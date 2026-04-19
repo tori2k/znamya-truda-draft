@@ -1,0 +1,719 @@
+---
+---
+<div class="pay" id="payModal" hidden>
+  <div class="pay__backdrop" data-close></div>
+
+  <div class="pay__sheet">
+    <button class="pay__close" data-close aria-label="Закрыть">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6L6 18M6 6l12 12"/></svg>
+    </button>
+
+    <!-- STEP 1: Форма на сайте клуба -->
+    <section class="pay__step" data-step="form">
+      <div class="pay__demo-badge">ДЕМО</div>
+      <h3 class="pay__title">Оформление членства</h3>
+      <div class="pay__summary" id="payTierInfo">—</div>
+
+      <form class="pay__form" id="payForm">
+        <label class="pay__field">
+          <span>ФИО</span>
+          <input type="text" name="fio" required placeholder="Иванов Иван Иванович" />
+        </label>
+        <label class="pay__field">
+          <span>Email (для чека)</span>
+          <input type="email" name="email" required placeholder="you@mail.ru" />
+        </label>
+        <label class="pay__field">
+          <span>Телефон</span>
+          <input type="tel" name="phone" required placeholder="+7 (___) ___-__-__" />
+        </label>
+        <label class="pay__agree">
+          <input type="checkbox" required />
+          <span>Согласен с условиями членства и обработкой персональных данных</span>
+        </label>
+        <button type="submit" class="pay__submit">
+          Перейти к оплате
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
+        </button>
+        <p class="pay__note">Безопасная оплата через Т-Кассу. Поддержка карт Visa / Mastercard / МИР, СБП, Tinkoff Pay, SberPay.</p>
+      </form>
+    </section>
+
+    <!-- STEP 2: Страница Т-Кассы (имитация) -->
+    <section class="pay__step" data-step="tkassa" hidden>
+      <div class="tk">
+        <div class="tk__head">
+          <div class="tk__brand">
+            <svg width="32" height="32" viewBox="0 0 32 32" fill="none">
+              <rect width="32" height="32" rx="6" fill="#FFDD2D"/>
+              <path d="M10 10h12v3.5h-4.25V22h-3.5V13.5H10V10z" fill="#333"/>
+            </svg>
+            <div>
+              <div class="tk__brand-n">Т-Касса</div>
+              <div class="tk__brand-s">Безопасный платёж</div>
+            </div>
+          </div>
+          <div class="tk__secure">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+            SSL
+          </div>
+        </div>
+
+        <div class="tk__merchant">
+          <div class="tk__merch-crest">
+            <div class="tk__shield">
+              <span>1909</span>
+            </div>
+          </div>
+          <div>
+            <div class="tk__merch-label">ПОЛУЧАТЕЛЬ ПЛАТЕЖА</div>
+            <div class="tk__merch-n">АНО ФК «Знамя Труда»</div>
+            <div class="tk__merch-s" id="tkOrderDesc">Членство в клубе — Болельщик</div>
+          </div>
+          <div class="tk__amount">
+            <div class="tk__amount-n" id="tkAmount">500 ₽</div>
+          </div>
+        </div>
+
+        <div class="tk__methods">
+          <div class="tk__tab tk__tab--active" data-method="card">Карта</div>
+          <div class="tk__tab" data-method="sbp">СБП</div>
+          <div class="tk__tab" data-method="tpay">Tinkoff Pay</div>
+          <div class="tk__tab" data-method="spay">SberPay</div>
+        </div>
+
+        <div class="tk__pane" data-pane="card">
+          <label class="tk__field">
+            <span>Номер карты</span>
+            <input type="text" id="tkCard" placeholder="0000 0000 0000 0000" maxlength="19" inputmode="numeric" />
+          </label>
+          <div class="tk__row">
+            <label class="tk__field">
+              <span>MM / ГГ</span>
+              <input type="text" id="tkExp" placeholder="12 / 28" maxlength="7" />
+            </label>
+            <label class="tk__field">
+              <span>CVC</span>
+              <input type="text" id="tkCvc" placeholder="•••" maxlength="3" inputmode="numeric" />
+            </label>
+          </div>
+          <button type="button" class="tk__pay" id="tkPayBtn">
+            <span>Оплатить <b id="tkPayAmount">500 ₽</b></span>
+          </button>
+          <div class="tk__hint">Тестовая карта: <code>4300 0000 0000 0777</code> · любая дата · любой CVC</div>
+        </div>
+
+        <div class="tk__pane" data-pane="sbp" hidden>
+          <div class="tk__qr">
+            <div class="tk__qr-box">
+              <svg viewBox="0 0 100 100" width="180" height="180">
+                <rect width="100" height="100" fill="#fff"/>
+                <g fill="#000">
+                  <rect x="5" y="5" width="25" height="25"/><rect x="10" y="10" width="15" height="15" fill="#fff"/><rect x="14" y="14" width="7" height="7"/>
+                  <rect x="70" y="5" width="25" height="25"/><rect x="75" y="10" width="15" height="15" fill="#fff"/><rect x="79" y="14" width="7" height="7"/>
+                  <rect x="5" y="70" width="25" height="25"/><rect x="10" y="75" width="15" height="15" fill="#fff"/><rect x="14" y="79" width="7" height="7"/>
+                  <rect x="40" y="10" width="4" height="4"/><rect x="48" y="8" width="4" height="6"/><rect x="56" y="12" width="4" height="4"/>
+                  <rect x="10" y="40" width="6" height="4"/><rect x="20" y="42" width="4" height="4"/><rect x="32" y="38" width="4" height="6"/><rect x="42" y="40" width="6" height="4"/>
+                  <rect x="50" y="46" width="4" height="8"/><rect x="58" y="42" width="6" height="4"/><rect x="68" y="40" width="4" height="6"/>
+                  <rect x="78" y="42" width="8" height="4"/><rect x="88" y="40" width="4" height="8"/>
+                  <rect x="40" y="52" width="4" height="4"/><rect x="48" y="54" width="6" height="4"/><rect x="58" y="52" width="4" height="6"/>
+                  <rect x="10" y="60" width="4" height="6"/><rect x="20" y="62" width="6" height="4"/><rect x="30" y="60" width="4" height="6"/>
+                  <rect x="40" y="64" width="6" height="4"/><rect x="50" y="62" width="4" height="6"/><rect x="58" y="66" width="6" height="4"/>
+                  <rect x="68" y="62" width="4" height="4"/><rect x="78" y="66" width="4" height="4"/><rect x="88" y="62" width="4" height="6"/>
+                  <rect x="38" y="78" width="6" height="4"/><rect x="48" y="80" width="4" height="6"/><rect x="58" y="78" width="6" height="4"/>
+                  <rect x="68" y="80" width="4" height="4"/><rect x="76" y="82" width="6" height="4"/><rect x="88" y="80" width="4" height="6"/>
+                </g>
+              </svg>
+            </div>
+            <div class="tk__qr-info">
+              <div class="tk__qr-title">Отсканируйте QR-код</div>
+              <div class="tk__qr-text">Откройте приложение банка → СБП → наведите камеру</div>
+              <button type="button" class="tk__pay tk__pay--sm" id="tkPayBtn2">Имитировать оплату</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="tk__pane" data-pane="tpay" hidden>
+          <div class="tk__wallet">
+            <div class="tk__wallet-logo" style="background:#FFDD2D;color:#333">T</div>
+            <div class="tk__wallet-text">Подтвердите оплату в приложении Т-Банка</div>
+            <button type="button" class="tk__pay" id="tkPayBtn3">Подтвердить</button>
+          </div>
+        </div>
+
+        <div class="tk__pane" data-pane="spay" hidden>
+          <div class="tk__wallet">
+            <div class="tk__wallet-logo" style="background:#21A038;color:#fff">S</div>
+            <div class="tk__wallet-text">Подтвердите оплату через SberPay</div>
+            <button type="button" class="tk__pay" id="tkPayBtn4">Подтвердить</button>
+          </div>
+        </div>
+
+        <div class="tk__footer">
+          <div class="tk__fee">Комиссии для плательщика нет · Чек на email</div>
+          <div class="tk__back" data-back>← Назад</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- STEP 3: Обработка -->
+    <section class="pay__step" data-step="processing" hidden>
+      <div class="proc">
+        <div class="proc__spinner"></div>
+        <div class="proc__title">Обрабатываем платёж…</div>
+        <div class="proc__text">Не закрывайте страницу</div>
+      </div>
+    </section>
+
+    <!-- STEP 4: Успех -->
+    <section class="pay__step" data-step="success" hidden>
+      <div class="ok">
+        <div class="ok__check">
+          <svg width="60" height="60" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+            <path d="M20 6L9 17l-5-5"/>
+          </svg>
+        </div>
+        <h3 class="ok__title">Добро пожаловать в клуб!</h3>
+        <p class="ok__text">
+          Платёж прошёл успешно. На <b id="okEmail">вашу почту</b> отправлен чек
+          и подтверждение членства. В течение 3 рабочих дней пришлём членскую карту.
+        </p>
+        <div class="ok__receipt">
+          <div class="ok__receipt-row">
+            <span>Членство</span>
+            <span id="okTier">—</span>
+          </div>
+          <div class="ok__receipt-row">
+            <span>Сумма</span>
+            <span id="okAmount">—</span>
+          </div>
+          <div class="ok__receipt-row">
+            <span>Номер операции</span>
+            <span id="okOrder">—</span>
+          </div>
+        </div>
+        <button type="button" class="btn btn--red" data-close>
+          Готово
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
+        </button>
+      </div>
+    </section>
+  </div>
+</div>
+
+<style>
+  .pay {
+    position: fixed;
+    inset: 0;
+    z-index: 100;
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+    padding: 20px;
+    overflow-y: auto;
+  }
+  .pay[hidden] { display: none; }
+
+  .pay__backdrop {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.7);
+    backdrop-filter: blur(8px);
+    animation: fadeIn 0.3s;
+  }
+  @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+  .pay__sheet {
+    position: relative;
+    z-index: 1;
+    width: 100%;
+    max-width: 520px;
+    background: #fff;
+    color: #1a1a1a;
+    margin: 40px 0;
+    animation: slideUp 0.4s cubic-bezier(.25,.46,.45,.94);
+    box-shadow: 0 40px 80px rgba(0,0,0,0.5);
+  }
+  @keyframes slideUp { from { transform: translateY(30px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+
+  .pay__close {
+    position: absolute;
+    top: 14px; right: 14px;
+    width: 36px; height: 36px;
+    background: transparent;
+    border: 0;
+    color: #666;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 3;
+    border-radius: 50%;
+    transition: background 0.2s;
+  }
+  .pay__close:hover { background: #f0f0f0; color: #000; }
+
+  .pay__step { padding: 32px; }
+
+  .pay__demo-badge {
+    display: inline-block;
+    padding: 3px 10px;
+    background: #E4002B;
+    color: #fff;
+    font-family: 'Oswald', sans-serif;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 2px;
+    margin-bottom: 16px;
+  }
+
+  .pay__title {
+    font-family: 'Oswald', sans-serif;
+    font-size: 24px;
+    font-weight: 700;
+    letter-spacing: -0.01em;
+    text-transform: uppercase;
+    color: #0a0a0a;
+    margin: 0 0 6px;
+  }
+  .pay__summary {
+    font-size: 14px;
+    color: #666;
+    padding: 12px 14px;
+    background: #f7f7f7;
+    border-left: 3px solid #E4002B;
+    margin: 16px 0 24px;
+  }
+
+  .pay__form { display: flex; flex-direction: column; gap: 14px; }
+  .pay__field { display: flex; flex-direction: column; gap: 6px; }
+  .pay__field span {
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: #666;
+  }
+  .pay__field input {
+    padding: 12px 14px;
+    border: 1px solid #ddd;
+    background: #fff;
+    color: #1a1a1a;
+    font-size: 15px;
+    outline: none;
+    transition: border-color 0.2s;
+    font-family: inherit;
+  }
+  .pay__field input:focus { border-color: #E4002B; }
+
+  .pay__agree {
+    display: flex;
+    gap: 10px;
+    align-items: flex-start;
+    font-size: 13px;
+    color: #666;
+    line-height: 1.5;
+    margin: 6px 0;
+    cursor: pointer;
+  }
+  .pay__agree input { accent-color: #E4002B; margin-top: 2px; }
+
+  .pay__submit {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    padding: 14px 24px;
+    background: #E4002B;
+    color: #fff;
+    border: 0;
+    font-family: 'Oswald', sans-serif;
+    font-size: 14px;
+    font-weight: 600;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: background 0.2s;
+    margin-top: 8px;
+  }
+  .pay__submit:hover { background: #B80023; }
+
+  .pay__note {
+    font-size: 12px;
+    color: #888;
+    line-height: 1.5;
+    margin: 10px 0 0;
+    text-align: center;
+  }
+
+  /* T-KASSA */
+  .tk { color: #1a1a1a; }
+  .tk__head {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-bottom: 18px;
+    border-bottom: 1px solid #eee;
+    margin-bottom: 20px;
+  }
+  .tk__brand { display: flex; align-items: center; gap: 12px; }
+  .tk__brand-n { font-weight: 700; font-size: 15px; color: #1a1a1a; }
+  .tk__brand-s { font-size: 11px; color: #888; }
+  .tk__secure {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 11px;
+    font-weight: 600;
+    color: #21A038;
+    letter-spacing: 1px;
+  }
+
+  .tk__merchant {
+    display: grid;
+    grid-template-columns: auto 1fr auto;
+    gap: 16px;
+    align-items: center;
+    padding: 16px;
+    background: #f9f7f0;
+    border: 1px solid #ede9dd;
+    margin-bottom: 22px;
+  }
+  .tk__merch-crest { }
+  .tk__shield {
+    width: 40px; height: 48px;
+    background: #E4002B;
+    clip-path: polygon(0 0, 100% 0, 100% 70%, 50% 100%, 0 70%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Oswald', sans-serif;
+    font-weight: 700;
+    font-size: 10px;
+    color: #fff;
+    margin-top: -4px;
+    padding-top: 2px;
+  }
+  .tk__merch-label {
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: #999;
+    margin-bottom: 3px;
+  }
+  .tk__merch-n { font-weight: 700; font-size: 14px; color: #1a1a1a; margin-bottom: 2px; }
+  .tk__merch-s { font-size: 12px; color: #666; }
+  .tk__amount-n {
+    font-family: 'Oswald', sans-serif;
+    font-weight: 700;
+    font-size: 28px;
+    color: #1a1a1a;
+    letter-spacing: -0.02em;
+  }
+
+  .tk__methods {
+    display: flex;
+    gap: 4px;
+    margin-bottom: 18px;
+    border-bottom: 2px solid #f0f0f0;
+  }
+  .tk__tab {
+    padding: 10px 14px;
+    font-size: 12px;
+    font-weight: 600;
+    color: #888;
+    cursor: pointer;
+    border-bottom: 2px solid transparent;
+    margin-bottom: -2px;
+    transition: all 0.2s;
+    user-select: none;
+  }
+  .tk__tab--active { color: #1a1a1a; border-bottom-color: #FFDD2D; }
+  .tk__tab:hover { color: #1a1a1a; }
+
+  .tk__pane { display: block; }
+  .tk__pane[hidden] { display: none; }
+  .tk__field { display: flex; flex-direction: column; gap: 6px; margin-bottom: 12px; }
+  .tk__field span {
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 1px;
+    color: #888;
+    text-transform: uppercase;
+  }
+  .tk__field input {
+    padding: 12px 14px;
+    border: 1px solid #ddd;
+    background: #fff;
+    color: #1a1a1a;
+    font-size: 15px;
+    font-family: inherit;
+    outline: none;
+    transition: border-color 0.2s;
+  }
+  .tk__field input:focus { border-color: #FFDD2D; }
+  .tk__row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+
+  .tk__pay {
+    width: 100%;
+    padding: 14px;
+    background: #FFDD2D;
+    color: #1a1a1a;
+    border: 0;
+    font-size: 15px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: background 0.2s;
+    margin-top: 10px;
+    font-family: inherit;
+  }
+  .tk__pay:hover { background: #f5d100; }
+  .tk__pay--sm { margin-top: 14px; padding: 12px 24px; width: auto; }
+  .tk__pay b { font-weight: 700; }
+
+  .tk__hint {
+    font-size: 11px;
+    color: #888;
+    text-align: center;
+    margin-top: 10px;
+  }
+  .tk__hint code {
+    background: #f0f0f0;
+    padding: 1px 6px;
+    border-radius: 3px;
+    font-size: 11px;
+    letter-spacing: 0.5px;
+  }
+
+  .tk__qr { display: flex; align-items: center; gap: 20px; padding: 14px 0; }
+  .tk__qr-box { padding: 10px; background: #fff; border: 1px solid #eee; }
+  .tk__qr-title { font-weight: 700; font-size: 14px; margin-bottom: 6px; }
+  .tk__qr-text { font-size: 12px; color: #666; line-height: 1.5; }
+
+  .tk__wallet { text-align: center; padding: 20px 0; }
+  .tk__wallet-logo {
+    width: 56px; height: 56px;
+    border-radius: 12px;
+    font-family: 'Oswald', sans-serif;
+    font-weight: 700;
+    font-size: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 14px;
+  }
+  .tk__wallet-text { font-size: 14px; color: #666; margin-bottom: 18px; }
+
+  .tk__footer {
+    padding-top: 16px;
+    margin-top: 18px;
+    border-top: 1px solid #eee;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 12px;
+  }
+  .tk__fee { color: #888; }
+  .tk__back {
+    color: #E4002B;
+    cursor: pointer;
+    font-weight: 600;
+  }
+  .tk__back:hover { text-decoration: underline; }
+
+  /* PROCESSING */
+  .proc {
+    padding: 60px 20px;
+    text-align: center;
+  }
+  .proc__spinner {
+    width: 60px; height: 60px;
+    border: 4px solid #f0f0f0;
+    border-top-color: #FFDD2D;
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+    margin: 0 auto 24px;
+  }
+  @keyframes spin { to { transform: rotate(360deg); } }
+  .proc__title { font-weight: 700; font-size: 17px; color: #1a1a1a; margin-bottom: 6px; }
+  .proc__text { font-size: 13px; color: #888; }
+
+  /* SUCCESS */
+  .ok { text-align: center; padding: 20px 0; }
+  .ok__check {
+    width: 90px; height: 90px;
+    border-radius: 50%;
+    background: #21A038;
+    color: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 20px;
+    animation: pop 0.5s cubic-bezier(.25,.46,.45,.94);
+  }
+  @keyframes pop { from { transform: scale(0); } to { transform: scale(1); } }
+
+  .ok__title {
+    font-family: 'Oswald', sans-serif;
+    font-size: 24px;
+    font-weight: 700;
+    text-transform: uppercase;
+    color: #0a0a0a;
+    margin: 0 0 12px;
+  }
+  .ok__text {
+    font-size: 14px;
+    color: #666;
+    line-height: 1.6;
+    max-width: 420px;
+    margin: 0 auto 24px;
+  }
+  .ok__text b { color: #1a1a1a; }
+
+  .ok__receipt {
+    background: #f7f7f7;
+    border: 1px dashed #ddd;
+    padding: 16px;
+    margin-bottom: 24px;
+    text-align: left;
+  }
+  .ok__receipt-row {
+    display: flex;
+    justify-content: space-between;
+    padding: 6px 0;
+    font-size: 13px;
+  }
+  .ok__receipt-row:not(:last-child) { border-bottom: 1px dashed #e0e0e0; }
+  .ok__receipt-row span:first-child { color: #888; }
+  .ok__receipt-row span:last-child { color: #1a1a1a; font-weight: 600; }
+
+  .ok .btn { margin: 0 auto; }
+
+  @media (max-width: 560px) {
+    .pay__step { padding: 24px 20px; }
+    .tk__merchant { grid-template-columns: 1fr; }
+    .tk__amount-n { font-size: 22px; }
+    .tk__qr { flex-direction: column; text-align: center; }
+    .tk__methods { overflow-x: auto; }
+  }
+</style>
+
+<script>
+  type Tier = { slug: string; name: string; amount: number };
+  const tiers: Record<string, Tier> = {
+    base: { slug: 'base', name: 'Болельщик', amount: 500 },
+    gold: { slug: 'gold', name: 'Золотой член', amount: 1500 },
+  };
+
+  const modal = document.getElementById('payModal') as HTMLElement | null;
+  const steps = document.querySelectorAll<HTMLElement>('.pay__step');
+  const tierInfo = document.getElementById('payTierInfo');
+  const orderDesc = document.getElementById('tkOrderDesc');
+  const amountEl = document.getElementById('tkAmount');
+  const amountBtn = document.getElementById('tkPayAmount');
+  const form = document.getElementById('payForm') as HTMLFormElement | null;
+  const okEmail = document.getElementById('okEmail');
+  const okTier = document.getElementById('okTier');
+  const okAmount = document.getElementById('okAmount');
+  const okOrder = document.getElementById('okOrder');
+
+  let state: { tier: Tier | null; email: string } = { tier: null, email: '' };
+
+  function showStep(name: string) {
+    steps.forEach((s) => { s.hidden = s.dataset.step !== name; });
+  }
+
+  function openModal(tierSlug: string) {
+    const tier = tiers[tierSlug];
+    if (!tier || !modal) return;
+    state.tier = tier;
+    if (tierInfo) tierInfo.textContent = `${tier.name} · ${tier.amount.toLocaleString('ru-RU')} ₽ / месяц`;
+    if (orderDesc) orderDesc.textContent = `Членство в клубе — ${tier.name}`;
+    if (amountEl) amountEl.textContent = `${tier.amount.toLocaleString('ru-RU')} ₽`;
+    if (amountBtn) amountBtn.textContent = `${tier.amount.toLocaleString('ru-RU')} ₽`;
+    showStep('form');
+    modal.hidden = false;
+    document.body.style.overflow = 'hidden';
+  }
+
+  function closeModal() {
+    if (!modal) return;
+    modal.hidden = true;
+    document.body.style.overflow = '';
+    form?.reset();
+  }
+
+  document.querySelectorAll('[data-tier]').forEach((el) => {
+    el.addEventListener('click', (e) => {
+      e.preventDefault();
+      const slug = (el as HTMLElement).dataset.tier;
+      if (slug) openModal(slug);
+    });
+  });
+
+  document.querySelectorAll('[data-close]').forEach((el) => {
+    el.addEventListener('click', closeModal);
+  });
+
+  form?.addEventListener('submit', (e) => {
+    e.preventDefault();
+    const data = new FormData(form);
+    state.email = String(data.get('email') || '');
+    showStep('tkassa');
+  });
+
+  // T-Kassa tabs
+  document.querySelectorAll<HTMLElement>('.tk__tab').forEach((tab) => {
+    tab.addEventListener('click', () => {
+      document.querySelectorAll('.tk__tab').forEach((t) => t.classList.remove('tk__tab--active'));
+      tab.classList.add('tk__tab--active');
+      const method = tab.dataset.method;
+      document.querySelectorAll<HTMLElement>('.tk__pane').forEach((p) => {
+        p.hidden = p.dataset.pane !== method;
+      });
+    });
+  });
+
+  // Card formatting
+  const card = document.getElementById('tkCard') as HTMLInputElement | null;
+  card?.addEventListener('input', () => {
+    const raw = card.value.replace(/\D/g, '').slice(0, 16);
+    card.value = raw.replace(/(\d{4})(?=\d)/g, '$1 ');
+  });
+  const exp = document.getElementById('tkExp') as HTMLInputElement | null;
+  exp?.addEventListener('input', () => {
+    const raw = exp.value.replace(/\D/g, '').slice(0, 4);
+    exp.value = raw.length > 2 ? `${raw.slice(0,2)} / ${raw.slice(2)}` : raw;
+  });
+  const cvc = document.getElementById('tkCvc') as HTMLInputElement | null;
+  cvc?.addEventListener('input', () => {
+    cvc.value = cvc.value.replace(/\D/g, '').slice(0, 3);
+  });
+
+  // Pay buttons (all methods)
+  function triggerPay() {
+    showStep('processing');
+    setTimeout(() => {
+      if (!state.tier) return;
+      if (okEmail) okEmail.textContent = state.email || 'вашу почту';
+      if (okTier) okTier.textContent = state.tier.name;
+      if (okAmount) okAmount.textContent = `${state.tier.amount.toLocaleString('ru-RU')} ₽`;
+      if (okOrder) okOrder.textContent = 'ZT-' + Date.now().toString().slice(-8);
+      showStep('success');
+    }, 1800);
+  }
+  ['tkPayBtn', 'tkPayBtn2', 'tkPayBtn3', 'tkPayBtn4'].forEach((id) => {
+    document.getElementById(id)?.addEventListener('click', triggerPay);
+  });
+
+  // Back
+  document.querySelectorAll('[data-back]').forEach((el) => {
+    el.addEventListener('click', () => showStep('form'));
+  });
+
+  // ESC
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && modal && !modal.hidden) closeModal();
+  });
+</script>

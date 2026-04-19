@@ -79,10 +79,10 @@ const allocations = [
               </li>
             ))}
           </ul>
-          <button type="button" class:list={['btn', t.featured ? 'btn--red' : 'btn--ghost', 'tier__cta']} data-tier={t.slug}>
+          <a href="#" class:list={['btn', t.featured ? 'btn--red' : 'btn--ghost', 'tier__cta']} data-tier={t.slug}>
             {t.cta}
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
-          </button>
+          </a>
         </article>
       ))}
     </div>
@@ -335,11 +335,3 @@ const allocations = [
   }
 </style>
 
-<script>
-  document.querySelectorAll('[data-tier]').forEach((btn) => {
-    btn.addEventListener('click', () => {
-      const tier = (btn as HTMLElement).dataset.tier;
-      alert(`Оплата через Т-Кассу (${tier}) будет подключена после согласования с клубом.`);
-    });
-  });
-</script>
