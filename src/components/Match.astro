@@ -1,0 +1,371 @@
+---
+const nextMatch = {
+  league: 'Первенство ФФМО · Группа А',
+  date: '2026-04-26',
+  dateText: '26 апреля · сб',
+  time: '15:00',
+  home: { name: 'Знамя Труда', city: 'Орехово-Зуево', short: 'ЗНМ' },
+  away: { name: 'Олимп', city: 'Долгопрудный', short: 'ОЛМ' },
+  venue: 'Стадион «Знамя Труда», Орехово-Зуево',
+  isHome: true,
+};
+
+const lastMatch = {
+  league: 'Первенство ФФМО · Группа А · 4 тур',
+  date: '2026-04-12',
+  dateText: '12 апреля',
+  home: { name: 'Знамя Труда', short: 'ЗНМ', score: 2 },
+  away: { name: 'СШОР-Зоркий', short: 'ЗОР', score: 1 },
+  result: 'win',
+};
+---
+<section class="match" id="match">
+  <div class="container-x">
+    <div class="match__grid">
+      <!-- NEXT -->
+      <div class="match__card match__card--next reveal-left">
+        <div class="match__tag">
+          <span class="match__tag-dot"></span>
+          Следующий матч
+        </div>
+        <div class="match__league">{nextMatch.league}</div>
+
+        <div class="match__teams">
+          <div class="team">
+            <div class="team__crest team__crest--home">{nextMatch.home.short}</div>
+            <div class="team__name">{nextMatch.home.name}</div>
+            <div class="team__city">{nextMatch.home.city}</div>
+          </div>
+
+          <div class="match__vs">
+            <div class="match__date">{nextMatch.dateText}</div>
+            <div class="match__time">{nextMatch.time}</div>
+            <div class="match__vs-label">VS</div>
+          </div>
+
+          <div class="team">
+            <div class="team__crest">{nextMatch.away.short}</div>
+            <div class="team__name">{nextMatch.away.name}</div>
+            <div class="team__city">{nextMatch.away.city}</div>
+          </div>
+        </div>
+
+        <div class="match__venue">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/>
+            <circle cx="12" cy="10" r="3"/>
+          </svg>
+          {nextMatch.venue}
+        </div>
+
+        <a href="#tickets" class="btn btn--red match__cta">
+          Афиша и билеты
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
+        </a>
+      </div>
+
+      <!-- LAST -->
+      <div class="match__card match__card--last reveal-right">
+        <div class="match__tag match__tag--muted">
+          <span class="match__tag-dot match__tag-dot--muted"></span>
+          Последний матч
+        </div>
+        <div class="match__league">{lastMatch.league}</div>
+
+        <div class="match__score-row">
+          <div class="score-team">
+            <div class="score-team__crest score-team__crest--home">{lastMatch.home.short}</div>
+            <div class="score-team__name">{lastMatch.home.name}</div>
+          </div>
+          <div class="score">
+            <span class="score__n score__n--win">{lastMatch.home.score}</span>
+            <span class="score__sep">:</span>
+            <span class="score__n">{lastMatch.away.score}</span>
+          </div>
+          <div class="score-team score-team--right">
+            <div class="score-team__crest">{lastMatch.away.short}</div>
+            <div class="score-team__name">{lastMatch.away.name}</div>
+          </div>
+        </div>
+
+        <div class="match__result">
+          <span class="result-badge result-badge--win">ПОБЕДА</span>
+          <span class="match__date-small">{lastMatch.dateText}</span>
+        </div>
+
+        <a href="#match" class="match__link">
+          Обзор матча
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 17L17 7M8 7h9v9"/></svg>
+        </a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .match {
+    padding: 80px 0;
+    position: relative;
+  }
+
+  .match__grid {
+    display: grid;
+    grid-template-columns: 1.4fr 1fr;
+    gap: 24px;
+  }
+
+  .match__card {
+    position: relative;
+    padding: 36px;
+    background: linear-gradient(160deg, #1a0006 0%, #0f0f0f 100%);
+    border: 1px solid rgba(228,0,43,0.2);
+    overflow: hidden;
+  }
+  .match__card--next {
+    background: linear-gradient(135deg, #E4002B 0%, #8a0019 100%);
+    border: 0;
+  }
+  .match__card--next::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background:
+      repeating-linear-gradient(45deg, transparent 0, transparent 30px, rgba(255,255,255,0.03) 30px, rgba(255,255,255,0.03) 31px),
+      radial-gradient(circle at 80% 20%, rgba(255,255,255,0.08) 0, transparent 50%);
+    pointer-events: none;
+  }
+  .match__card--next > * { position: relative; z-index: 1; }
+
+  .match__tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    font-family: 'Oswald', sans-serif;
+    font-size: 11px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    font-weight: 600;
+    color: #fff;
+    margin-bottom: 8px;
+  }
+  .match__tag-dot {
+    width: 8px; height: 8px;
+    background: #fff;
+    border-radius: 50%;
+    animation: pulse 1.8s infinite;
+  }
+  @keyframes pulse {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.5; transform: scale(1.4); }
+  }
+  .match__tag--muted { color: #9a9a9a; }
+  .match__tag-dot--muted { background: #6a6a6a; animation: none; }
+
+  .match__league {
+    font-size: 12px;
+    color: rgba(255,255,255,0.7);
+    letter-spacing: 1.5px;
+    margin-bottom: 32px;
+  }
+  .match__card--last .match__league { color: #6a6a6a; }
+
+  /* NEXT match teams */
+  .match__teams {
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
+    gap: 20px;
+    align-items: center;
+    margin-bottom: 28px;
+  }
+  .team { text-align: center; }
+  .team__crest {
+    width: 72px; height: 84px;
+    margin: 0 auto 14px;
+    background: rgba(0,0,0,0.3);
+    border: 2px solid rgba(255,255,255,0.2);
+    clip-path: polygon(0 0, 100% 0, 100% 70%, 50% 100%, 0 70%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Oswald', sans-serif;
+    font-weight: 700;
+    font-size: 20px;
+    letter-spacing: 1px;
+    color: #fff;
+  }
+  .team__crest--home {
+    background: #fff;
+    color: #E4002B;
+    border-color: #fff;
+  }
+  .team__name {
+    font-family: 'Oswald', sans-serif;
+    font-size: 18px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    color: #fff;
+  }
+  .team__city {
+    font-size: 10px;
+    color: rgba(255,255,255,0.6);
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    margin-top: 4px;
+  }
+
+  .match__vs {
+    text-align: center;
+    padding: 0 10px;
+  }
+  .match__date {
+    font-family: 'Oswald', sans-serif;
+    font-weight: 600;
+    font-size: 13px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: #fff;
+    margin-bottom: 4px;
+  }
+  .match__time {
+    font-family: 'Oswald', sans-serif;
+    font-weight: 700;
+    font-size: 36px;
+    letter-spacing: -0.02em;
+    color: #fff;
+    line-height: 1;
+    margin-bottom: 8px;
+  }
+  .match__vs-label {
+    font-family: 'Oswald', sans-serif;
+    font-weight: 400;
+    font-size: 10px;
+    letter-spacing: 3px;
+    color: rgba(255,255,255,0.6);
+  }
+
+  .match__venue {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 12px;
+    color: rgba(255,255,255,0.75);
+    letter-spacing: 0.5px;
+    margin-bottom: 28px;
+    padding-top: 18px;
+    border-top: 1px solid rgba(255,255,255,0.15);
+  }
+
+  .match__cta {
+    background: #fff;
+    color: #E4002B;
+  }
+  .match__cta:hover {
+    background: #0a0a0a;
+    color: #fff;
+    transform: translateX(4px);
+  }
+
+  /* LAST match */
+  .match__score-row {
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
+    align-items: center;
+    gap: 12px;
+    margin: 20px 0;
+  }
+  .score-team { text-align: center; }
+  .score-team--right { }
+  .score-team__crest {
+    width: 50px; height: 58px;
+    margin: 0 auto 10px;
+    background: rgba(228,0,43,0.15);
+    border: 1.5px solid rgba(228,0,43,0.4);
+    clip-path: polygon(0 0, 100% 0, 100% 70%, 50% 100%, 0 70%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Oswald', sans-serif;
+    font-weight: 700;
+    font-size: 14px;
+    color: #fff;
+  }
+  .score-team__crest--home {
+    background: #E4002B;
+    border-color: #E4002B;
+  }
+  .score-team__name {
+    font-family: 'Oswald', sans-serif;
+    font-size: 12px;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    color: #d8d8d8;
+  }
+
+  .score {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-family: 'Oswald', sans-serif;
+  }
+  .score__n {
+    font-weight: 700;
+    font-size: 44px;
+    letter-spacing: -0.02em;
+    color: #fff;
+    line-height: 1;
+  }
+  .score__n--win { color: #E4002B; }
+  .score__sep {
+    font-weight: 400;
+    font-size: 32px;
+    color: #6a6a6a;
+  }
+
+  .match__result {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin: 20px 0;
+    padding-top: 18px;
+    border-top: 1px solid rgba(255,255,255,0.06);
+  }
+  .result-badge {
+    padding: 4px 10px;
+    background: rgba(228,0,43,0.15);
+    border: 1px solid rgba(228,0,43,0.4);
+    color: #E4002B;
+    font-family: 'Oswald', sans-serif;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+  }
+  .match__date-small {
+    font-size: 11px;
+    color: #888;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+  }
+
+  .match__link {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-family: 'Oswald', sans-serif;
+    font-size: 12px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: #E4002B;
+    text-decoration: none;
+    transition: gap 0.2s;
+  }
+  .match__link:hover { gap: 14px; }
+
+  @media (max-width: 900px) {
+    .match__grid { grid-template-columns: 1fr; }
+    .match__card { padding: 28px 24px; }
+    .match__teams { grid-template-columns: 1fr; gap: 20px; }
+    .team__crest { width: 64px; height: 74px; }
+  }
+</style>

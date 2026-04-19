@@ -1,0 +1,145 @@
+---
+---
+<footer class="footer">
+  <div class="container-x footer__inner">
+    <div class="footer__brand">
+      <div class="logo">
+        <div class="logo__shield">
+          <span class="logo__year">1909</span>
+        </div>
+        <div class="logo__text">
+          <span class="logo__name">ЗНАМЯ ТРУДА</span>
+          <span class="logo__city">Орехово-Зуево</span>
+        </div>
+      </div>
+      <p class="footer__text">Старейший действующий футбольный клуб России. Основан в 1909 году.</p>
+    </div>
+
+    <div class="footer__links">
+      <div class="footer__col">
+        <div class="footer__col-title">Клуб</div>
+        <a href="#history">История</a>
+        <a href="#team">Команда</a>
+        <a href="#match">Матчи</a>
+        <a href="#membership">Членство</a>
+      </div>
+      <div class="footer__col">
+        <div class="footer__col-title">Партнёры</div>
+        <a href="#partners">Скидки для членов</a>
+        <a href="#contacts">Стать партнёром</a>
+      </div>
+      <div class="footer__col">
+        <div class="footer__col-title">Контакты</div>
+        <a href="mailto:info@znamyatruda.ru">info@znamyatruda.ru</a>
+        <a href="tel:+74964154500">+7 (496) 415-45-00</a>
+      </div>
+    </div>
+  </div>
+
+  <div class="footer__bottom">
+    <div class="container-x footer__bottom-inner">
+      <span>© 1909–2026 ФК «Знамя Труда» Орехово-Зуево</span>
+      <span>Сайт: <a href="https://t.me/tori2k">@tori2k</a></span>
+    </div>
+  </div>
+</footer>
+
+<style>
+  .footer {
+    background: #050505;
+    border-top: 3px solid #E4002B;
+    padding-top: 60px;
+    margin-top: 0;
+  }
+
+  .footer__inner {
+    display: grid;
+    grid-template-columns: 1.2fr 2fr;
+    gap: 60px;
+    padding-bottom: 50px;
+  }
+
+  .footer__brand .logo { margin-bottom: 16px; }
+  .footer__brand .logo__shield {
+    width: 44px; height: 52px;
+    background: #E4002B;
+    clip-path: polygon(0 0, 100% 0, 100% 70%, 50% 100%, 0 70%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .footer__brand .logo__shield .logo__year {
+    font-family: 'Oswald', sans-serif;
+    font-weight: 700;
+    font-size: 11px;
+    color: #fff;
+    margin-top: -6px;
+  }
+  .footer__brand .logo {
+    display: flex; align-items: center; gap: 12px;
+  }
+  .footer__brand .logo__text { display: flex; flex-direction: column; line-height: 1; }
+  .footer__brand .logo__name {
+    font-family: 'Oswald', sans-serif;
+    font-weight: 700;
+    font-size: 17px;
+    letter-spacing: 1.5px;
+  }
+  .footer__brand .logo__city {
+    font-size: 10px;
+    color: #9a9a9a;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    margin-top: 3px;
+  }
+  .footer__text {
+    font-size: 13px;
+    color: #888;
+    line-height: 1.6;
+    max-width: 320px;
+    margin: 0;
+  }
+
+  .footer__links {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 40px;
+  }
+  .footer__col { display: flex; flex-direction: column; gap: 10px; }
+  .footer__col-title {
+    font-family: 'Oswald', sans-serif;
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: #E4002B;
+    margin-bottom: 6px;
+  }
+  .footer__col a {
+    font-size: 13.5px;
+    color: #a0a0a0;
+    text-decoration: none;
+    transition: color 0.2s;
+  }
+  .footer__col a:hover { color: #fff; }
+
+  .footer__bottom {
+    border-top: 1px solid rgba(255,255,255,0.05);
+    padding: 24px 0;
+  }
+  .footer__bottom-inner {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 20px;
+    flex-wrap: wrap;
+    font-size: 12px;
+    color: #666;
+  }
+  .footer__bottom-inner a { color: #E4002B; text-decoration: none; }
+
+  @media (max-width: 800px) {
+    .footer__inner { grid-template-columns: 1fr; gap: 40px; }
+    .footer__links { grid-template-columns: repeat(2, 1fr); }
+  }
+</style>

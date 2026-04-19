@@ -1,0 +1,262 @@
+---
+const milestones = [
+  {
+    year: '1909',
+    title: 'Основание',
+    text: 'Управляющий Морозовской мануфактуры Гарри Чарнок регистрирует устав «Клуба спорта „Орехово"». Первая форма — бело-голубая, скопированная с английского «Блэкбёрн Роверс».',
+  },
+  {
+    year: '1910–1913',
+    title: 'Четыре титула подряд',
+    text: 'Клуб становится чемпионом Москвы четыре сезона подряд — в эпоху, когда Москва была центром футбола страны.',
+  },
+  {
+    year: '1914',
+    title: 'Свой стадион',
+    text: 'Открыт стадион «Знамя Труда» — один из старейших непрерывно действующих футбольных стадионов России. На тот момент считался лучшим в стране.',
+  },
+  {
+    year: '1962',
+    title: 'Финал Кубка СССР',
+    text: '11 августа 1962 года на БСА в Лужниках клуб играет в финале Кубка СССР перед 102 000 зрителей. Единственный в истории финалист, никогда не игравший в высшем дивизионе.',
+    featured: true,
+  },
+  {
+    year: '2025',
+    title: 'Новая глава',
+    text: 'Клуб возвращается к своим корням — в футбол любительский, близкий к болельщикам. Играет в Первенстве Федерации футбола Московской области.',
+  },
+];
+---
+<section class="history" id="history">
+  <div class="container-x">
+    <div class="history__head reveal">
+      <div class="sec-tag">История</div>
+      <h2 class="history__title">
+        <span>117 ЛЕТ</span>
+        <span class="history__title-accent">БЕЗ ОСТАНОВКИ</span>
+      </h2>
+      <p class="history__lead">
+        «Знамя Труда» — старейший действующий футбольный клуб России. За более чем вековую
+        историю клуб сменил несколько названий, но никогда не прерывал свой путь в футболе.
+      </p>
+    </div>
+
+    <div class="history__timeline">
+      {milestones.map((m, i) => (
+        <div class:list={['mil', m.featured && 'mil--featured']} style={`--i: ${i}`}>
+          <div class="mil__year">{m.year}</div>
+          <div class="mil__body">
+            <h3 class="mil__title">{m.title}</h3>
+            <p class="mil__text">{m.text}</p>
+            {m.featured && (
+              <div class="mil__badge">
+                <span>★</span> Главный момент в истории
+              </div>
+            )}
+          </div>
+        </div>
+      ))}
+    </div>
+
+    <div class="history__quote reveal">
+      <blockquote>
+        «Есть клубы, которые рождаются на миг. А есть те,
+        что идут через эпохи. Мы из вторых.»
+      </blockquote>
+      <cite>— болельщик «Знамени Труда»</cite>
+    </div>
+  </div>
+</section>
+
+<style>
+  .history {
+    padding: 120px 0;
+    position: relative;
+    background: linear-gradient(180deg, #0a0a0a 0%, #0f0f0f 50%, #0a0a0a 100%);
+  }
+
+  .history__head {
+    max-width: 780px;
+    margin-bottom: 80px;
+  }
+  .history__title {
+    font-family: 'Oswald', sans-serif;
+    font-size: clamp(48px, 8vw, 120px);
+    font-weight: 700;
+    line-height: 0.9;
+    letter-spacing: -0.02em;
+    text-transform: uppercase;
+    color: #fff;
+    margin: 0 0 28px;
+    display: flex;
+    flex-direction: column;
+  }
+  .history__title-accent {
+    color: #E4002B;
+    font-style: italic;
+    text-shadow: 0 0 40px rgba(228,0,43,0.3);
+  }
+  .history__lead {
+    font-size: 17px;
+    color: #c0c0c0;
+    line-height: 1.7;
+    max-width: 620px;
+  }
+
+  /* Timeline */
+  .history__timeline {
+    position: relative;
+    padding-left: 0;
+    max-width: 980px;
+    margin: 0 auto;
+  }
+  .history__timeline::before {
+    content: '';
+    position: absolute;
+    left: 180px;
+    top: 0; bottom: 0;
+    width: 2px;
+    background: linear-gradient(180deg, rgba(228,0,43,0.6), rgba(228,0,43,0.1));
+  }
+
+  .mil {
+    display: grid;
+    grid-template-columns: 160px 1fr;
+    gap: 60px;
+    padding: 28px 0;
+    position: relative;
+    opacity: 0;
+    transform: translateY(20px);
+    animation: milIn 0.8s cubic-bezier(.25,.46,.45,.94) forwards;
+    animation-delay: calc(var(--i) * 0.12s);
+  }
+  @keyframes milIn {
+    to { opacity: 1; transform: translateY(0); }
+  }
+  .mil::before {
+    content: '';
+    position: absolute;
+    left: 174px;
+    top: 38px;
+    width: 14px; height: 14px;
+    background: #0a0a0a;
+    border: 3px solid #E4002B;
+    border-radius: 50%;
+    z-index: 2;
+  }
+  .mil--featured::before {
+    background: #E4002B;
+    box-shadow: 0 0 0 6px rgba(228,0,43,0.3), 0 0 30px #E4002B;
+    width: 18px; height: 18px;
+    left: 172px;
+  }
+
+  .mil__year {
+    font-family: 'Oswald', sans-serif;
+    font-weight: 700;
+    font-size: 32px;
+    letter-spacing: 0.02em;
+    color: #E4002B;
+    text-align: right;
+    padding-right: 0;
+    line-height: 1;
+    margin-top: 30px;
+  }
+
+  .mil__body {
+    background: #131313;
+    border: 1px solid rgba(255,255,255,0.06);
+    padding: 24px 28px;
+    position: relative;
+  }
+  .mil--featured .mil__body {
+    background: linear-gradient(135deg, rgba(228,0,43,0.08), rgba(10,10,10,0.8));
+    border-color: rgba(228,0,43,0.35);
+    box-shadow: 0 20px 60px rgba(228,0,43,0.12);
+  }
+  .mil__title {
+    font-family: 'Oswald', sans-serif;
+    font-size: 22px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.02em;
+    color: #fff;
+    margin: 0 0 10px;
+  }
+  .mil__text {
+    font-size: 14.5px;
+    color: #a8a8a8;
+    line-height: 1.7;
+    margin: 0;
+  }
+  .mil__badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    margin-top: 16px;
+    padding: 6px 14px;
+    background: rgba(228,0,43,0.15);
+    border: 1px solid rgba(228,0,43,0.4);
+    color: #ff4060;
+    font-family: 'Oswald', sans-serif;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+  }
+  .mil__badge span { color: #E4002B; font-size: 14px; }
+
+  /* Quote */
+  .history__quote {
+    text-align: center;
+    max-width: 820px;
+    margin: 100px auto 0;
+    padding: 0 20px;
+  }
+  .history__quote blockquote {
+    font-family: 'Playfair Display', serif;
+    font-style: italic;
+    font-size: clamp(22px, 3vw, 34px);
+    line-height: 1.4;
+    color: #fff;
+    margin: 0 0 16px;
+    position: relative;
+  }
+  .history__quote blockquote::before {
+    content: '"';
+    position: absolute;
+    top: -30px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 80px;
+    color: #E4002B;
+    opacity: 0.5;
+    font-family: 'Playfair Display', serif;
+    line-height: 1;
+  }
+  .history__quote cite {
+    font-style: normal;
+    font-size: 12px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: #888;
+  }
+
+  @media (max-width: 800px) {
+    .history { padding: 80px 0; }
+    .history__timeline::before { left: 12px; }
+    .mil {
+      grid-template-columns: 1fr;
+      gap: 14px;
+      padding-left: 40px;
+    }
+    .mil::before { left: 6px; top: 12px; }
+    .mil--featured::before { left: 4px; }
+    .mil__year {
+      text-align: left;
+      font-size: 24px;
+      margin-top: 0;
+    }
+  }
+</style>

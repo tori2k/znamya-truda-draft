@@ -1,0 +1,345 @@
+---
+const tiers = [
+  {
+    slug: 'base',
+    name: 'Болельщик',
+    price: 500,
+    period: 'в месяц',
+    badge: null,
+    features: [
+      'Членская карта «Знамени»',
+      'Стикерпак и вымпел в подарок',
+      'Скидки у партнёров клуба',
+      'Ранний доступ к мерчу',
+      'Приглашения на встречи с командой',
+    ],
+    cta: 'Вступить',
+  },
+  {
+    slug: 'gold',
+    name: 'Золотой член',
+    price: 1500,
+    period: 'в месяц',
+    badge: '★ Максимум поддержки',
+    featured: true,
+    features: [
+      'Всё из тарифа «Болельщик»',
+      'Именная эксклюзивная карта',
+      'Брендированный мерч (футболка, шарф)',
+      'Проход в VIP-зону на матчах',
+      'Имя на стене благодарности клуба',
+      'Приглашение на закрытые мероприятия',
+    ],
+    cta: 'Стать золотым членом',
+  },
+];
+
+const allocations = [
+  { n: 45, label: 'Инфраструктура стадиона', desc: 'Ремонт трибун, газон, освещение, экипировка' },
+  { n: 30, label: 'Команда и тренерский штаб', desc: 'Зарплаты, транспорт, экипировка' },
+  { n: 15, label: 'Детская школа', desc: 'Тренировки, форма, турниры для юных' },
+  { n: 10, label: 'Медиа и организация матчей', desc: 'Трансляции, фото, безопасность' },
+];
+---
+<section class="member" id="membership">
+  <div class="container-x">
+    <div class="member__head reveal">
+      <div class="sec-tag">Клуб болельщиков</div>
+      <h2 class="member__title">
+        СТАНЬ ЧАСТЬЮ<br/>
+        <span>«ЗНАМЕНИ»</span>
+      </h2>
+      <p class="member__lead">
+        Клуб живёт, когда за него болеют. Членство — это не благотворительность,
+        а участие. Ты получаешь карту, скидки, доступ к событиям —
+        а клуб получает стабильную поддержку, без которой невозможно существовать.
+      </p>
+    </div>
+
+    <!-- Tiers -->
+    <div class="tiers">
+      {tiers.map((t, i) => (
+        <article class:list={['tier', t.featured && 'tier--featured', 'reveal']} style={`transition-delay: ${i * 0.1}s`}>
+          {t.badge && <div class="tier__badge">{t.badge}</div>}
+          <div class="tier__head">
+            <div class="tier__name">{t.name}</div>
+            <div class="tier__price">
+              <span class="tier__price-n">{t.price.toLocaleString('ru-RU')}</span>
+              <span class="tier__price-cur">₽</span>
+              <span class="tier__price-per">{t.period}</span>
+            </div>
+          </div>
+          <ul class="tier__features">
+            {t.features.map((f) => (
+              <li>
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" class="tier__check">
+                  <path d="M20 6L9 17l-5-5"/>
+                </svg>
+                {f}
+              </li>
+            ))}
+          </ul>
+          <button type="button" class:list={['btn', t.featured ? 'btn--red' : 'btn--ghost', 'tier__cta']} data-tier={t.slug}>
+            {t.cta}
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
+          </button>
+        </article>
+      ))}
+    </div>
+
+    <!-- Transparency -->
+    <div class="transparency reveal">
+      <div class="transparency__head">
+        <div class="sec-tag">Прозрачность</div>
+        <h3 class="transparency__title">КУДА ИДУТ<br/>ВЗНОСЫ</h3>
+        <p class="transparency__text">
+          Каждый рубль работает на клуб. Мы публикуем отчёт о расходах
+          ежеквартально — членам он доступен в личном кабинете.
+        </p>
+      </div>
+
+      <div class="alloc">
+        {allocations.map((a, i) => (
+          <div class="alloc__row reveal" style={`transition-delay: ${i * 0.08}s`}>
+            <div class="alloc__n">{a.n}%</div>
+            <div class="alloc__body">
+              <div class="alloc__label">{a.label}</div>
+              <div class="alloc__desc">{a.desc}</div>
+              <div class="alloc__bar">
+                <span style={`width: ${a.n}%`}></span>
+              </div>
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .member {
+    padding: 120px 0;
+    background: linear-gradient(180deg, #0a0a0a, #120000);
+    position: relative;
+  }
+
+  .member__head {
+    max-width: 740px;
+    margin-bottom: 70px;
+  }
+  .member__title {
+    font-family: 'Oswald', sans-serif;
+    font-size: clamp(48px, 7vw, 100px);
+    font-weight: 700;
+    line-height: 0.9;
+    letter-spacing: -0.02em;
+    text-transform: uppercase;
+    color: #fff;
+    margin: 0 0 24px;
+  }
+  .member__title span { color: #E4002B; }
+  .member__lead {
+    font-size: 16px;
+    color: #b0b0b0;
+    line-height: 1.75;
+    max-width: 620px;
+  }
+
+  /* Tiers */
+  .tiers {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 24px;
+    margin-bottom: 120px;
+  }
+
+  .tier {
+    position: relative;
+    padding: 40px 36px;
+    background: #131313;
+    border: 1px solid rgba(255,255,255,0.08);
+    display: flex;
+    flex-direction: column;
+  }
+  .tier--featured {
+    background: linear-gradient(135deg, rgba(228,0,43,0.1), rgba(10,10,10,0.9));
+    border-color: #E4002B;
+    box-shadow: 0 30px 80px rgba(228,0,43,0.2);
+  }
+  .tier--featured::before {
+    content: '';
+    position: absolute;
+    top: -3px; left: -3px; right: -3px;
+    height: 6px;
+    background: #E4002B;
+  }
+
+  .tier__badge {
+    position: absolute;
+    top: 20px; right: 24px;
+    padding: 5px 12px;
+    background: #E4002B;
+    color: #fff;
+    font-family: 'Oswald', sans-serif;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    clip-path: polygon(6px 0, 100% 0, calc(100% - 6px) 100%, 0 100%);
+  }
+
+  .tier__head {
+    padding-bottom: 24px;
+    border-bottom: 1px solid rgba(255,255,255,0.08);
+    margin-bottom: 28px;
+  }
+  .tier__name {
+    font-family: 'Oswald', sans-serif;
+    font-size: 14px;
+    font-weight: 600;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: #E4002B;
+    margin-bottom: 10px;
+  }
+  .tier__price {
+    display: flex;
+    align-items: baseline;
+    gap: 6px;
+    flex-wrap: wrap;
+  }
+  .tier__price-n {
+    font-family: 'Oswald', sans-serif;
+    font-weight: 700;
+    font-size: clamp(48px, 6vw, 72px);
+    letter-spacing: -0.03em;
+    color: #fff;
+    line-height: 1;
+  }
+  .tier__price-cur {
+    font-family: 'Oswald', sans-serif;
+    font-weight: 700;
+    font-size: 30px;
+    color: #fff;
+  }
+  .tier__price-per {
+    font-size: 13px;
+    color: #888;
+    letter-spacing: 1.5px;
+    margin-left: 10px;
+  }
+
+  .tier__features {
+    list-style: none;
+    padding: 0;
+    margin: 0 0 32px;
+    flex: 1;
+  }
+  .tier__features li {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    padding: 10px 0;
+    font-size: 14px;
+    color: #d0d0d0;
+    line-height: 1.5;
+    border-bottom: 1px dashed rgba(255,255,255,0.05);
+  }
+  .tier__features li:last-child { border-bottom: 0; }
+  .tier__check {
+    flex-shrink: 0;
+    color: #E4002B;
+    margin-top: 2px;
+  }
+
+  .tier__cta { align-self: flex-start; }
+
+  /* Transparency */
+  .transparency {
+    display: grid;
+    grid-template-columns: 1fr 1.3fr;
+    gap: 80px;
+    align-items: start;
+  }
+  .transparency__title {
+    font-family: 'Oswald', sans-serif;
+    font-size: clamp(36px, 5vw, 64px);
+    font-weight: 700;
+    line-height: 0.95;
+    letter-spacing: -0.02em;
+    text-transform: uppercase;
+    color: #fff;
+    margin: 0 0 20px;
+  }
+  .transparency__text {
+    font-size: 15px;
+    color: #a8a8a8;
+    line-height: 1.7;
+  }
+
+  .alloc {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+  }
+  .alloc__row {
+    display: grid;
+    grid-template-columns: 110px 1fr;
+    gap: 28px;
+    align-items: center;
+    padding: 16px 0;
+    border-top: 1px solid rgba(255,255,255,0.06);
+  }
+  .alloc__row:first-child { border-top: 0; padding-top: 0; }
+  .alloc__n {
+    font-family: 'Oswald', sans-serif;
+    font-weight: 700;
+    font-size: 44px;
+    letter-spacing: -0.02em;
+    color: #E4002B;
+    line-height: 1;
+  }
+  .alloc__label {
+    font-family: 'Oswald', sans-serif;
+    font-size: 17px;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+    color: #fff;
+    margin-bottom: 4px;
+  }
+  .alloc__desc {
+    font-size: 13px;
+    color: #888;
+    margin-bottom: 12px;
+  }
+  .alloc__bar {
+    height: 4px;
+    background: rgba(255,255,255,0.05);
+    position: relative;
+    overflow: hidden;
+  }
+  .alloc__bar span {
+    display: block;
+    height: 100%;
+    background: linear-gradient(90deg, #E4002B, #ff4060);
+    transition: width 1.5s cubic-bezier(.25,.46,.45,.94);
+  }
+
+  @media (max-width: 900px) {
+    .member { padding: 80px 0; }
+    .tiers { grid-template-columns: 1fr; }
+    .transparency { grid-template-columns: 1fr; gap: 40px; }
+    .alloc__row { grid-template-columns: 80px 1fr; gap: 16px; }
+    .alloc__n { font-size: 34px; }
+  }
+</style>
+
+<script>
+  document.querySelectorAll('[data-tier]').forEach((btn) => {
+    btn.addEventListener('click', () => {
+      const tier = (btn as HTMLElement).dataset.tier;
+      alert(`Оплата через Т-Кассу (${tier}) будет подключена после согласования с клубом.`);
+    });
+  });
+</script>

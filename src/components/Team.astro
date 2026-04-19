@@ -1,0 +1,313 @@
+---
+const coach = {
+  name: 'Александр Данцев',
+  role: 'Главный тренер',
+  photo: null,
+};
+
+const squad = [
+  { num: 1, name: 'Вратарь', role: 'GK' },
+  { num: 4, name: 'Защитник', role: 'DF' },
+  { num: 5, name: 'Защитник', role: 'DF' },
+  { num: 6, name: 'Полузащитник', role: 'MF' },
+  { num: 8, name: 'Полузащитник', role: 'MF' },
+  { num: 9, name: 'Нападающий', role: 'FW' },
+  { num: 10, name: 'Капитан', role: 'MF' },
+  { num: 11, name: 'Нападающий', role: 'FW' },
+];
+---
+<section class="team" id="team">
+  <div class="container-x">
+    <div class="team__head reveal">
+      <div class="sec-tag">Команда</div>
+      <h2 class="team__title">
+        НАША<br/>
+        <span>КОМАНДА</span>
+      </h2>
+      <p class="team__lead">
+        Ребята, которые каждую неделю выходят на поле и защищают честь клуба с 1909 года.
+      </p>
+    </div>
+
+    <!-- Coach -->
+    <div class="coach reveal">
+      <div class="coach__photo">
+        <div class="coach__placeholder">
+          <svg width="80" height="80" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1">
+            <circle cx="12" cy="8" r="4"/>
+            <path d="M4 21c0-4 4-6 8-6s8 2 8 6"/>
+          </svg>
+        </div>
+        <div class="coach__accent"></div>
+      </div>
+      <div class="coach__info">
+        <div class="coach__tag">ГЛАВНЫЙ ТРЕНЕР</div>
+        <h3 class="coach__name">{coach.name}</h3>
+        <p class="coach__text">
+          Руководит командой. Отвечает за игровую модель, подготовку и результат.
+          Работает с составом в межсезонье и по ходу турнира.
+        </p>
+        <div class="coach__meta">
+          <div class="coach__stat">
+            <span class="coach__stat-n">23</span>
+            <span class="coach__stat-l">игрока<br/>в заявке</span>
+          </div>
+          <div class="coach__stat">
+            <span class="coach__stat-n">4</span>
+            <span class="coach__stat-l">матча<br/>сыграно</span>
+          </div>
+          <div class="coach__stat">
+            <span class="coach__stat-n">8</span>
+            <span class="coach__stat-l">очков<br/>набрано</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Squad -->
+    <div class="squad">
+      <div class="squad__head reveal">
+        <h3 class="squad__title">Состав сезона 2025/26</h3>
+        <p class="squad__note">Фото и имена обновятся после старта сезона</p>
+      </div>
+
+      <div class="squad__grid">
+        {squad.map((p, i) => (
+          <article class="player reveal" style={`transition-delay: ${i * 0.06}s`}>
+            <div class="player__photo">
+              <div class="player__num">{p.num}</div>
+              <div class="player__placeholder">
+                <svg width="60" height="60" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1">
+                  <circle cx="12" cy="8" r="4"/>
+                  <path d="M4 21c0-4 4-6 8-6s8 2 8 6"/>
+                </svg>
+              </div>
+            </div>
+            <div class="player__body">
+              <div class="player__role">{p.role}</div>
+              <div class="player__name">{p.name}</div>
+            </div>
+          </article>
+        ))}
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .team {
+    padding: 120px 0;
+    background: #0a0a0a;
+  }
+
+  .team__head {
+    max-width: 720px;
+    margin-bottom: 70px;
+  }
+  .team__title {
+    font-family: 'Oswald', sans-serif;
+    font-size: clamp(48px, 7vw, 100px);
+    font-weight: 700;
+    line-height: 0.9;
+    letter-spacing: -0.02em;
+    text-transform: uppercase;
+    color: #fff;
+    margin: 0 0 24px;
+  }
+  .team__title span {
+    color: #E4002B;
+  }
+  .team__lead {
+    font-size: 16px;
+    color: #a8a8a8;
+    line-height: 1.7;
+    max-width: 560px;
+  }
+
+  /* Coach */
+  .coach {
+    display: grid;
+    grid-template-columns: 320px 1fr;
+    gap: 48px;
+    align-items: center;
+    padding: 40px;
+    background: linear-gradient(135deg, rgba(228,0,43,0.06), rgba(10,10,10,0.8));
+    border: 1px solid rgba(228,0,43,0.2);
+    margin-bottom: 80px;
+    position: relative;
+    overflow: hidden;
+  }
+  .coach::before {
+    content: '';
+    position: absolute;
+    top: -50%; right: -20%;
+    width: 400px; height: 400px;
+    background: radial-gradient(circle, rgba(228,0,43,0.25), transparent 70%);
+    filter: blur(50px);
+  }
+  .coach > * { position: relative; z-index: 1; }
+
+  .coach__photo {
+    aspect-ratio: 1;
+    background: #131313;
+    border: 1px solid rgba(255,255,255,0.08);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    clip-path: polygon(0 0, 100% 0, 100% calc(100% - 20px), calc(100% - 20px) 100%, 0 100%);
+  }
+  .coach__placeholder { color: #333; }
+  .coach__accent {
+    position: absolute;
+    bottom: 0; left: 0;
+    width: 80px; height: 6px;
+    background: #E4002B;
+  }
+
+  .coach__tag {
+    display: inline-block;
+    font-family: 'Oswald', sans-serif;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: #E4002B;
+    margin-bottom: 10px;
+  }
+  .coach__name {
+    font-family: 'Oswald', sans-serif;
+    font-size: clamp(32px, 4vw, 48px);
+    font-weight: 700;
+    letter-spacing: -0.01em;
+    text-transform: uppercase;
+    line-height: 1;
+    margin: 0 0 18px;
+  }
+  .coach__text {
+    font-size: 15px;
+    color: #a8a8a8;
+    line-height: 1.7;
+    margin: 0 0 28px;
+    max-width: 520px;
+  }
+  .coach__meta {
+    display: flex;
+    gap: 36px;
+    padding-top: 24px;
+    border-top: 1px solid rgba(255,255,255,0.08);
+  }
+  .coach__stat { display: flex; flex-direction: column; gap: 4px; }
+  .coach__stat-n {
+    font-family: 'Oswald', sans-serif;
+    font-weight: 700;
+    font-size: 32px;
+    color: #fff;
+    line-height: 1;
+  }
+  .coach__stat-l {
+    font-size: 10px;
+    color: #888;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    line-height: 1.3;
+  }
+
+  /* Squad */
+  .squad__head {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin-bottom: 28px;
+    padding-bottom: 18px;
+    border-bottom: 1px solid rgba(255,255,255,0.08);
+  }
+  .squad__title {
+    font-family: 'Oswald', sans-serif;
+    font-size: 22px;
+    font-weight: 700;
+    letter-spacing: 0.02em;
+    text-transform: uppercase;
+    color: #fff;
+    margin: 0;
+  }
+  .squad__note {
+    font-size: 12px;
+    color: #888;
+    letter-spacing: 1px;
+    margin: 0;
+  }
+
+  .squad__grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 16px;
+  }
+
+  .player {
+    background: #131313;
+    border: 1px solid rgba(255,255,255,0.06);
+    transition: all 0.4s cubic-bezier(.25,.46,.45,.94);
+    cursor: pointer;
+    overflow: hidden;
+  }
+  .player:hover {
+    border-color: #E4002B;
+    transform: translateY(-4px);
+    box-shadow: 0 20px 40px rgba(228,0,43,0.2);
+  }
+  .player__photo {
+    position: relative;
+    aspect-ratio: 3/4;
+    background: linear-gradient(180deg, #1a1a1a 0%, #0a0a0a 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+  }
+  .player__num {
+    position: absolute;
+    top: 12px; right: 16px;
+    font-family: 'Oswald', sans-serif;
+    font-weight: 700;
+    font-size: 64px;
+    color: rgba(228,0,43,0.7);
+    line-height: 1;
+  }
+  .player__placeholder { color: #2a2a2a; }
+
+  .player__body {
+    padding: 16px;
+    border-top: 2px solid #E4002B;
+  }
+  .player__role {
+    font-family: 'Oswald', sans-serif;
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 2.5px;
+    color: #E4002B;
+    margin-bottom: 4px;
+  }
+  .player__name {
+    font-family: 'Oswald', sans-serif;
+    font-size: 14px;
+    font-weight: 600;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    color: #fff;
+  }
+
+  @media (max-width: 900px) {
+    .team { padding: 80px 0; }
+    .coach {
+      grid-template-columns: 1fr;
+      gap: 28px;
+      padding: 28px;
+    }
+    .coach__photo { max-width: 280px; }
+    .coach__meta { gap: 20px; flex-wrap: wrap; }
+    .squad__grid { grid-template-columns: repeat(2, 1fr); }
+  }
+</style>
