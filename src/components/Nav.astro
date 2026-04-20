@@ -4,7 +4,7 @@ const items = [
   { href: '#news', label: 'Новости' },
   { href: '#history', label: 'История' },
   { href: '#team', label: 'Команда' },
-  { href: '#membership', label: 'Клуб' },
+  { href: '#partners', label: 'Партнёры' },
   { href: '#contacts', label: 'Контакты' },
 ];
 ---
@@ -28,7 +28,7 @@ const items = [
       ))}
     </ul>
 
-    <a href="#membership" class="btn btn--red nav__cta">Вступить в клуб</a>
+    <a href="#contacts" class="btn btn--red nav__cta">Связаться</a>
 
     <button class="nav__burger" id="navBurger" aria-label="Меню">
       <span></span><span></span><span></span>
@@ -39,7 +39,7 @@ const items = [
     {items.map((i) => (
       <a href={i.href}>{i.label}</a>
     ))}
-    <a href="#membership" class="btn btn--red">Вступить в клуб</a>
+    <a href="#contacts" class="btn btn--red">Связаться</a>
   </div>
 </nav>
 
