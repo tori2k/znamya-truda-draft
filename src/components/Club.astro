@@ -1,0 +1,385 @@
+---
+const administration = [
+  {
+    role: 'Председатель',
+    name: 'Александр Кузнецов',
+    note: 'Руководство клубом, стратегия развития',
+  },
+  {
+    role: 'Генеральный директор',
+    name: 'Сергей Бондарь',
+    note: 'Операционная деятельность, организация матчей',
+  },
+  {
+    role: 'Главный тренер',
+    name: 'Александр Данцев',
+    note: 'Тренерский штаб, работа с составом',
+  },
+];
+
+const stadiumFacts = [
+  { n: '1914', l: 'год открытия' },
+  { n: '~2 500', l: 'мест' },
+  { n: '110+', l: 'лет истории' },
+];
+
+const details = [
+  { label: 'Полное название', value: 'ФК «Знамя Труда» Орехово-Зуево' },
+  { label: 'Год основания', value: '1909' },
+  { label: 'Лига', value: 'Первенство Федерации футбола Московской области' },
+  { label: 'Домашний стадион', value: 'Стадион «Знамя Труда»' },
+  { label: 'Юридический адрес', value: 'Орехово-Зуево, Московская область' },
+  { label: 'Email', value: 'info@znamyatruda.ru' },
+];
+---
+<section class="club" id="club">
+  <div class="container-x">
+    <div class="club__head reveal">
+      <div class="sec-tag">Клуб</div>
+      <h2 class="club__title">
+        ОРГАНИЗАЦИЯ<br/>
+        <span>«ЗНАМЕНИ»</span>
+      </h2>
+      <p class="club__lead">
+        Кто стоит за клубом, где мы играем и с кем можно связаться
+        по официальным вопросам.
+      </p>
+    </div>
+
+    <!-- АДМИНИСТРАЦИЯ -->
+    <div class="club__sub reveal">
+      <div class="club__sub-head">
+        <span class="club__sub-tag">01 · Администрация</span>
+        <h3 class="club__sub-title">Руководство клуба</h3>
+      </div>
+
+      <div class="admin">
+        {administration.map((a, i) => (
+          <article class="adm reveal" style={`transition-delay: ${i * 0.08}s`}>
+            <div class="adm__num">0{i + 1}</div>
+            <div class="adm__body">
+              <div class="adm__role">{a.role}</div>
+              <h4 class="adm__name">{a.name}</h4>
+              <p class="adm__note">{a.note}</p>
+            </div>
+          </article>
+        ))}
+      </div>
+    </div>
+
+    <!-- СТАДИОН -->
+    <div class="club__sub reveal">
+      <div class="club__sub-head">
+        <span class="club__sub-tag">02 · Стадион</span>
+        <h3 class="club__sub-title">Домашняя арена</h3>
+      </div>
+
+      <div class="stadium">
+        <div class="stadium__visual">
+          <div class="stadium__placeholder">
+            <svg width="80" height="80" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" opacity="0.4">
+              <path d="M2 12c0-4 4-7 10-7s10 3 10 7-4 7-10 7S2 16 2 12z"/>
+              <path d="M2 12h20M12 5v14"/>
+            </svg>
+            <span>Фото стадиона</span>
+          </div>
+          <div class="stadium__badge">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M12 2L9 9l-7 1 5 5-1 7 6-3 6 3-1-7 5-5-7-1z"/>
+            </svg>
+            С 1914 года
+          </div>
+        </div>
+
+        <div class="stadium__info">
+          <h4 class="stadium__name">Стадион «Знамя Труда»</h4>
+          <p class="stadium__text">
+            Один из старейших непрерывно действующих футбольных стадионов России.
+            Открыт в 1914 году — изначально по английскому проекту, с деревянными
+            трибунами и павильоном. На тот момент считался лучшим в стране.
+          </p>
+          <p class="stadium__text">
+            Сегодня — дом ФК «Знамя Труда», место встречи болельщиков,
+            проведения матчей Первенства Московской области.
+          </p>
+
+          <div class="stadium__facts">
+            {stadiumFacts.map((f) => (
+              <div class="fact">
+                <div class="fact__n">{f.n}</div>
+                <div class="fact__l">{f.l}</div>
+              </div>
+            ))}
+          </div>
+
+          <a href="https://yandex.ru/maps/?text=стадион%20Знамя%20Труда%20Орехово-Зуево" target="_blank" rel="noopener" class="btn btn--ghost stadium__cta">
+            Открыть на карте
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 17L17 7M8 7h9v9"/></svg>
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <!-- РЕКВИЗИТЫ -->
+    <div class="club__sub reveal">
+      <div class="club__sub-head">
+        <span class="club__sub-tag">03 · Реквизиты и контакты</span>
+        <h3 class="club__sub-title">Официальные данные</h3>
+      </div>
+
+      <div class="details">
+        {details.map((d, i) => (
+          <div class="dt reveal" style={`transition-delay: ${i * 0.05}s`}>
+            <div class="dt__label">{d.label}</div>
+            <div class="dt__value">{d.value}</div>
+          </div>
+        ))}
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .club {
+    padding: 120px 0;
+    background: #ffffff;
+  }
+
+  .club__head {
+    max-width: 720px;
+    margin-bottom: 80px;
+  }
+  .club__title {
+    font-family: 'Oswald', sans-serif;
+    font-size: clamp(44px, 6vw, 84px);
+    font-weight: 700;
+    line-height: 0.9;
+    letter-spacing: -0.02em;
+    text-transform: uppercase;
+    color: #0a0a0a;
+    margin: 0 0 20px;
+  }
+  .club__title span { color: #E4002B; }
+  .club__lead {
+    font-size: 16px;
+    color: #4a4a4a;
+    line-height: 1.7;
+  }
+
+  /* Sub section */
+  .club__sub {
+    margin-bottom: 70px;
+    padding-bottom: 70px;
+    border-bottom: 1px solid rgba(0,0,0,0.08);
+  }
+  .club__sub:last-child {
+    margin-bottom: 0;
+    padding-bottom: 0;
+    border-bottom: 0;
+  }
+  .club__sub-head {
+    display: flex;
+    align-items: baseline;
+    gap: 20px;
+    margin-bottom: 32px;
+    flex-wrap: wrap;
+  }
+  .club__sub-tag {
+    font-family: 'Oswald', sans-serif;
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: #E4002B;
+  }
+  .club__sub-title {
+    font-family: 'Oswald', sans-serif;
+    font-size: clamp(24px, 3vw, 34px);
+    font-weight: 700;
+    letter-spacing: -0.01em;
+    text-transform: uppercase;
+    color: #0a0a0a;
+    margin: 0;
+  }
+
+  /* Администрация */
+  .admin {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+  }
+  .adm {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: 20px;
+    padding: 28px;
+    background: #fafaf7;
+    border: 1px solid rgba(0,0,0,0.08);
+    transition: all 0.3s;
+  }
+  .adm:hover {
+    border-color: #E4002B;
+    transform: translateY(-3px);
+    box-shadow: 0 15px 30px rgba(228,0,43,0.1);
+  }
+  .adm__num {
+    font-family: 'Oswald', sans-serif;
+    font-weight: 700;
+    font-size: 38px;
+    color: #E4002B;
+    line-height: 1;
+    letter-spacing: -0.02em;
+  }
+  .adm__role {
+    font-family: 'Oswald', sans-serif;
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 2.5px;
+    text-transform: uppercase;
+    color: #6a6a6a;
+    margin-bottom: 6px;
+  }
+  .adm__name {
+    font-family: 'Oswald', sans-serif;
+    font-size: 18px;
+    font-weight: 700;
+    letter-spacing: 0.02em;
+    text-transform: uppercase;
+    color: #0a0a0a;
+    margin: 0 0 10px;
+    line-height: 1.1;
+  }
+  .adm__note {
+    font-size: 13px;
+    color: #4a4a4a;
+    line-height: 1.5;
+    margin: 0;
+  }
+
+  /* Стадион */
+  .stadium {
+    display: grid;
+    grid-template-columns: 1.2fr 1fr;
+    gap: 40px;
+    align-items: stretch;
+  }
+  .stadium__visual {
+    position: relative;
+    aspect-ratio: 4/3;
+    background: linear-gradient(135deg, #f3f1ec 0%, #e8e5dc 100%);
+    border: 1px solid rgba(0,0,0,0.08);
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .stadium__placeholder {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+    color: #c8c6bf;
+    font-family: 'Oswald', sans-serif;
+    font-size: 11px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+  }
+  .stadium__badge {
+    position: absolute;
+    top: 16px; left: 16px;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 12px;
+    background: #E4002B;
+    color: #fff;
+    font-family: 'Oswald', sans-serif;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    clip-path: polygon(0 0, 100% 0, calc(100% - 8px) 100%, 0 100%);
+    padding-right: 16px;
+  }
+
+  .stadium__info { display: flex; flex-direction: column; }
+  .stadium__name {
+    font-family: 'Oswald', sans-serif;
+    font-size: clamp(24px, 3vw, 32px);
+    font-weight: 700;
+    letter-spacing: -0.01em;
+    text-transform: uppercase;
+    color: #0a0a0a;
+    margin: 0 0 16px;
+    line-height: 1;
+  }
+  .stadium__text {
+    font-size: 14.5px;
+    color: #4a4a4a;
+    line-height: 1.7;
+    margin: 0 0 14px;
+  }
+  .stadium__facts {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+    padding: 20px 0;
+    margin: 18px 0 22px;
+    border-top: 1px solid rgba(0,0,0,0.08);
+    border-bottom: 1px solid rgba(0,0,0,0.08);
+  }
+  .fact { display: flex; flex-direction: column; gap: 4px; }
+  .fact__n {
+    font-family: 'Oswald', sans-serif;
+    font-weight: 700;
+    font-size: 24px;
+    color: #E4002B;
+    line-height: 1;
+    letter-spacing: -0.02em;
+  }
+  .fact__l {
+    font-size: 10px;
+    color: #6a6a6a;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+  }
+  .stadium__cta { align-self: flex-start; }
+
+  /* Реквизиты */
+  .details {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 0;
+    border-top: 1px solid rgba(0,0,0,0.08);
+    border-left: 1px solid rgba(0,0,0,0.08);
+  }
+  .dt {
+    padding: 22px 24px;
+    border-right: 1px solid rgba(0,0,0,0.08);
+    border-bottom: 1px solid rgba(0,0,0,0.08);
+    transition: background 0.2s;
+  }
+  .dt:hover { background: #fafaf7; }
+  .dt__label {
+    font-family: 'Oswald', sans-serif;
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: #6a6a6a;
+    margin-bottom: 8px;
+  }
+  .dt__value {
+    font-size: 15px;
+    font-weight: 500;
+    color: #0a0a0a;
+    line-height: 1.4;
+  }
+
+  @media (max-width: 900px) {
+    .club { padding: 80px 0; }
+    .admin { grid-template-columns: 1fr; }
+    .stadium { grid-template-columns: 1fr; gap: 28px; }
+    .details { grid-template-columns: 1fr; }
+  }
+</style>
