@@ -107,7 +107,7 @@ const news = [
 <style>
   .news {
     padding: 120px 0;
-    background: #0a0a0a;
+    background: #fafaf7;
   }
   .news__head { margin-bottom: 48px; }
   .news__head-row {
@@ -124,7 +124,7 @@ const news = [
     line-height: 0.9;
     letter-spacing: -0.02em;
     text-transform: uppercase;
-    color: #fff;
+    color: #0a0a0a;
     margin: 0;
   }
   .news__title span { color: #E4002B; }
@@ -134,13 +134,13 @@ const news = [
     align-items: center;
     gap: 10px;
     padding: 12px 22px;
-    border: 1px solid rgba(255,255,255,0.2);
+    border: 1px solid rgba(0,0,0,0.18);
     font-family: 'Oswald', sans-serif;
     font-size: 12px;
     font-weight: 600;
     letter-spacing: 2px;
     text-transform: uppercase;
-    color: #d0d0d0;
+    color: #2a2a2a;
     text-decoration: none;
     transition: all 0.3s;
     clip-path: polygon(0 0, 100% 0, calc(100% - 10px) 100%, 0 100%);
@@ -168,18 +168,19 @@ const news = [
 
   /* CARD */
   .ncard {
-    background: #131313;
-    border: 1px solid rgba(255,255,255,0.06);
+    background: #ffffff;
+    border: 1px solid rgba(0,0,0,0.08);
     overflow: hidden;
     transition: all 0.4s cubic-bezier(.25,.46,.45,.94);
     cursor: pointer;
     display: flex;
     flex-direction: column;
+    box-shadow: 0 4px 16px rgba(0,0,0,0.04);
   }
   .ncard:hover {
-    border-color: rgba(228,0,43,0.5);
+    border-color: rgba(228,0,43,0.35);
     transform: translateY(-4px);
-    box-shadow: 0 20px 40px rgba(228,0,43,0.12);
+    box-shadow: 0 20px 40px rgba(228,0,43,0.1);
   }
 
   .ncard--featured {
@@ -189,7 +190,7 @@ const news = [
   /* IMAGE */
   .ncard__image {
     position: relative;
-    background: linear-gradient(135deg, #1a1a1a 0%, #0a0a0a 100%);
+    background: linear-gradient(135deg, #f3f1ec 0%, #e8e5dc 100%);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -198,19 +199,19 @@ const news = [
   .ncard__image--featured {
     aspect-ratio: 16/9;
     background:
-      radial-gradient(circle at 70% 30%, rgba(228,0,43,0.3), transparent 60%),
-      linear-gradient(135deg, #2a0010 0%, #0a0a0a 100%);
+      radial-gradient(circle at 70% 30%, rgba(228,0,43,0.15), transparent 60%),
+      linear-gradient(135deg, #ffeef1 0%, #f3f1ec 100%);
   }
   .ncard__image--small {
     flex-direction: row;
     aspect-ratio: 16/10;
   }
   .ncard:hover .ncard__image {
-    background-color: #1f0008;
+    background-color: #fff5f7;
   }
 
   .ncard__placeholder {
-    color: #2a2a2a;
+    color: #c8c6bf;
     transition: transform 0.6s cubic-bezier(.25,.46,.45,.94);
   }
   .ncard:hover .ncard__placeholder { transform: scale(1.08); }
@@ -224,14 +225,14 @@ const news = [
     color: #E4002B;
     letter-spacing: -0.02em;
     line-height: 1;
-    text-shadow: 0 0 40px rgba(228,0,43,0.5);
+    text-shadow: 0 4px 20px rgba(228,0,43,0.25);
   }
 
   .ncard__gradient {
     position: absolute;
     bottom: 0; left: 0; right: 0;
     height: 50%;
-    background: linear-gradient(180deg, transparent, rgba(10,10,10,0.8));
+    background: linear-gradient(180deg, transparent, rgba(255,255,255,0.6));
     pointer-events: none;
   }
 
@@ -264,7 +265,7 @@ const news = [
   }
   .ncard__date {
     font-size: 11px;
-    color: #888;
+    color: #6a6a6a;
     letter-spacing: 1px;
   }
 
@@ -274,7 +275,7 @@ const news = [
     font-weight: 600;
     letter-spacing: -0.01em;
     line-height: 1.25;
-    color: #fff;
+    color: #0a0a0a;
     margin: 0;
     transition: color 0.3s;
   }
@@ -288,7 +289,7 @@ const news = [
 
   .ncard__excerpt {
     font-size: 14px;
-    color: #a8a8a8;
+    color: #4a4a4a;
     line-height: 1.6;
     margin: 0;
     flex: 1;
