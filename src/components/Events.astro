@@ -1,0 +1,200 @@
+---
+const TIMEPAD_URL = 'https://fczt.timepad.ru/events/';
+---
+<section class="events" id="events">
+  <div class="container-x">
+    <div class="events__grid">
+      <div class="events__head reveal">
+        <div class="sec-tag">События клуба</div>
+        <h2 class="events__title">
+          ВСТРЕЧИ,<br/>
+          <span>МАТЧИ,</span><br/>
+          СОБРАНИЯ
+        </h2>
+        <p class="events__lead">
+          Записывайтесь на встречи с командой, открытые тренировки,
+          собрания болельщиков и товарищеские матчи.
+          Регистрация и билеты — через&nbsp;Timepad.
+        </p>
+        <a class="events__cta" href={TIMEPAD_URL} target="_blank" rel="noopener">
+          Все мероприятия
+          <span class="arrow">→</span>
+        </a>
+      </div>
+
+      <div class="events__visual reveal-right">
+        <div class="events__card">
+          <div class="events__card-tag">TIMEPAD</div>
+          <div class="events__card-row">
+            <span class="dot"></span>
+            <div>
+              <div class="events__card-title">Открытые тренировки</div>
+              <div class="events__card-meta">Бесплатно · по расписанию</div>
+            </div>
+          </div>
+          <div class="events__card-row">
+            <span class="dot"></span>
+            <div>
+              <div class="events__card-title">Встречи с командой</div>
+              <div class="events__card-meta">После домашних матчей</div>
+            </div>
+          </div>
+          <div class="events__card-row">
+            <span class="dot"></span>
+            <div>
+              <div class="events__card-title">Собрания болельщиков</div>
+              <div class="events__card-meta">Ежемесячно</div>
+            </div>
+          </div>
+          <div class="events__card-row">
+            <span class="dot"></span>
+            <div>
+              <div class="events__card-title">Товарищеские матчи</div>
+              <div class="events__card-meta">Сезонно</div>
+            </div>
+          </div>
+          <div class="events__card-foot">
+            Полное расписание и регистрация — на странице клуба&nbsp;на&nbsp;Timepad.
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .events {
+    padding: 120px 0;
+    background: #ffffff;
+    position: relative;
+    overflow: hidden;
+  }
+  .events::before {
+    content: '';
+    position: absolute;
+    top: -200px; right: -200px;
+    width: 600px; height: 600px;
+    background: radial-gradient(circle, rgba(228,0,43,0.05), transparent 70%);
+    filter: blur(50px);
+    pointer-events: none;
+  }
+
+  .events__grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 80px;
+    align-items: center;
+  }
+
+  .events__head { max-width: 540px; }
+  .events__title {
+    font-family: 'Onest', sans-serif;
+    font-size: clamp(48px, 7vw, 96px);
+    font-weight: 900;
+    line-height: 0.92;
+    letter-spacing: -0.03em;
+    text-transform: uppercase;
+    margin: 0 0 24px;
+    color: #0a0a0a;
+  }
+  .events__title span { color: #E4002B; }
+  .events__lead {
+    font-size: 16px;
+    color: #4a4a4a;
+    line-height: 1.7;
+    margin: 0 0 36px;
+  }
+
+  .events__cta {
+    display: inline-flex;
+    align-items: center;
+    gap: 14px;
+    padding: 16px 28px;
+    background: #0a0a0a;
+    color: #fff;
+    font-family: 'Onest', sans-serif;
+    font-weight: 700;
+    font-size: 13px;
+    letter-spacing: 2.5px;
+    text-transform: uppercase;
+    text-decoration: none;
+    transition: all 0.3s;
+    border: 1px solid #0a0a0a;
+  }
+  .events__cta:hover {
+    background: #E4002B;
+    border-color: #E4002B;
+    transform: translateX(4px);
+  }
+  .events__cta .arrow {
+    font-size: 18px;
+    transition: transform 0.3s;
+  }
+  .events__cta:hover .arrow { transform: translateX(4px); }
+
+  /* Card */
+  .events__visual { position: relative; }
+  .events__card {
+    background: #fafaf7;
+    border: 1px solid rgba(0,0,0,0.08);
+    padding: 36px 32px;
+    box-shadow: 0 30px 60px rgba(0,0,0,0.06);
+    position: relative;
+  }
+  .events__card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0;
+    width: 100%; height: 6px;
+    background: #E4002B;
+  }
+  .events__card-tag {
+    font-family: 'Onest', sans-serif;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 3px;
+    color: #E4002B;
+    margin-bottom: 26px;
+  }
+  .events__card-row {
+    display: flex;
+    align-items: flex-start;
+    gap: 14px;
+    padding: 14px 0;
+    border-bottom: 1px solid rgba(0,0,0,0.06);
+  }
+  .events__card-row:last-of-type { border-bottom: 0; }
+  .dot {
+    width: 8px; height: 8px;
+    background: #E4002B;
+    margin-top: 7px;
+    flex-shrink: 0;
+    transform: rotate(45deg);
+  }
+  .events__card-title {
+    font-family: 'Onest', sans-serif;
+    font-weight: 700;
+    font-size: 16px;
+    color: #0a0a0a;
+    line-height: 1.3;
+  }
+  .events__card-meta {
+    font-size: 12px;
+    color: #6a6a6a;
+    margin-top: 2px;
+  }
+  .events__card-foot {
+    margin-top: 22px;
+    padding-top: 18px;
+    border-top: 1px dashed rgba(0,0,0,0.12);
+    font-size: 12px;
+    color: #888;
+    line-height: 1.6;
+    font-style: italic;
+  }
+
+  @media (max-width: 900px) {
+    .events { padding: 80px 0; }
+    .events__grid { grid-template-columns: 1fr; gap: 40px; }
+  }
+</style>
