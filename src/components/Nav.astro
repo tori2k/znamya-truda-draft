@@ -51,6 +51,12 @@ const BASE = import.meta.env.BASE_URL.replace(/\/$/, '');
     backdrop-filter: blur(20px);
     background: rgba(255,255,255,0.85);
     border-bottom: 1px solid rgba(0,0,0,0.06);
+    transition: background 0.3s ease, backdrop-filter 0.3s ease, box-shadow 0.3s ease;
+  }
+  .nav--scrolled {
+    background: rgba(255,255,255,0.96);
+    backdrop-filter: blur(24px);
+    box-shadow: 0 2px 20px rgba(0,0,0,0.06);
   }
   .nav__inner {
     display: flex;
@@ -58,14 +64,18 @@ const BASE = import.meta.env.BASE_URL.replace(/\/$/, '');
     justify-content: space-between;
     height: 72px;
     gap: 24px;
+    transition: height 0.3s ease;
   }
+  .nav--scrolled .nav__inner { height: 56px; }
   .nav__logo { text-decoration: none; color: inherit; flex-shrink: 0; }
   .logo { display: flex; align-items: center; gap: 12px; }
   .logo__img {
     height: 48px;
     width: auto;
     display: block;
+    transition: height 0.3s ease;
   }
+  .nav--scrolled .logo__img { height: 36px; }
   .logo__text { display: flex; flex-direction: column; line-height: 1; }
   .logo__name {
     font-family: 'Onest', sans-serif;
@@ -168,4 +178,20 @@ const BASE = import.meta.env.BASE_URL.replace(/\/$/, '');
   mobile?.querySelectorAll('a').forEach((a) => {
     a.addEventListener('click', () => mobile.classList.remove('open'));
   });
+
+  const nav = document.querySelector('.nav');
+  if (nav) {
+    let ticking = false;
+    const onScroll = () => {
+      nav.classList.toggle('nav--scrolled', window.scrollY > 80);
+      ticking = false;
+    };
+    window.addEventListener('scroll', () => {
+      if (!ticking) {
+        window.requestAnimationFrame(onScroll);
+        ticking = true;
+      }
+    }, { passive: true });
+    onScroll();
+  }
 </script>
