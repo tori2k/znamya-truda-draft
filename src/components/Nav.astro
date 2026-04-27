@@ -8,14 +8,13 @@ const items = [
   { href: '#events', label: 'События' },
   { href: '#contacts', label: 'Контакты' },
 ];
+const BASE = import.meta.env.BASE_URL.replace(/\/$/, '');
 ---
 <nav class="nav">
   <div class="container-x nav__inner">
     <a href="#" class="nav__logo" aria-label="ФК Знамя Труда — Главная">
       <div class="logo">
-        <div class="logo__shield">
-          <span class="logo__year">1909</span>
-        </div>
+        <img src={`${BASE}/logo.png`} alt="ФК Знамя Труда" class="logo__img" />
         <div class="logo__text">
           <span class="logo__name">Знамя Труда</span>
           <span class="logo__city">Орехово-Зуево</span>
@@ -62,22 +61,10 @@ const items = [
   }
   .nav__logo { text-decoration: none; color: inherit; flex-shrink: 0; }
   .logo { display: flex; align-items: center; gap: 12px; }
-  .logo__shield {
-    position: relative;
-    width: 44px; height: 52px;
-    background: #E4002B;
-    clip-path: polygon(0 0, 100% 0, 100% 70%, 50% 100%, 0 70%);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
-  .logo__year {
-    font-family: 'Onest', sans-serif;
-    font-weight: 700;
-    font-size: 11px;
-    letter-spacing: 1px;
-    color: #fff;
-    margin-top: -6px;
+  .logo__img {
+    height: 48px;
+    width: auto;
+    display: block;
   }
   .logo__text { display: flex; flex-direction: column; line-height: 1; }
   .logo__name {

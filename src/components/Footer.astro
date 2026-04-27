@@ -1,12 +1,11 @@
 ---
+const BASE = import.meta.env.BASE_URL.replace(/\/$/, '');
 ---
 <footer class="footer">
   <div class="container-x footer__inner">
     <div class="footer__brand">
       <div class="logo">
-        <div class="logo__shield">
-          <span class="logo__year">1909</span>
-        </div>
+        <img src={`${BASE}/logo.png`} alt="ФК Знамя Труда" class="logo__img" />
         <div class="logo__text">
           <span class="logo__name">ЗНАМЯ ТРУДА</span>
           <span class="logo__city">Орехово-Зуево</span>
@@ -66,24 +65,14 @@
     padding-bottom: 50px;
   }
 
-  .footer__brand .logo { margin-bottom: 16px; }
-  .footer__brand .logo__shield {
-    width: 44px; height: 52px;
-    background: #E4002B;
-    clip-path: polygon(0 0, 100% 0, 100% 70%, 50% 100%, 0 70%);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
-  .footer__brand .logo__shield .logo__year {
-    font-family: 'Onest', sans-serif;
-    font-weight: 700;
-    font-size: 11px;
-    color: #fff;
-    margin-top: -6px;
-  }
   .footer__brand .logo {
-    display: flex; align-items: center; gap: 12px;
+    display: flex; align-items: center; gap: 14px;
+    margin-bottom: 16px;
+  }
+  .footer__brand .logo__img {
+    height: 56px;
+    width: auto;
+    display: block;
   }
   .footer__brand .logo__text { display: flex; flex-direction: column; line-height: 1; }
   .footer__brand .logo__name {
