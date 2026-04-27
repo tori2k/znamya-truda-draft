@@ -1,4 +1,7 @@
 ---
+const BASE = import.meta.env.BASE_URL.replace(/\/$/, '');
+const LOGO = `${BASE}/logo.png`;
+
 const nextMatch = {
   league: 'Первенство ФФМО · Группа А',
   date: '2026-04-26',
@@ -32,7 +35,9 @@ const lastMatch = {
 
         <div class="match__teams">
           <div class="team">
-            <div class="team__crest team__crest--home">{nextMatch.home.short}</div>
+            <div class="team__crest team__crest--logo">
+              <img src={LOGO} alt={nextMatch.home.name} />
+            </div>
             <div class="team__name">{nextMatch.home.name}</div>
             <div class="team__city">{nextMatch.home.city}</div>
           </div>
@@ -74,7 +79,9 @@ const lastMatch = {
 
         <div class="match__score-row">
           <div class="score-team">
-            <div class="score-team__crest score-team__crest--home">{lastMatch.home.short}</div>
+            <div class="score-team__crest score-team__crest--logo">
+              <img src={LOGO} alt={lastMatch.home.name} />
+            </div>
             <div class="score-team__name">{lastMatch.home.name}</div>
           </div>
           <div class="score">
@@ -201,6 +208,17 @@ const lastMatch = {
     color: #E4002B;
     border-color: #fff;
   }
+  .team__crest--logo {
+    background: transparent;
+    border: 0;
+    clip-path: none;
+    width: 84px; height: 84px;
+  }
+  .team__crest--logo img {
+    width: 100%; height: 100%;
+    object-fit: contain;
+    display: block;
+  }
   .team__name {
     font-family: 'Onest', sans-serif;
     font-size: 18px;
@@ -292,6 +310,17 @@ const lastMatch = {
     font-weight: 700;
     font-size: 14px;
     color: #E4002B;
+  }
+  .score-team__crest--logo {
+    background: transparent;
+    border: 0;
+    clip-path: none;
+    width: 58px; height: 58px;
+  }
+  .score-team__crest--logo img {
+    width: 100%; height: 100%;
+    object-fit: contain;
+    display: block;
   }
   .score-team__crest--home {
     background: #E4002B;
