@@ -1,0 +1,43 @@
+---
+const phrase = '1909 ◆ ОРЕХОВО-ЗУЕВО ◆ 1909 ◆ СТАРЕЙШИЙ ФУТБОЛЬНЫЙ КЛУБ РОССИИ ◆ 1909 ◆ WE ARE FAMILY ◆ ';
+---
+<section class="marquee1909" aria-hidden="true">
+  <div class="marquee1909__track">
+    <span class="marquee1909__chunk">{phrase}{phrase}{phrase}{phrase}</span>
+    <span class="marquee1909__chunk">{phrase}{phrase}{phrase}{phrase}</span>
+  </div>
+</section>
+
+<style>
+  .marquee1909 {
+    background: #0e0e0e;
+    height: 80px;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    position: relative;
+  }
+  .marquee1909__track {
+    display: flex;
+    width: max-content;
+    animation: marquee1909-scroll 40s linear infinite;
+    will-change: transform;
+  }
+  .marquee1909__chunk {
+    font-family: 'Onest', sans-serif;
+    font-weight: 900;
+    font-size: clamp(36px, 5vw, 56px);
+    letter-spacing: -0.02em;
+    color: #ffffff;
+    line-height: 1;
+    white-space: nowrap;
+    padding-right: 0;
+  }
+  @keyframes marquee1909-scroll {
+    0%   { transform: translateX(0); }
+    100% { transform: translateX(-50%); }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .marquee1909__track { animation: none; }
+  }
+</style>
