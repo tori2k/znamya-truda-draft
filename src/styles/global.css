@@ -64,6 +64,9 @@ body {
   clip-path: polygon(16px 0, 100% 0, 100% 100%, 0 100%);
 }
 
+.section-clip-bottom { clip-path: polygon(0 0, 100% 0, 100% calc(100% - 40px), 0 100%); }
+.section-clip-top    { clip-path: polygon(0 40px, 100% 0, 100% 100%, 0 100%); }
+
 .sec-tag {
   display: inline-flex;
   align-items: center;
