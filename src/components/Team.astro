@@ -205,7 +205,10 @@ const groups = [
     object-fit: cover;
     object-position: center top;
     display: block;
+    filter: grayscale(0.5) saturate(0.85);
+    transition: filter 0.5s ease;
   }
+  .staff__card:hover .staff__photo img { filter: none; }
   .staff__accent {
     position: absolute;
     bottom: 0; left: 0;
@@ -321,7 +324,10 @@ const groups = [
     object-fit: cover;
     object-position: center top;
     display: block;
+    filter: grayscale(0.5) saturate(0.85);
+    transition: filter 0.5s ease;
   }
+  .player:hover .player__photo img { filter: none; }
   .player__num {
     position: absolute;
     top: 10px; right: 14px;
