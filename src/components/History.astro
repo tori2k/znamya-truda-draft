@@ -3,17 +3,37 @@ const milestones = [
   {
     year: '1909',
     title: 'Основание',
-    text: 'Управляющий Морозовской мануфактуры Гарри Чарнок регистрирует устав «Клуба спорта „Орехово"». Первая форма — бело-голубая, скопированная с английского «Блэкбёрн Роверс».',
+    text: 'Управляющий Морозовской мануфактуры Гарри Чарнок регистрирует устав «Клуба спорта „Орехово"». Устав утвердили 16 ноября 1909 года. Первая форма — бело-голубая, скопированная с английского «Блэкбёрн Роверс».',
   },
   {
     year: '1910–1913',
     title: 'Четыре титула подряд',
-    text: 'Клуб становится чемпионом Москвы четыре сезона подряд — в эпоху, когда Москва была центром футбола страны.',
+    text: 'Клуб становится чемпионом Московской футбольной лиги четыре сезона подряд — в эпоху, когда Москва была центром футбола страны.',
   },
   {
     year: '1914',
     title: 'Свой стадион',
-    text: 'Открыт стадион «Знамя Труда» — один из старейших непрерывно действующих футбольных стадионов России. На тот момент считался лучшим в стране.',
+    text: '7 апреля 1914 года состоялось открытие стадиона «Знамя Труда» — одного из старейших в России. По общему мнению, это был лучший футбольный плац Российской империи.',
+  },
+  {
+    year: '1944',
+    title: 'Снова чемпионы',
+    text: '29 октября «Красное Знамя» разгромило Серпухов со счётом 4:1 в финале первенства Московской области и завоевало чемпионский титул.',
+  },
+  {
+    year: '1951',
+    title: 'Долгожданный титул',
+    text: '3 июля в финале Кубка Московской области текстильщики из Орехова обыграли команду Ступино со счётом 1:0.',
+  },
+  {
+    year: '1955',
+    title: 'Повторение успеха',
+    text: '1 октября «Красное знамя» одержало победу над «Энергией» (Кашира) со счётом 8:0 и стало двукратным обладателем Кубка Московской области.',
+  },
+  {
+    year: '1960',
+    title: 'Чемпион Европы',
+    text: 'Воспитанник клуба Юрий Ковалёв стал частью легендарной команды, выигравшей Кубок Европы в 1960 году.',
   },
   {
     year: '1962',
@@ -22,9 +42,34 @@ const milestones = [
     featured: true,
   },
   {
+    year: '1993',
+    title: 'Первая лига',
+    text: 'Впервые в новейшей российской истории орехово-зуевская команда взяла старт в соревнованиях первого дивизиона.',
+  },
+  {
+    year: '1998',
+    title: '«Спартак» — чемпион',
+    text: '«Спартак-Орехово» стал победителем Второй лиги, уступив всего лишь единожды в сезоне.',
+  },
+  {
+    year: '2004',
+    title: 'Трагедия',
+    text: '27 мая произошла страшная автокатастрофа. Автобус с командой, направлявшийся на матч в Щёлково, столкнулся с контейнеровозом. В результате аварии погибло 9 человек: 4 футболиста и 5 сотрудников клуба. Память о них клуб бережно хранит.',
+  },
+  {
+    year: '2006',
+    title: 'Возвращение в профессионалы',
+    text: '«Знамя Труда» стало победителем третьего дивизиона в зоне «Московская область», группа «А», и вернулось в профессиональный футбол.',
+  },
+  {
     year: '2025',
+    title: 'Неудачное объединение',
+    text: 'В январе 2025 года заключено концессионное соглашение с клубом «Композит» (Павловский Посад). Название «Знамя Труда» сохранено, но задача выйти в дивизион «Серебро» Второй лиги не выполнена — команда заняла пятое место.',
+  },
+  {
+    year: '2026',
     title: 'Новая глава',
-    text: 'Клуб возвращается к своим корням — в футбол любительский, близкий к болельщикам. Играет в Первенстве Федерации футбола Московской области.',
+    text: 'В январе 2026 года администрация Орехово-Зуево разорвала концессионное соглашение, и клуб вновь перешёл в муниципальную собственность. Сезон-2026 команда проведёт в Первенстве Федерации футбола Московской области.',
   },
 ];
 ---
@@ -44,10 +89,17 @@ const milestones = [
 
     <div class="history__timeline">
       {milestones.map((m, i) => (
-        <div class:list={['mil', m.featured && 'mil--featured']} style={`--i: ${i}`}>
-          <div class="mil__year">{m.year}</div>
-          <div class="mil__body">
-            <h3 class="mil__title">{m.title}</h3>
+        <details class:list={['mil', m.featured && 'mil--featured']} style={`--i: ${i}`} open={m.featured}>
+          <summary class="mil__sum">
+            <div class="mil__year">{m.year}</div>
+            <div class="mil__body">
+              <h3 class="mil__title">{m.title}</h3>
+              <span class="mil__toggle" aria-hidden="true">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M6 9l6 6 6-6"/></svg>
+              </span>
+            </div>
+          </summary>
+          <div class="mil__content">
             <p class="mil__text">{m.text}</p>
             {m.featured && (
               <div class="mil__badge">
@@ -55,14 +107,14 @@ const milestones = [
               </div>
             )}
           </div>
-        </div>
+        </details>
       ))}
     </div>
 
     <div class="history__quote reveal">
       <blockquote>
         «Есть клубы, которые рождаются на миг. А есть те,
-        что идут через эпохи. Мы из вторых.»
+        что идут через эпохи. Мы из вторых»
       </blockquote>
       <cite>— болельщик «Знамени Труда»</cite>
     </div>
@@ -121,15 +173,12 @@ const milestones = [
   }
 
   .mil {
-    display: grid;
-    grid-template-columns: 160px 1fr;
-    gap: 60px;
-    padding: 28px 0;
+    padding: 14px 0;
     position: relative;
     opacity: 0;
     transform: translateY(20px);
     animation: milIn 0.8s cubic-bezier(.25,.46,.45,.94) forwards;
-    animation-delay: calc(var(--i) * 0.12s);
+    animation-delay: calc(var(--i) * 0.08s);
   }
   @keyframes milIn {
     to { opacity: 1; transform: translateY(0); }
@@ -138,12 +187,13 @@ const milestones = [
     content: '';
     position: absolute;
     left: 174px;
-    top: 38px;
+    top: 36px;
     width: 14px; height: 14px;
     background: #ffffff;
     border: 3px solid #E4002B;
     border-radius: 50%;
     z-index: 2;
+    transition: all 0.3s;
   }
   .mil--featured::before {
     background: #E4002B;
@@ -151,24 +201,46 @@ const milestones = [
     width: 18px; height: 18px;
     left: 172px;
   }
+  .mil[open]::before {
+    background: #E4002B;
+  }
+
+  /* summary — кликабельная шапка карточки */
+  .mil__sum {
+    display: grid;
+    grid-template-columns: 160px 1fr;
+    gap: 60px;
+    cursor: pointer;
+    list-style: none;
+    user-select: none;
+  }
+  .mil__sum::-webkit-details-marker { display: none; }
 
   .mil__year {
     font-family: 'Onest', sans-serif;
     font-weight: 700;
-    font-size: 32px;
+    font-size: 30px;
     letter-spacing: 0.02em;
     color: #E4002B;
     text-align: right;
-    padding-right: 0;
     line-height: 1;
-    margin-top: 30px;
+    margin-top: 18px;
   }
 
   .mil__body {
     background: #fafaf7;
     border: 1px solid rgba(0,0,0,0.08);
-    padding: 24px 28px;
+    padding: 18px 28px;
     position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    transition: all 0.3s;
+  }
+  .mil__sum:hover .mil__body {
+    border-color: rgba(228,0,43,0.4);
+    background: #fff;
   }
   .mil--featured .mil__body {
     background: linear-gradient(135deg, rgba(228,0,43,0.06), #ffffff);
@@ -177,12 +249,39 @@ const milestones = [
   }
   .mil__title {
     font-family: 'Onest', sans-serif;
-    font-size: 22px;
+    font-size: 19px;
     font-weight: 700;
     text-transform: uppercase;
     letter-spacing: 0.02em;
     color: #0a0a0a;
-    margin: 0 0 10px;
+    margin: 0;
+    flex: 1;
+  }
+  .mil__toggle {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 28px; height: 28px;
+    color: #E4002B;
+    transition: transform 0.3s ease;
+    flex-shrink: 0;
+  }
+  .mil[open] .mil__toggle {
+    transform: rotate(180deg);
+  }
+
+  /* раскрывающееся содержимое */
+  .mil__content {
+    margin-top: 12px;
+    margin-left: 220px;
+    padding: 20px 28px;
+    background: #ffffff;
+    border-left: 3px solid #E4002B;
+    animation: milContent 0.4s ease;
+  }
+  @keyframes milContent {
+    from { opacity: 0; transform: translateY(-6px); }
+    to { opacity: 1; transform: translateY(0); }
   }
   .mil__text {
     font-size: 14.5px;
@@ -246,17 +345,25 @@ const milestones = [
   @media (max-width: 800px) {
     .history { padding: 80px 0; }
     .history__timeline::before { left: 12px; }
-    .mil {
-      grid-template-columns: 1fr;
-      gap: 14px;
-      padding-left: 40px;
-    }
-    .mil::before { left: 6px; top: 12px; }
+    .mil { padding-left: 40px; }
+    .mil::before { left: 6px; top: 26px; }
     .mil--featured::before { left: 4px; }
+    .mil__sum {
+      grid-template-columns: 1fr;
+      gap: 8px;
+    }
     .mil__year {
       text-align: left;
-      font-size: 24px;
+      font-size: 22px;
       margin-top: 0;
+    }
+    .mil__body {
+      padding: 14px 18px;
+    }
+    .mil__title { font-size: 16px; }
+    .mil__content {
+      margin-left: 0;
+      padding: 16px 18px;
     }
   }
 </style>

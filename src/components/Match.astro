@@ -3,22 +3,22 @@ const BASE = import.meta.env.BASE_URL.replace(/\/$/, '');
 const LOGO = `${BASE}/logo.png`;
 
 const nextMatch = {
-  league: 'Первенство ФФМО · Группа А',
-  date: '2026-04-26',
-  dateText: '26 апреля · сб',
-  time: '15:00',
-  home: { name: 'Знамя Труда', city: 'Орехово-Зуево', short: 'ЗНМ' },
-  away: { name: 'Олимп', city: 'Долгопрудный', short: 'ОЛМ' },
-  venue: 'Стадион «Знамя Труда», Орехово-Зуево',
-  isHome: true,
+  league: 'ФФМО · Б-2 · 2 тур',
+  date: '2026-05-02',
+  dateText: '2 мая · пт',
+  time: '17:00',
+  home: { name: 'Восток-Кристалл', city: 'Электросталь', short: 'ВКР' },
+  away: { name: 'Знамя Труда', city: 'Орехово-Зуево', short: 'ЗНМ' },
+  venue: 'Стадион «Восток», Электросталь',
+  isHome: false,
 };
 
 const lastMatch = {
-  league: 'Первенство ФФМО · Группа А · 4 тур',
-  date: '2026-04-12',
-  dateText: '12 апреля',
-  home: { name: 'Знамя Труда', short: 'ЗНМ', score: 2 },
-  away: { name: 'СШОР-Зоркий', short: 'ЗОР', score: 1 },
+  league: 'ФФМО · Б-2 · 1 тур',
+  date: '2026-04-26',
+  dateText: '26 апреля',
+  home: { name: 'Знамя Труда', short: 'ЗНМ', score: 3 },
+  away: { name: 'ФК НЕО', short: 'НЕО', score: 1 },
   result: 'win',
 };
 ---
@@ -35,9 +35,13 @@ const lastMatch = {
 
         <div class="match__teams">
           <div class="team">
-            <div class="team__crest team__crest--logo">
-              <img src={LOGO} alt={nextMatch.home.name} />
-            </div>
+            {nextMatch.home.name === 'Знамя Труда' ? (
+              <div class="team__crest team__crest--logo">
+                <img src={LOGO} alt={nextMatch.home.name} />
+              </div>
+            ) : (
+              <div class="team__crest">{nextMatch.home.short}</div>
+            )}
             <div class="team__name">{nextMatch.home.name}</div>
             <div class="team__city">{nextMatch.home.city}</div>
           </div>
@@ -49,7 +53,13 @@ const lastMatch = {
           </div>
 
           <div class="team">
-            <div class="team__crest">{nextMatch.away.short}</div>
+            {nextMatch.away.name === 'Знамя Труда' ? (
+              <div class="team__crest team__crest--logo">
+                <img src={LOGO} alt={nextMatch.away.name} />
+              </div>
+            ) : (
+              <div class="team__crest">{nextMatch.away.short}</div>
+            )}
             <div class="team__name">{nextMatch.away.name}</div>
             <div class="team__city">{nextMatch.away.city}</div>
           </div>

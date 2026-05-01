@@ -7,52 +7,53 @@ const staff = [
     name: 'Роман Федотов',
     role: 'Главный тренер',
     photo: '/team/fedotov.jpg',
-    bio: 'Воспитанник клуба, отыграл 7 сезонов в основном составе.',
+    bio: 'Воспитанник клуба, 7 сезонов провёл в качестве игрока. В 2025 году входил в тренерский штаб. С 2026 года — главный тренер.',
   },
   {
     name: 'Дмитрий Пинин',
     role: 'Тренер',
     photo: '/team/pinin.jpg',
-    bio: null,
-  },
-  {
-    name: 'Александр Кузнецов',
-    role: 'Директор клуба',
-    photo: '/team/kuznetsov.jpg',
-    bio: null,
+    bio: 'Более 280 матчей за клуб, 9 сезонов в качестве игрока. Победитель Второй лиги в 1998 году. С 2015 года входит в тренерский штаб.',
   },
 ];
 
-// Сокращение амплуа
-const r = (full: string) => ({
-  'Вратарь': 'GK',
-  'Защитник': 'DF',
-  'Полузащитник': 'MF',
-  'Нападающий': 'FW',
-} as Record<string, string>)[full] || full;
+// Склонение возраста
+const ageWord = (n: number): string => {
+  const mod10  = n % 10;
+  const mod100 = n % 100;
+  if (mod100 >= 11 && mod100 <= 14) return 'лет';
+  if (mod10 === 1) return 'год';
+  if (mod10 >= 2 && mod10 <= 4) return 'года';
+  return 'лет';
+};
 
-// Состав ФК «Знамя Труда» — данные с ffmo.ru
+// Состав ФК «Знамя Труда» — сезон 2026
+// num: null означает «подписан, но не заявлен» (без номера)
 const squad = [
   { num:  1, last: 'Заборовский', first: 'Иван',      age: 21, role: 'Вратарь',      photo: '/team/zaborovsky.jpg' },
-  { num:  2, last: 'Чикин',       first: 'Александр', age: 19, role: 'Защитник',     photo: null },
+  { num:  3, last: 'Чикин',       first: 'Александр', age: 19, role: 'Защитник',     photo: '/team/chikin.jpg' },
   { num:  5, last: 'Копылов',     first: 'Максим',    age: 22, role: 'Защитник',     photo: '/team/kopylov.jpg' },
   { num:  6, last: 'Лёвин',       first: 'Александр', age: 34, role: 'Нападающий',   photo: '/team/levin.jpg' },
-  { num:  7, last: 'Шлепанов',    first: 'Даниил',    age: 37, role: 'Нападающий',   photo: null },
+  { num:  7, last: 'Шлепанов',    first: 'Даниил',    age: 37, role: 'Нападающий',   photo: '/team/shlepanov.jpg' },
   { num:  8, last: 'Коробов',     first: 'Никита',    age: 26, role: 'Полузащитник', photo: '/team/korobov.jpg' },
   { num: 10, last: 'Урхов',       first: 'Роман',     age: 30, role: 'Полузащитник', photo: '/team/urkhov.jpg' },
   { num: 11, last: 'Субботин',    first: 'Евгений',   age: 26, role: 'Полузащитник', photo: '/team/subbotin.jpg' },
   { num: 13, last: 'Любченко',    first: 'Олег',      age: 20, role: 'Защитник',     photo: '/team/lyubchenko.jpg' },
+  { num: 14, last: 'Белоцерковский', first: 'Артём',  age: 18, role: 'Защитник',     photo: '/team/belotserkovsky.jpg' },
+  { num: 16, last: 'Каминецкий',  first: 'Михаил',    age: 18, role: 'Вратарь',      photo: '/team/kaminetsky.jpg' },
   { num: 17, last: 'Канаев',      first: 'Михаил',    age: 36, role: 'Полузащитник', photo: '/team/kanaev.jpg' },
-  { num: 19, last: 'Степанов',    first: 'Александр', age: 27, role: 'Полузащитник', photo: null },
+  { num: 19, last: 'Степанов',    first: 'Александр', age: 27, role: 'Полузащитник', photo: '/team/stepanov.jpg' },
   { num: 20, last: 'Малания',     first: 'Диего',     age: 35, role: 'Защитник',     photo: '/team/malania.jpg' },
   { num: 22, last: 'Харланов',    first: 'Ярослав',   age: 28, role: 'Защитник',     photo: '/team/kharlanov.jpg' },
-  { num: 23, last: 'Каминецкий',  first: 'Михаил',    age: 18, role: 'Вратарь',      photo: null },
   { num: 27, last: 'Бекулов',     first: 'Сагит',     age: 26, role: 'Защитник',     photo: '/team/bekulov.jpg' },
-  { num: 71, last: 'Марков',      first: 'Владимир',  age: 28, role: 'Полузащитник', photo: null },
-  { num: 77, last: 'Сёмушкин',    first: 'Никита',    age: 20, role: 'Полузащитник', photo: null },
+  { num: 31, last: 'Крупинов',    first: 'Дмитрий',   age: 30, role: 'Вратарь',      photo: null },
+  { num: 71, last: 'Марков',      first: 'Владимир',  age: 28, role: 'Полузащитник', photo: '/team/markov.jpg' },
+  { num: 77, last: 'Сёмушкин',    first: 'Никита',    age: 20, role: 'Полузащитник', photo: '/team/semushkin.png' },
   { num: 88, last: 'Черкасов',    first: 'Данила',    age: 25, role: 'Полузащитник', photo: '/team/cherkasov.jpg' },
   { num: 93, last: 'Денисов',     first: 'Андрей',    age: 32, role: 'Защитник',     photo: null },
   { num: 97, last: 'Герасимов',   first: 'Иван',      age: 21, role: 'Защитник',     photo: '/team/gerasimov.jpg' },
+  { num: null, last: 'Клепча',    first: 'Владимир',  age: 20, role: 'Нападающий',   photo: null },
+  { num: null, last: 'Лопанов',   first: 'Никита',    age: 19, role: 'Нападающий',   photo: null },
 ];
 
 const groups = [
@@ -71,7 +72,7 @@ const groups = [
         <span>КОМАНДА</span>
       </h2>
       <p class="team__lead">
-        Тренерский штаб и основной состав «Знамени Труда» — сезон&nbsp;2025/26, Лига&nbsp;Б-2 ФФМО.
+        <strong>Больше чем клуб, это история.</strong> Тренерский штаб и основной состав «Знамени Труда» — сезон&nbsp;2026.
       </p>
     </div>
 
@@ -105,7 +106,7 @@ const groups = [
     <div class="squad">
       <div class="squad__head reveal">
         <h3 class="squad__title">Основной состав</h3>
-        <p class="squad__note">{squad.length} игроков · сезон 2025/26</p>
+        <p class="squad__note">{squad.length} игроков · сезон 2026</p>
       </div>
 
       {groups.map((g) => (
@@ -114,8 +115,8 @@ const groups = [
           <div class="squad__grid">
             {g.items.map((p, i) => (
               <article class="player reveal" style={`transition-delay: ${i * 0.04}s`}>
+                <div class="player__num-tag">{p.num !== null ? `#${p.num}` : 'NEW'}</div>
                 <div class="player__photo">
-                  <div class="player__num">{p.num}</div>
                   {p.photo ? (
                     <img src={asset(p.photo)} alt={`${p.last} ${p.first}`} loading="lazy" />
                   ) : (
@@ -128,7 +129,7 @@ const groups = [
                   )}
                 </div>
                 <div class="player__body">
-                  <div class="player__role">{r(p.role)} · {p.age} лет</div>
+                  <div class="player__role">{p.role} · {p.age} {ageWord(p.age)}</div>
                   <div class="player__name">
                     <span class="player__first">{p.first}</span>
                     <span class="player__last">{p.last}</span>
@@ -298,6 +299,7 @@ const groups = [
   }
 
   .player {
+    position: relative;
     background: #ffffff;
     border: 1px solid rgba(0,0,0,0.08);
     transition: all 0.4s cubic-bezier(.25,.46,.45,.94);
@@ -308,6 +310,20 @@ const groups = [
     border-color: #E4002B;
     transform: translateY(-4px);
     box-shadow: 0 20px 40px rgba(228,0,43,0.15);
+  }
+  .player__num-tag {
+    position: absolute;
+    top: 10px; left: 10px;
+    z-index: 3;
+    background: #E4002B;
+    color: #ffffff;
+    font-family: 'Onest', sans-serif;
+    font-weight: 700;
+    font-size: 14px;
+    letter-spacing: 0.5px;
+    padding: 4px 10px;
+    line-height: 1;
+    box-shadow: 0 4px 12px rgba(228,0,43,0.35);
   }
   .player__photo {
     position: relative;
@@ -327,17 +343,6 @@ const groups = [
     transition: transform 0.5s ease;
   }
   .player:hover .player__photo img { transform: scale(1.04); }
-  .player__num {
-    position: absolute;
-    top: 10px; right: 14px;
-    font-family: 'Onest', sans-serif;
-    font-weight: 900;
-    font-size: 56px;
-    color: rgba(255,255,255,0.95);
-    text-shadow: 0 2px 12px rgba(0,0,0,0.4);
-    line-height: 1;
-    z-index: 2;
-  }
   .player__placeholder { color: #c8c6bf; }
 
   .player__body {
