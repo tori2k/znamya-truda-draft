@@ -1,9 +1,10 @@
 ---
 number: 7
-lastName: "Шлепанов"
-firstName: "Даниил"
+lastName: Шлепанов
+firstName: Даниил
 age: 37
 role: Нападающий
-photo: "../../../public/team/shlepanov.jpg"
+photo: ../../../public/team/shlepanov.jpg
 order: 100
+showName: true
 ---
