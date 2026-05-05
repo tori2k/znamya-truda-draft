@@ -1,7 +1,7 @@
 ---
 title: Уверенное начало сезона!
 date: 2026-04-25
-category: Команда
+category: Матчи
 excerpt: Новый сезон для «Знамени Труда» начался с настоящего праздника футбола!
 image: /news/nerxapz1f4hcaxsxizmg9llixtkh8rixp3p-qirbw-or_m4lfrvvj3zjodf18zh5h9bcih_yp9vlmckg5bvmx3p3.jpg
 featured: true
