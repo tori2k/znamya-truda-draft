@@ -1,9 +1,12 @@
 /**
  * Клиент TimePad API. Тянет ближайший матч ФК «Знамя Труда».
  *
- * Токен и ID орги — в env-переменных TIMEPAD_TOKEN, TIMEPAD_ORG_ID.
- * Если их нет (например, на CI без секретов) — возвращаем null,
- * Match.astro подставит fallback-данные.
+ * Идёт через Cloudflare Worker-прокси: TimePad API режет запросы с
+ * GitHub Actions IP-диапазона (403), поэтому фетч проксируется через CF.
+ * Токен и org_id живут в Secrets Worker'а — в этот код они не попадают.
+ *
+ * URL прокси задаётся через переменную TIMEPAD_PROXY_URL. Если она пуста —
+ * возвращаем [] и Match.astro упадёт в fallback-карточку.
  */
 
 export interface TimepadEvent {
@@ -19,33 +22,18 @@ export interface TimepadEvent {
   descriptionShort: string;
 }
 
-const API_BASE = 'https://api.timepad.ru/v1';
-
 export async function fetchUpcomingEvents(): Promise<TimepadEvent[]> {
-  // На сервере (build-time) берём из process.env. Если нет — пропускаем,
-  // чтобы Match.astro отрисовался на fallback-данных.
-  const token = process.env.TIMEPAD_TOKEN;
-  const orgId = process.env.TIMEPAD_ORG_ID;
+  const proxyUrl = process.env.TIMEPAD_PROXY_URL;
 
-  if (!token || !orgId) {
-    console.warn('[timepad] TIMEPAD_TOKEN или TIMEPAD_ORG_ID не заданы — пропускаю');
+  if (!proxyUrl) {
+    console.warn('[timepad] TIMEPAD_PROXY_URL не задан — пропускаю');
     return [];
   }
 
-  const params = new URLSearchParams({
-    organization_ids: String(orgId),
-    limit: '10',
-    sort: '+starts_at',
-    starts_at_min: new Date().toISOString(),
-    fields: 'id,name,starts_at,location,description_short,poster_image,url',
-  });
-
   try {
-    const res = await fetch(`${API_BASE}/events?${params}`, {
-      headers: { Authorization: `Bearer ${token}` },
-    });
+    const res = await fetch(`${proxyUrl.replace(/\/$/, '')}/events?limit=10`);
     if (!res.ok) {
-      console.warn(`[timepad] API вернул ${res.status}`);
+      console.warn(`[timepad] proxy вернул ${res.status}`);
       return [];
     }
     const data = await res.json();

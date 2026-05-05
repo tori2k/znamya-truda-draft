@@ -28,8 +28,7 @@ jobs:
       - run: npm ci
       - run: npm run build
         env:
-          TIMEPAD_TOKEN: ${{ secrets.TIMEPAD_TOKEN }}
-          TIMEPAD_ORG_ID: ${{ secrets.TIMEPAD_ORG_ID }}
+          TIMEPAD_PROXY_URL: ${{ secrets.TIMEPAD_PROXY_URL }}
       - uses: actions/upload-pages-artifact@v3
         with:
           path: ./dist
