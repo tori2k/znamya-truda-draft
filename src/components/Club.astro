@@ -54,12 +54,15 @@ const details = [
       <div class="club__sub-head">
         <span class="club__sub-tag">01 · Администрация</span>
         <h3 class="club__sub-title">Руководство клуба</h3>
+        <p class="club__sub-lead">
+          Клуб — это не только футболисты. По всем официальным вопросам —
+          обращайтесь к нам.
+        </p>
       </div>
 
       <div class="admin">
         {administration.map((a, i) => (
           <article class="adm reveal" style={`transition-delay: ${i * 0.08}s`}>
-            <div class="adm__num">0{i + 1}</div>
             <div class="adm__body">
               <div class="adm__role">{a.role}</div>
               <h4 class="adm__name">{a.name}</h4>
@@ -211,6 +214,14 @@ const details = [
     color: #0a0a0a;
     margin: 0;
   }
+  .club__sub-lead {
+    font-family: 'Onest', sans-serif;
+    font-size: clamp(15px, 1.4vw, 17px);
+    line-height: 1.5;
+    color: #1f1f1f;
+    margin: 12px 0 0;
+    max-width: 720px;
+  }
 
   /* Администрация */
   .admin {
@@ -219,9 +230,6 @@ const details = [
     gap: 16px;
   }
   .adm {
-    display: grid;
-    grid-template-columns: auto 1fr;
-    gap: 20px;
     padding: 28px;
     background: #fafaf7;
     border: 1px solid rgba(0,0,0,0.08);

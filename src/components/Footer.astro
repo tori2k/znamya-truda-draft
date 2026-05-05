@@ -1,5 +1,6 @@
 ---
 const BASE = import.meta.env.BASE_URL.replace(/\/$/, '');
+const HOME = `${BASE}/`;
 ---
 <footer class="footer">
   <div class="container-x footer__inner">
@@ -18,12 +19,11 @@ const BASE = import.meta.env.BASE_URL.replace(/\/$/, '');
     <div class="footer__links">
       <div class="footer__col">
         <div class="footer__col-title">Клуб</div>
-        <a href="#match">Матчи</a>
-        <a href="#news">Новости</a>
-        <a href="#history">История</a>
-        <a href="#team">Команда</a>
-        <a href="#club">Клуб</a>
-        <a href="#events">События</a>
+        <a href={`${HOME}#match`}>Матчи</a>
+        <a href={`${HOME}#news`}>Новости</a>
+        <a href={`${HOME}#history`}>История</a>
+        <a href={`${HOME}#team`}>Команда</a>
+        <a href={`${HOME}#club`}>Клуб</a>
       </div>
       <div class="footer__col">
         <div class="footer__col-title">Соцсети</div>
@@ -35,8 +35,8 @@ const BASE = import.meta.env.BASE_URL.replace(/\/$/, '');
       </div>
       <div class="footer__col">
         <div class="footer__col-title">Контакты</div>
-        <a href="mailto:info@znamyatruda.ru">info@znamyatruda.ru</a>
-        <a href="tel:+74964154500">+7 (496) 415-45-00</a>
+        <a href="mailto:club@fczt1909.ru">club@fczt1909.ru</a>
+        <a href={`${HOME}#contacts`}>Все контакты →</a>
       </div>
     </div>
   </div>
