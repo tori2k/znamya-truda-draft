@@ -1,27 +1,29 @@
 ---
+import { getCollection } from 'astro:content';
 import { fetchNextEvent, parseMatchTeams, isHomeMatch, formatMatchDate, formatMatchTime } from '../lib/timepad';
 
 const BASE = import.meta.env.BASE_URL.replace(/\/$/, '');
 const LOGO = `${BASE}/logo.png`;
+const asset = (p: string) => `${BASE}${p.startsWith('/') ? p : '/' + p}`;
 
 // Тянем следующий матч из TimePad. Если не получилось — fallback на хардкод.
 const tpEvent = await fetchNextEvent();
 
-// Лого соперников — добавляются вручную в /public/opponents/<slug>.png.
-// Маппинг: точное совпадение названия команды → файл логотипа.
-// Если нет — рисуется текстовая аббревиатура (как было).
-const OPPONENT_LOGOS: Record<string, string> = {
-  'Сатурн-2':         '/opponents/saturn.png',
-  'Кристалл-Восток':  '/opponents/kristall-vostok.png',
-  'ФК НЕО':           '/opponents/neo.png',
-  // Добавляй сюда новые лого по мере появления соперников
-};
+// Логотипы соперников живут в коллекции opponents (src/content/opponents/*.md).
+// Заказчик добавляет команды через Decap-админку: имя команды + файл лого.
+// Match.astro ищет совпадение по имени (case-insensitive substring).
+// Если команда найдена, но лого ещё не загружено — рисуется текстовая
+// аббревиатура (как раньше). Это позволяет сразу заявить соперника, потом
+// дозалить лого без правок кода.
+const opponentEntries = await getCollection('opponents');
 
-const opponentLogo = (name: string): string | null => {
-  const key = Object.keys(OPPONENT_LOGOS).find(
-    (k) => name.toLowerCase().includes(k.toLowerCase()),
+const opponentLogo = (teamName: string): string | null => {
+  const lc = teamName.toLowerCase();
+  const found = opponentEntries.find((e) =>
+    lc.includes(e.data.name.toLowerCase()) || e.data.name.toLowerCase().includes(lc),
   );
-  return key ? `${BASE}${OPPONENT_LOGOS[key]}` : null;
+  if (!found || !found.data.logo) return null;
+  return asset(found.data.logo);
 };
 
 const fallbackNext = {

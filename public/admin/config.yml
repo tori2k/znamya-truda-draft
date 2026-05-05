@@ -165,3 +165,28 @@ collections:
         widget: 'number'
         value_type: 'int'
         default: 100
+
+  # ─── Логотипы команд-соперников ────────────────────────────────────────
+  - name: 'opponents'
+    label: '🛡 Логотипы соперников'
+    label_singular: 'Соперник'
+    folder: 'src/content/opponents'
+    create: true
+    delete: true
+    slug: '{{slug}}'
+    extension: 'md'
+    format: 'frontmatter'
+    summary: '{{name}}'
+    media_folder: '/public/opponents'
+    public_folder: '/opponents'
+
+    fields:
+      - label: 'Название команды'
+        name: 'name'
+        widget: 'string'
+        hint: 'Точно как в TimePad-событии или вручную в Match.astro. Например: «Сатурн-2», «Кристалл-Восток», «ФК НЕО».'
+      - label: 'Логотип'
+        name: 'logo'
+        widget: 'image'
+        required: false
+        hint: 'Квадратный PNG или SVG, желательно на прозрачном фоне. Если не загружено — на сайте будет текстовая аббревиатура (например, КРВ для Кристалл-Восток).'

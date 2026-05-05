@@ -69,5 +69,16 @@ const staff = defineCollection({
   }),
 });
 
-export const collections = { news, squad, staff };
+// Логотипы команд-соперников. Заказчик добавляет через Decap админку
+// каждый раз, когда нужен новый матч с новой командой.
+// Match.astro ищет здесь по полю name (case-insensitive substring).
+const opponents = defineCollection({
+  loader: glob({ pattern: '**/*.md', base: './src/content/opponents' }),
+  schema: z.object({
+    name: z.string(),
+    logo: imagePath,
+  }),
+});
+
+export const collections = { news, squad, staff, opponents };
 export { NEWS_CATEGORIES, ROLES };
