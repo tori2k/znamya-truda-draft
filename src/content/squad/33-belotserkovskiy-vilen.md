@@ -1,9 +1,10 @@
 ---
 number: 33
-lastName: "Белоцерковский"
-firstName: "Вилен"
+lastName: Белоцерковский
+firstName: Вилен
 age: 18
 role: Полузащитник
-photo: "../../../public/team/belotserkovsky.jpg"
+photo: ../../../public/team/belotserkovsky.jpg
 order: 100
+showName: true
 ---
