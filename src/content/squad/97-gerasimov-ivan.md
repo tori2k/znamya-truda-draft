@@ -1,9 +1,10 @@
 ---
 number: 97
-lastName: "Герасимов"
-firstName: "Иван"
+lastName: Герасимов
+firstName: Иван
 age: 21
 role: Защитник
-photo: "../../../public/team/gerasimov.jpg"
+photo: ../../../public/team/gerasimov.jpg
 order: 100
+showName: true
 ---
