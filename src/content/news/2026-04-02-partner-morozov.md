@@ -6,7 +6,7 @@ excerpt: >
   Второй тур подарил нашей команде непростой выезд в Электросталь. Несмотря на
   территориальное преимущество и контроль игры со стороны нашей команды — матч
   завершился вничью.
-image: https://sun9-38.userapi.com/s/v1/ig2/p7awuQ9u3pj1k2bK11AY439el5SngtgPIRgYjkMEoKdnGsXpYzNUsVhbQWHHe27KsC6i5ztITmBNtOuI-d0Ru5ao.jpg?quality=95&as=32x24,48x36,72x54,108x81,160x120,240x180,360x270,480x360,540x405,640x480,720x540,1080x810,1280x960,1440x1080,1570x1178&from=bu&cs=1570x0
+image: /news/p7awuq9u3pj1k2bk11ay439el5sngtgpirgyjkmeokdngsxpyznusvhbqwhhe27ksc6i5ztitmbntoui-d0ru5ao.jpg
 featured: true
 score: 1:1
 ---
