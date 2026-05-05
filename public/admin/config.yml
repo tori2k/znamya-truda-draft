@@ -74,11 +74,14 @@ collections:
       - label: 'Текст новости'
         name: 'body'
         widget: 'markdown'
-        # Запрещаем встроенный image-виджет в тулбаре, чтобы юзер не натыкался
-        # на «обязательное поле alt». Картинку в тексте можно вставлять через
-        # markdown ![](/news/...) или просто через drag-n-drop.
+        # Раскладка тулбара без встроенного image-компонента, чтобы юзер
+        # не натыкался на «обязательное поле alt». Картинки в тексте
+        # вставляем как обычный markdown ![](/news/file.jpg), drag-n-drop
+        # тоже работает. Iframes (VK Video, YouTube) разрешены — Astro
+        # рендерит HTML внутри markdown как есть.
         buttons: ['bold', 'italic', 'code', 'link', 'heading-one', 'heading-two', 'heading-three', 'quote', 'bulleted-list', 'numbered-list']
         editor_components: []
+        modes: ['raw']
 
   # ─── Состав ───────────────────────────────────────────────────────────
   - name: 'squad'

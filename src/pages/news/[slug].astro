@@ -204,6 +204,17 @@ const asset = (p: string) => `${BASE}${p.startsWith('/') ? p : '/' + p}`;
     height: auto;
     margin: 1.5em 0;
   }
+  /* Адаптивные iframe (VK Video, YouTube) — на всю ширину 16:9, без
+     торчания за границы на мобиле */
+  .post__body :global(iframe) {
+    display: block;
+    width: 100% !important;
+    aspect-ratio: 16 / 9;
+    height: auto !important;
+    margin: 1.5em 0;
+    border: 0;
+    background: #000;
+  }
 
   /* Блок «Читать дальше» */
   .post__more {
