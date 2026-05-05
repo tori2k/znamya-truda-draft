@@ -1,3 +1,4 @@
 ---
-name: "Кристалл-Восток"
+name: Кристалл-Восток
+logo: /opponents/awhprrst.png
 ---
