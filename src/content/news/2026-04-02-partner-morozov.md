@@ -28,4 +28,4 @@ score: 1:1
 
 **[Протокол встречи](https://ffmo.ru/tournament43869/match/3819287)**
 
-<iframe src="https://vk.com/video_ext.php?oid=-124468946&id=456240805&autoplay=1" width="1280" height="720" style="background-color: #000" allow="autoplay; encrypted-media; fullscreen; picture-in-picture; screen-wake-lock;" frameborder="0" allowfullscreen></iframe>
+<iframe src="https://vkvideo.ru/video_ext.php?oid=-124468946&id=456240805&hash=a2841c4f6bcae474&hd=1&autoplay=1" width="640" height="360" allow="autoplay; encrypted-media; fullscreen; picture-in-picture; screen-wake-lock;" frameborder="0" allowfullscreen></iframe>
