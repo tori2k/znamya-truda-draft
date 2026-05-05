@@ -68,6 +68,9 @@ if (tpEvent) {
 
 // Последний матч редактируется вручную здесь.
 // result: 'win' | 'draw' | 'loss' — определяет цвет бейджа.
+// reportSlug: id новости-отчёта — если задан, появляется кнопка «Отчёт о матче».
+//             Slug — это часть URL после /news/, например '2026-05-02-otchet-vs-kristall'.
+//             Можно оставить пустой строкой, кнопки не будет.
 const lastMatch = {
   league: 'ФФМО · Б-2 · 2 тур',
   date: '2026-05-02',
@@ -75,6 +78,7 @@ const lastMatch = {
   home: { name: 'Кристалл-Восток', short: 'КРВ', score: 1 },
   away: { name: 'Знамя Труда',     short: 'ЗНМ', score: 1 },
   result: 'draw' as 'win' | 'draw' | 'loss',
+  reportSlug: '' as string,
 };
 
 const RESULT_LABELS = {
@@ -214,10 +218,18 @@ const shortName = (name: string) => {
           <span class="match__date-small">{lastMatch.dateText}</span>
         </div>
 
-        <a href="https://ffmo.ru/tournament43869/" target="_blank" rel="noopener" class="match__link">
-          Турнирная таблица ФФМО
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 17L17 7M8 7h9v9"/></svg>
-        </a>
+        <div class="match__last-actions">
+          {lastMatch.reportSlug && (
+            <a href={`${BASE}/news/${lastMatch.reportSlug}/`} class="btn btn--red match__report">
+              Отчёт о матче
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
+            </a>
+          )}
+          <a href="https://ffmo.ru/tournament43869/" target="_blank" rel="noopener" class="match__link">
+            Турнирная таблица ФФМО
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 17L17 7M8 7h9v9"/></svg>
+          </a>
+        </div>
       </div>
     </div>
   </div>
@@ -508,6 +520,15 @@ const shortName = (name: string) => {
     text-transform: uppercase;
   }
 
+  .match__last-actions {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin-top: 16px;
+  }
+  .match__report {
+    align-self: flex-start;
+  }
   .match__link {
     display: inline-flex;
     align-items: center;

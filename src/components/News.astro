@@ -5,17 +5,17 @@ const BASE = import.meta.env.BASE_URL.replace(/\/$/, '');
 const newsUrl = (slug: string) => `${BASE}/news/${slug}/`;
 const asset = (p: string) => `${BASE}${p.startsWith('/') ? p : '/' + p}`;
 
-// Берём 4 свежих новости, отдаём приоритет featured
+// 4 свежих новости одного размера. Без featured-выделения —
+// заказчику проще: одна меньше — нет «дыры» от пустого закрепа.
 const all = (await getCollection('news')).sort(
   (a, b) => b.data.date.getTime() - a.data.date.getTime()
 );
-const featured = all.find((n) => n.data.featured) ?? all[0];
-const others = all.filter((n) => n.id !== featured?.id).slice(0, 3);
+const items = all.slice(0, 4);
 
 const fmtDate = (d: Date) =>
   new Intl.DateTimeFormat('ru-RU', { day: 'numeric', month: 'long' }).format(d);
 ---
-{featured && (
+{items.length > 0 && (
 <section class="news" id="news">
   <div class="container-x">
     <div class="news__head reveal">
@@ -30,49 +30,24 @@ const fmtDate = (d: Date) =>
     </div>
 
     <div class="news__grid">
-      <!-- FEATURED -->
-      <a href={newsUrl(featured.id)} class="ncard ncard--featured reveal">
-        <div class="ncard__image ncard__image--featured">
-          {featured.data.image && (
-            <img src={asset(featured.data.image)} alt={featured.data.title} class="ncard__img" loading="lazy" />
-          )}
-          {featured.data.score && <div class="ncard__score">{featured.data.score}</div>}
-          <div class="ncard__gradient"></div>
-        </div>
-        <div class="ncard__body ncard__body--featured">
-          <div class="ncard__meta">
-            <span class="ncard__cat">{featured.data.category}</span>
-            <span class="ncard__date">{fmtDate(featured.data.date)}</span>
+      {items.map((n, i) => (
+        <a href={newsUrl(n.id)} class="ncard reveal" style={`transition-delay: ${i * 0.08}s`}>
+          <div class="ncard__image">
+            {n.data.image && (
+              <img src={asset(n.data.image)} alt={n.data.title} class="ncard__img" loading="lazy" />
+            )}
+            {n.data.score && <div class="ncard__score">{n.data.score}</div>}
           </div>
-          <h3 class="ncard__title ncard__title--featured">{featured.data.title}</h3>
-          <p class="ncard__excerpt">{featured.data.excerpt}</p>
-          <span class="ncard__link">
-            Читать полностью
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
-          </span>
-        </div>
-      </a>
-
-      <!-- SMALL -->
-      <div class="news__column">
-        {others.map((n, i) => (
-          <a href={newsUrl(n.id)} class="ncard reveal" style={`transition-delay: ${(i + 1) * 0.1}s`}>
-            <div class="ncard__image ncard__image--small">
-              {n.data.image && (
-                <img src={asset(n.data.image)} alt={n.data.title} class="ncard__img" loading="lazy" />
-              )}
+          <div class="ncard__body">
+            <div class="ncard__meta">
+              <span class="ncard__cat">{n.data.category}</span>
+              <span class="ncard__date">{fmtDate(n.data.date)}</span>
             </div>
-            <div class="ncard__body">
-              <div class="ncard__meta">
-                <span class="ncard__cat">{n.data.category}</span>
-                <span class="ncard__date">{fmtDate(n.data.date)}</span>
-              </div>
-              <h3 class="ncard__title">{n.data.title}</h3>
-              <p class="ncard__excerpt ncard__excerpt--small">{n.data.excerpt}</p>
-            </div>
-          </a>
-        ))}
-      </div>
+            <h3 class="ncard__title">{n.data.title}</h3>
+            <p class="ncard__excerpt">{n.data.excerpt}</p>
+          </div>
+        </a>
+      ))}
     </div>
   </div>
 </section>
@@ -127,18 +102,12 @@ const fmtDate = (d: Date) =>
     transform: translateX(4px);
   }
 
-  /* GRID */
+  /* GRID — 2×2 одинаковых карточек */
   .news__grid {
     display: grid;
-    grid-template-columns: 1.3fr 1fr;
+    grid-template-columns: repeat(2, 1fr);
     gap: 24px;
     align-items: stretch;
-  }
-
-  .news__column {
-    display: flex;
-    flex-direction: column;
-    gap: 16px;
   }
 
   /* CARD */
@@ -160,28 +129,15 @@ const fmtDate = (d: Date) =>
     box-shadow: 0 20px 40px rgba(228,0,43,0.1);
   }
 
-  .ncard--featured {
-    flex-direction: column;
-  }
-
   /* IMAGE */
   .ncard__image {
     position: relative;
+    aspect-ratio: 16/10;
     background: linear-gradient(135deg, #f3f1ec 0%, #e8e5dc 100%);
     display: flex;
     align-items: center;
     justify-content: center;
     overflow: hidden;
-  }
-  .ncard__image--featured {
-    aspect-ratio: 16/9;
-    background:
-      radial-gradient(circle at 70% 30%, rgba(228,0,43,0.15), transparent 60%),
-      linear-gradient(135deg, #ffeef1 0%, #f3f1ec 100%);
-  }
-  .ncard__image--small {
-    flex-direction: row;
-    aspect-ratio: 16/10;
   }
   .ncard:hover .ncard__image {
     background-color: #fff5f7;
@@ -303,7 +259,6 @@ const fmtDate = (d: Date) =>
   @media (max-width: 900px) {
     .news { padding: 80px 0; }
     .news__grid { grid-template-columns: 1fr; }
-    .ncard__body--featured { padding: 24px 22px; }
     .ncard__score { font-size: 54px; top: 14px; right: 18px; }
   }
 </style>
