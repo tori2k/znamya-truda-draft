@@ -1,18 +1,23 @@
 ---
-const items = [
-  { href: '#match', label: 'Матчи' },
-  { href: '#news', label: 'Новости' },
-  { href: '#history', label: 'История' },
-  { href: '#team', label: 'Команда' },
-  { href: '#club', label: 'Клуб' },
-  { href: '#events', label: 'События' },
-  { href: '#contacts', label: 'Контакты' },
-];
 const BASE = import.meta.env.BASE_URL.replace(/\/$/, '');
+const HOME = `${BASE}/`;
+
+// Якорные ссылки в меню работают на главной странице. На вложенных
+// (например /news/[slug]) кликаем якорь — переходим на главную к нужной секции.
+const items = [
+  { href: `${HOME}#match`,    label: 'Матчи' },
+  { href: `${HOME}#news`,     label: 'Новости' },
+  { href: `${HOME}#history`,  label: 'История' },
+  { href: `${HOME}#team`,     label: 'Команда' },
+  { href: `${HOME}#club`,     label: 'Клуб' },
+  // События скрыты пока мероприятий мало — раздел вернём, когда будет что показать
+  { href: `${HOME}#contacts`, label: 'Контакты' },
+];
+const CONTACTS = `${HOME}#contacts`;
 ---
 <nav class="nav">
   <div class="container-x nav__inner">
-    <a href="#" class="nav__logo" aria-label="ФК Знамя Труда — Главная">
+    <a href={HOME} class="nav__logo" aria-label="ФК Знамя Труда — Главная">
       <div class="logo">
         <img src={`${BASE}/logo.png`} alt="ФК Знамя Труда" class="logo__img" />
         <div class="logo__text">
@@ -28,7 +33,7 @@ const BASE = import.meta.env.BASE_URL.replace(/\/$/, '');
       ))}
     </ul>
 
-    <a href="#contacts" class="btn btn--red nav__cta">Связаться</a>
+    <a href={CONTACTS} class="btn btn--red nav__cta">Связаться</a>
 
     <button class="nav__burger" id="navBurger" aria-label="Меню">
       <span></span><span></span><span></span>
@@ -39,7 +44,7 @@ const BASE = import.meta.env.BASE_URL.replace(/\/$/, '');
     {items.map((i) => (
       <a href={i.href}>{i.label}</a>
     ))}
-    <a href="#contacts" class="btn btn--red">Связаться</a>
+    <a href={CONTACTS} class="btn btn--red">Связаться</a>
   </div>
 </nav>
 
