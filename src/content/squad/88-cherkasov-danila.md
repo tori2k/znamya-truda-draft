@@ -1,9 +1,10 @@
 ---
 number: 88
-lastName: "Черкасов"
-firstName: "Данила"
+lastName: Черкасов
+firstName: Данила
 age: 25
 role: Полузащитник
-photo: "../../../public/team/cherkasov.jpg"
+photo: ../../../public/team/cherkasov.jpg
 order: 100
+showName: true
 ---
