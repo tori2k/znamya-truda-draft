@@ -109,10 +109,12 @@ const groups = ROLES.map((role) => ({
                 </div>
                 <div class="player__body">
                   <div class="player__role">{p.role} · {p.age} {ageWord(p.age)}</div>
-                  <div class="player__name">
-                    <span class="player__first">{p.firstName}</span>
-                    <span class="player__last">{p.lastName}</span>
-                  </div>
+                  {p.showName && (
+                    <div class="player__name">
+                      <span class="player__first">{p.firstName}</span>
+                      <span class="player__last">{p.lastName}</span>
+                    </div>
+                  )}
                 </div>
               </article>
             ))}

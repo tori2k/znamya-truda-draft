@@ -4,16 +4,19 @@ const administration = [
     role: 'Директор',
     name: 'Александр Кузнецов',
     note: 'Руководство клубом, стратегия развития, координация всех направлений деятельности',
+    email: 'club@fczt1909.ru',
   },
   {
     role: 'Заместитель директора',
     name: 'Никита Поддувалкин',
     note: 'Операционная деятельность, организация матчей',
+    email: 'club@fczt1909.ru',
   },
   {
     role: 'Заместитель директора',
     name: 'Олег Андреев',
     note: 'Продвижение клуба, взаимодействие с болельщиками, партнёрами и СМИ',
+    email: 'andreev@fczt1909.ru',
   },
 ];
 
@@ -61,6 +64,11 @@ const details = [
               <div class="adm__role">{a.role}</div>
               <h4 class="adm__name">{a.name}</h4>
               <p class="adm__note">{a.note}</p>
+              {a.email && (
+                <a href={`mailto:${a.email}`} class="adm__email">
+                  {a.email}
+                </a>
+              )}
             </div>
           </article>
         ))}
@@ -256,6 +264,23 @@ const details = [
     color: #4a4a4a;
     line-height: 1.5;
     margin: 0;
+  }
+  .adm__email {
+    display: inline-block;
+    margin-top: 12px;
+    padding: 6px 12px;
+    border: 1px solid rgba(228,0,43,0.25);
+    background: rgba(228,0,43,0.05);
+    color: #E4002B;
+    font-family: 'Onest', sans-serif;
+    font-size: 12px;
+    font-weight: 500;
+    text-decoration: none;
+    transition: all 0.2s;
+  }
+  .adm__email:hover {
+    background: rgba(228,0,43,0.1);
+    border-color: rgba(228,0,43,0.45);
   }
 
   /* Стадион */

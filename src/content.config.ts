@@ -38,6 +38,8 @@ const squad = defineCollection({
       photo: image().optional(),
       // order — для ручной перестановки внутри одной роли (опционально)
       order: z.number().int().default(100),
+      // Показывать ли ФИО на карточке (по умолчанию — нет, только номер+амплуа)
+      showName: z.boolean().default(false),
     }),
 });
 

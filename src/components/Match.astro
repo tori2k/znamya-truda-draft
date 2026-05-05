@@ -7,6 +7,23 @@ const LOGO = `${BASE}/logo.png`;
 // Тянем следующий матч из TimePad. Если не получилось — fallback на хардкод.
 const tpEvent = await fetchNextEvent();
 
+// Лого соперников — добавляются вручную в /public/opponents/<slug>.png.
+// Маппинг: точное совпадение названия команды → файл логотипа.
+// Если нет — рисуется текстовая аббревиатура (как было).
+const OPPONENT_LOGOS: Record<string, string> = {
+  'Сатурн-2':         '/opponents/saturn.png',
+  'Кристалл-Восток':  '/opponents/kristall-vostok.png',
+  'ФК НЕО':           '/opponents/neo.png',
+  // Добавляй сюда новые лого по мере появления соперников
+};
+
+const opponentLogo = (name: string): string | null => {
+  const key = Object.keys(OPPONENT_LOGOS).find(
+    (k) => name.toLowerCase().includes(k.toLowerCase()),
+  );
+  return key ? `${BASE}${OPPONENT_LOGOS[key]}` : null;
+};
+
 const fallbackNext = {
   league: 'ФФМО · Б-2',
   dateText: 'дата уточняется',
@@ -45,13 +62,21 @@ if (tpEvent) {
   };
 }
 
+// Последний матч редактируется вручную здесь.
+// result: 'win' | 'draw' | 'loss' — определяет цвет бейджа.
 const lastMatch = {
-  league: 'ФФМО · Б-2 · 1 тур',
-  date: '2026-04-26',
-  dateText: '26 апреля',
-  home: { name: 'Знамя Труда', short: 'ЗНМ', score: 3 },
-  away: { name: 'ФК НЕО', short: 'НЕО', score: 1 },
-  result: 'win',
+  league: 'ФФМО · Б-2 · 2 тур',
+  date: '2026-05-02',
+  dateText: '2 мая',
+  home: { name: 'Кристалл-Восток', short: 'КРВ', score: 1 },
+  away: { name: 'Знамя Труда',     short: 'ЗНМ', score: 1 },
+  result: 'draw' as 'win' | 'draw' | 'loss',
+};
+
+const RESULT_LABELS = {
+  win:  'ПОБЕДА',
+  draw: 'НИЧЬЯ',
+  loss: 'ПОРАЖЕНИЕ',
 };
 
 const isOurTeam = (name: string) => /знамя труда/i.test(name);
@@ -75,6 +100,10 @@ const shortName = (name: string) =>
               <div class="team__crest team__crest--logo">
                 <img src={LOGO} alt={nextMatch.homeName} />
               </div>
+            ) : opponentLogo(nextMatch.homeName) ? (
+              <div class="team__crest team__crest--logo">
+                <img src={opponentLogo(nextMatch.homeName)!} alt={nextMatch.homeName} />
+              </div>
             ) : (
               <div class="team__crest">{shortName(nextMatch.homeName)}</div>
             )}
@@ -93,6 +122,10 @@ const shortName = (name: string) =>
               <div class="team__crest team__crest--logo">
                 <img src={LOGO} alt={nextMatch.awayName} />
               </div>
+            ) : opponentLogo(nextMatch.awayName) ? (
+              <div class="team__crest team__crest--logo">
+                <img src={opponentLogo(nextMatch.awayName)!} alt={nextMatch.awayName} />
+              </div>
             ) : (
               <div class="team__crest">{shortName(nextMatch.awayName)}</div>
             )}
@@ -110,7 +143,7 @@ const shortName = (name: string) =>
         </div>
 
         <a href={nextMatch.url} target="_blank" rel="noopener" class="btn btn--red match__cta">
-          Афиша и билеты
+          Зарегистрироваться на матч
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
         </a>
       </div>
@@ -125,24 +158,42 @@ const shortName = (name: string) =>
 
         <div class="match__score-row">
           <div class="score-team">
-            <div class="score-team__crest score-team__crest--logo">
-              <img src={LOGO} alt={lastMatch.home.name} />
-            </div>
+            {isOurTeam(lastMatch.home.name) ? (
+              <div class="score-team__crest score-team__crest--logo">
+                <img src={LOGO} alt={lastMatch.home.name} />
+              </div>
+            ) : opponentLogo(lastMatch.home.name) ? (
+              <div class="score-team__crest score-team__crest--logo">
+                <img src={opponentLogo(lastMatch.home.name)!} alt={lastMatch.home.name} />
+              </div>
+            ) : (
+              <div class="score-team__crest">{lastMatch.home.short}</div>
+            )}
             <div class="score-team__name">{lastMatch.home.name}</div>
           </div>
           <div class="score">
-            <span class="score__n score__n--win">{lastMatch.home.score}</span>
+            <span class={`score__n ${lastMatch.result === 'win' ? 'score__n--win' : ''}`}>{lastMatch.home.score}</span>
             <span class="score__sep">:</span>
-            <span class="score__n">{lastMatch.away.score}</span>
+            <span class={`score__n ${lastMatch.result === 'loss' ? 'score__n--win' : ''}`}>{lastMatch.away.score}</span>
           </div>
           <div class="score-team score-team--right">
-            <div class="score-team__crest">{lastMatch.away.short}</div>
+            {isOurTeam(lastMatch.away.name) ? (
+              <div class="score-team__crest score-team__crest--logo">
+                <img src={LOGO} alt={lastMatch.away.name} />
+              </div>
+            ) : opponentLogo(lastMatch.away.name) ? (
+              <div class="score-team__crest score-team__crest--logo">
+                <img src={opponentLogo(lastMatch.away.name)!} alt={lastMatch.away.name} />
+              </div>
+            ) : (
+              <div class="score-team__crest">{lastMatch.away.short}</div>
+            )}
             <div class="score-team__name">{lastMatch.away.name}</div>
           </div>
         </div>
 
         <div class="match__result">
-          <span class="result-badge result-badge--win">ПОБЕДА</span>
+          <span class={`result-badge result-badge--${lastMatch.result}`}>{RESULT_LABELS[lastMatch.result]}</span>
           <span class="match__date-small">{lastMatch.dateText}</span>
         </div>
 
@@ -411,14 +462,27 @@ const shortName = (name: string) =>
   }
   .result-badge {
     padding: 4px 10px;
-    background: rgba(228,0,43,0.1);
-    border: 1px solid rgba(228,0,43,0.35);
-    color: #E4002B;
+    border: 1px solid;
     font-family: 'Onest', sans-serif;
     font-size: 10px;
     font-weight: 700;
     letter-spacing: 2px;
     text-transform: uppercase;
+  }
+  .result-badge--win {
+    background: rgba(228,0,43,0.1);
+    border-color: rgba(228,0,43,0.35);
+    color: #E4002B;
+  }
+  .result-badge--draw {
+    background: rgba(120,120,120,0.1);
+    border-color: rgba(120,120,120,0.35);
+    color: #555;
+  }
+  .result-badge--loss {
+    background: rgba(70,70,70,0.08);
+    border-color: rgba(70,70,70,0.3);
+    color: #2a2a2a;
   }
   .match__date-small {
     font-size: 11px;

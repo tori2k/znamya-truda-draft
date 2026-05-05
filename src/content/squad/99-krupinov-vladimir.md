@@ -1,7 +1,7 @@
 ---
-number: 31
+number: 99
 lastName: "Крупинов"
-firstName: "Олег"
+firstName: "Владимир"
 age: 30
 role: Полузащитник
 photo: "../../../public/team/krupinov.jpg"
