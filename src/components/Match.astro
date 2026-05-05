@@ -4,6 +4,8 @@ import { fetchNextEvent, parseMatchTeams, isHomeMatch, formatMatchDate, formatMa
 
 const BASE = import.meta.env.BASE_URL.replace(/\/$/, '');
 const LOGO = `${BASE}/logo.png`;
+// Версия лого с белой обводкой для красных карточек (next match — красный фон)
+const LOGO_ON_RED = `${BASE}/logo-on-red.png`;
 const asset = (p: string) => `${BASE}${p.startsWith('/') ? p : '/' + p}`;
 
 // Тянем следующий матч из TimePad. Если не получилось — fallback на хардкод.
@@ -113,7 +115,7 @@ const shortName = (name: string) => {
           <div class="team">
             {isOurTeam(nextMatch.homeName) ? (
               <div class="team__crest team__crest--logo">
-                <img src={LOGO} alt={nextMatch.homeName} />
+                <img src={LOGO_ON_RED} alt={nextMatch.homeName} />
               </div>
             ) : opponentLogo(nextMatch.homeName) ? (
               <div class="team__crest team__crest--logo">
@@ -135,7 +137,7 @@ const shortName = (name: string) => {
           <div class="team">
             {isOurTeam(nextMatch.awayName) ? (
               <div class="team__crest team__crest--logo">
-                <img src={LOGO} alt={nextMatch.awayName} />
+                <img src={LOGO_ON_RED} alt={nextMatch.awayName} />
               </div>
             ) : opponentLogo(nextMatch.awayName) ? (
               <div class="team__crest team__crest--logo">

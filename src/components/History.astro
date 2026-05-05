@@ -320,19 +320,19 @@ const milestones = [
     line-height: 1.4;
     color: #0a0a0a;
     margin: 0 0 16px;
+    padding-top: 32px;
     position: relative;
   }
+  /* Тонкая красная горизонтальная черта вместо обрезанной кавычки */
   .history__quote blockquote::before {
-    content: '"';
+    content: '';
     position: absolute;
-    top: -30px;
+    top: 0;
     left: 50%;
     transform: translateX(-50%);
-    font-size: 80px;
-    color: #E4002B;
-    opacity: 0.5;
-    font-family: 'Onest', serif;
-    line-height: 1;
+    width: 60px;
+    height: 3px;
+    background: #E4002B;
   }
   .history__quote cite {
     font-style: normal;
