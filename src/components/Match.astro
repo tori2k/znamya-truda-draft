@@ -82,8 +82,21 @@ const RESULT_LABELS = {
 };
 
 const isOurTeam = (name: string) => /знамя труда/i.test(name);
-const shortName = (name: string) =>
-  name.split(/\s+/).map((w) => w[0]).join('').toUpperCase().slice(0, 4);
+
+// Аббревиатура для команды без логотипа.
+// «Кристалл-Восток» → «КВ» (по словам)
+// «ФК НЕО» → «НЕО» (пропускаем «ФК»)
+// «Сатурн-2» → «САТ» (одно слово → первые 3 буквы)
+const shortName = (name: string) => {
+  const words = name
+    .replace(/[«»"']/g, '')
+    .split(/[\s\-]+/)
+    .filter((w) => w && !/^фк$/i.test(w));
+  if (words.length >= 2) {
+    return words.map((w) => w[0]).join('').toUpperCase().slice(0, 4);
+  }
+  return (words[0] || name).slice(0, 3).toUpperCase();
+};
 ---
 <section class="match" id="match">
   <div class="container-x">
