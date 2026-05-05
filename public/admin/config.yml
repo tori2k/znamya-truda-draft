@@ -1,19 +1,14 @@
 # Decap CMS — конфиг админки ФК «Знамя Труда»
-#
-# ⚠️ Перед использованием:
-#   1. Создай GitHub OAuth App: https://github.com/settings/applications/new
-#      - Homepage URL: https://tori2k.github.io/znamya-truda-draft/
-#      - Authorization callback URL: <URL твоего OAuth-прокси>/callback
-#   2. Подними OAuth-прокси (например на Vercel: https://github.com/sterlingwes/decap-proxy)
-#   3. Замени base_url ниже на URL твоего прокси
-#   4. В репо открой Settings → Collaborators → пригласи редакторов
+# OAuth-прокси: Cloudflare Worker (znamya-decap-oauth)
+# GitHub OAuth App: «Знамя Труда CMS» (Client ID: Ov23liT0ddlySSycDgag)
+# Доступ к админке имеют только collaborator'ы репо tori2k/znamya-truda-draft.
 
 backend:
   name: github
-  repo: tori2k/znamya-truda-draft   # измени, если другой репо
+  repo: tori2k/znamya-truda-draft
   branch: main
-  base_url: https://decap-proxy.vercel.app   # замени на свой OAuth-прокси
-  auth_endpoint: api/auth
+  base_url: https://znamya-decap-oauth.baryevkirill.workers.dev
+  auth_endpoint: auth
 
 # В режиме разработки локально включай test-repo:
 # local_backend: true
