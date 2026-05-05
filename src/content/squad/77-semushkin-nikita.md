@@ -1,9 +1,10 @@
 ---
 number: 77
-lastName: "Сёмушкин"
-firstName: "Никита"
+lastName: Сёмушкин
+firstName: Никита
 age: 20
 role: Полузащитник
-photo: "../../../public/team/semushkin.png"
+photo: ../../../public/team/semushkin.png
 order: 100
+showName: true
 ---
