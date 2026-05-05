@@ -21,6 +21,4 @@ score: 3:1
 \
 **[Протокол встречи](https://ffmo.ru/tournament43869/match/3819277)**
 
-```
 <iframe src="https://vk.com/video_ext.php?oid=-124468946&id=456240786&autoplay=1" width="1280" height="720" style="background-color: #000" allow="autoplay; encrypted-media; fullscreen; picture-in-picture; screen-wake-lock;" frameborder="0" allowfullscreen></iframe>
-```
