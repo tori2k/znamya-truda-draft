@@ -1,9 +1,10 @@
 ---
 number: 20
-lastName: "Малания"
-firstName: "Диего"
+lastName: Малания
+firstName: Диего
 age: 35
 role: Защитник
-photo: "../../../public/team/malania.jpg"
+photo: ../../../public/team/malania.jpg
 order: 100
+showName: true
 ---
