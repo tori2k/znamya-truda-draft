@@ -1,21 +1,7 @@
 ---
-const BASE = import.meta.env.BASE_URL.replace(/\/$/, '');
-const asset = (path: string) => `${BASE}${path.startsWith('/') ? path : '/' + path}`;
-
-const staff = [
-  {
-    name: 'Роман Федотов',
-    role: 'Главный тренер',
-    photo: '/team/fedotov.jpg',
-    bio: 'Воспитанник клуба, 7 сезонов провёл в качестве игрока. В 2025 году входил в тренерский штаб. С 2026 года — главный тренер.',
-  },
-  {
-    name: 'Дмитрий Пинин',
-    role: 'Тренер',
-    photo: '/team/pinin.jpg',
-    bio: 'Более 280 матчей за клуб, 9 сезонов в качестве игрока. Победитель Второй лиги в 1998 году. С 2015 года входит в тренерский штаб.',
-  },
-];
+import { getCollection } from 'astro:content';
+import { Image } from 'astro:assets';
+import { ROLES } from '../content.config';
 
 // Склонение возраста
 const ageWord = (n: number): string => {
@@ -27,41 +13,34 @@ const ageWord = (n: number): string => {
   return 'лет';
 };
 
-// Состав ФК «Знамя Труда» — сезон 2026
-// num: null означает «подписан, но не заявлен» (без номера)
-const squad = [
-  { num:  1, last: 'Заборовский', first: 'Иван',      age: 21, role: 'Вратарь',      photo: '/team/zaborovsky.jpg' },
-  { num:  3, last: 'Чикин',       first: 'Александр', age: 19, role: 'Защитник',     photo: '/team/chikin.jpg' },
-  { num:  5, last: 'Копылов',     first: 'Максим',    age: 22, role: 'Защитник',     photo: '/team/kopylov.jpg' },
-  { num:  6, last: 'Лёвин',       first: 'Александр', age: 34, role: 'Нападающий',   photo: '/team/levin.jpg' },
-  { num:  7, last: 'Шлепанов',    first: 'Даниил',    age: 37, role: 'Нападающий',   photo: '/team/shlepanov.jpg' },
-  { num:  8, last: 'Коробов',     first: 'Никита',    age: 26, role: 'Полузащитник', photo: '/team/korobov.jpg' },
-  { num: 10, last: 'Урхов',       first: 'Роман',     age: 30, role: 'Полузащитник', photo: '/team/urkhov.jpg' },
-  { num: 11, last: 'Субботин',    first: 'Евгений',   age: 26, role: 'Полузащитник', photo: '/team/subbotin.jpg' },
-  { num: 13, last: 'Любченко',    first: 'Олег',      age: 20, role: 'Защитник',     photo: '/team/lyubchenko.jpg' },
-  { num: 14, last: 'Белоцерковский', first: 'Артём',  age: 18, role: 'Защитник',     photo: '/team/belotserkovsky.jpg' },
-  { num: 16, last: 'Каминецкий',  first: 'Михаил',    age: 18, role: 'Вратарь',      photo: '/team/kaminetsky.jpg' },
-  { num: 17, last: 'Канаев',      first: 'Михаил',    age: 36, role: 'Полузащитник', photo: '/team/kanaev.jpg' },
-  { num: 19, last: 'Степанов',    first: 'Александр', age: 27, role: 'Полузащитник', photo: '/team/stepanov.jpg' },
-  { num: 20, last: 'Малания',     first: 'Диего',     age: 35, role: 'Защитник',     photo: '/team/malania.jpg' },
-  { num: 22, last: 'Харланов',    first: 'Ярослав',   age: 28, role: 'Защитник',     photo: '/team/kharlanov.jpg' },
-  { num: 27, last: 'Бекулов',     first: 'Сагит',     age: 26, role: 'Защитник',     photo: '/team/bekulov.jpg' },
-  { num: 31, last: 'Крупинов',    first: 'Дмитрий',   age: 30, role: 'Вратарь',      photo: null },
-  { num: 71, last: 'Марков',      first: 'Владимир',  age: 28, role: 'Полузащитник', photo: '/team/markov.jpg' },
-  { num: 77, last: 'Сёмушкин',    first: 'Никита',    age: 20, role: 'Полузащитник', photo: '/team/semushkin.png' },
-  { num: 88, last: 'Черкасов',    first: 'Данила',    age: 25, role: 'Полузащитник', photo: '/team/cherkasov.jpg' },
-  { num: 93, last: 'Денисов',     first: 'Андрей',    age: 32, role: 'Защитник',     photo: null },
-  { num: 97, last: 'Герасимов',   first: 'Иван',      age: 21, role: 'Защитник',     photo: '/team/gerasimov.jpg' },
-  { num: null, last: 'Клепча',    first: 'Владимир',  age: 20, role: 'Нападающий',   photo: null },
-  { num: null, last: 'Лопанов',   first: 'Никита',    age: 19, role: 'Нападающий',   photo: null },
-];
+// Тренерский штаб
+const staff = (await getCollection('staff'))
+  .map((e) => e.data)
+  .sort((a, b) => a.order - b.order);
 
-const groups = [
-  { title: 'Вратари',       items: squad.filter((p) => p.role === 'Вратарь') },
-  { title: 'Защитники',     items: squad.filter((p) => p.role === 'Защитник') },
-  { title: 'Полузащитники', items: squad.filter((p) => p.role === 'Полузащитник') },
-  { title: 'Нападающие',    items: squad.filter((p) => p.role === 'Нападающий') },
-];
+// Состав ФК «Знамя Труда» — сезон 2026
+const squad = (await getCollection('squad'))
+  .map((e) => e.data)
+  .sort((a, b) => {
+    // Внутри роли сначала по order, потом по номеру (null в конец), потом по фамилии
+    if (a.order !== b.order) return a.order - b.order;
+    const aNum = a.number ?? 999;
+    const bNum = b.number ?? 999;
+    if (aNum !== bNum) return aNum - bNum;
+    return a.lastName.localeCompare(b.lastName, 'ru');
+  });
+
+const groupTitles: Record<typeof ROLES[number], string> = {
+  'Вратарь': 'Вратари',
+  'Защитник': 'Защитники',
+  'Полузащитник': 'Полузащитники',
+  'Нападающий': 'Нападающие',
+};
+
+const groups = ROLES.map((role) => ({
+  title: groupTitles[role],
+  items: squad.filter((p) => p.role === role),
+}));
 ---
 <section class="team" id="team">
   <div class="container-x">
@@ -72,7 +51,7 @@ const groups = [
         <span>КОМАНДА</span>
       </h2>
       <p class="team__lead">
-        <strong>Больше чем клуб, это история.</strong> Тренерский штаб и основной состав «Знамени Труда» — сезон&nbsp;2026.
+        <strong>Это история.</strong> Тренерский штаб и основной состав «Знамени Труда» — сезон&nbsp;2026.
       </p>
     </div>
 
@@ -82,7 +61,7 @@ const groups = [
         <article class="staff__card reveal" style={`transition-delay: ${i * 0.08}s`}>
           <div class="staff__photo">
             {s.photo ? (
-              <img src={asset(s.photo)} alt={s.name} loading="lazy" />
+              <Image src={s.photo} alt={s.name} widths={[400, 800]} sizes="400px" loading="lazy" />
             ) : (
               <div class="placeholder">
                 <svg width="80" height="80" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1">
@@ -115,10 +94,10 @@ const groups = [
           <div class="squad__grid">
             {g.items.map((p, i) => (
               <article class="player reveal" style={`transition-delay: ${i * 0.04}s`}>
-                <div class="player__num-tag">{p.num !== null ? `#${p.num}` : 'NEW'}</div>
+                <div class="player__num-tag">{p.number !== null ? `#${p.number}` : 'NEW'}</div>
                 <div class="player__photo">
                   {p.photo ? (
-                    <img src={asset(p.photo)} alt={`${p.last} ${p.first}`} loading="lazy" />
+                    <Image src={p.photo} alt={`${p.lastName} ${p.firstName}`} widths={[300, 600]} sizes="300px" loading="lazy" />
                   ) : (
                     <div class="player__placeholder">
                       <svg width="70" height="70" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1">
@@ -131,8 +110,8 @@ const groups = [
                 <div class="player__body">
                   <div class="player__role">{p.role} · {p.age} {ageWord(p.age)}</div>
                   <div class="player__name">
-                    <span class="player__first">{p.first}</span>
-                    <span class="player__last">{p.last}</span>
+                    <span class="player__first">{p.firstName}</span>
+                    <span class="player__last">{p.lastName}</span>
                   </div>
                 </div>
               </article>

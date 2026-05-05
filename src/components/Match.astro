@@ -1,17 +1,49 @@
 ---
+import { fetchNextEvent, parseMatchTeams, isHomeMatch, formatMatchDate, formatMatchTime } from '../lib/timepad';
+
 const BASE = import.meta.env.BASE_URL.replace(/\/$/, '');
 const LOGO = `${BASE}/logo.png`;
 
-const nextMatch = {
-  league: 'ФФМО · Б-2 · 2 тур',
-  date: '2026-05-02',
-  dateText: '2 мая · пт',
-  time: '17:00',
-  home: { name: 'Восток-Кристалл', city: 'Электросталь', short: 'ВКР' },
-  away: { name: 'Знамя Труда', city: 'Орехово-Зуево', short: 'ЗНМ' },
-  venue: 'Стадион «Восток», Электросталь',
-  isHome: false,
+// Тянем следующий матч из TimePad. Если не получилось — fallback на хардкод.
+const tpEvent = await fetchNextEvent();
+
+const fallbackNext = {
+  league: 'ФФМО · Б-2',
+  dateText: 'дата уточняется',
+  time: '',
+  homeName: 'Знамя Труда',
+  homeCity: 'Орехово-Зуево',
+  awayName: 'Соперник',
+  awayCity: '',
+  venue: 'Стадион «Знамя Труда», Орехово-Зуево',
+  url: 'https://fczt.timepad.ru/',
+  posterUrl: null as string | null,
 };
+
+let nextMatch = fallbackNext;
+if (tpEvent) {
+  const teams = parseMatchTeams(tpEvent.name);
+  const home = teams ? teams.home : 'Знамя Труда';
+  const away = teams ? teams.away : tpEvent.name;
+  const homeIsKlub = isHomeMatch(tpEvent);
+  const venue = [
+    tpEvent.location.address,
+    tpEvent.location.city,
+  ].filter(Boolean).join(', ');
+
+  nextMatch = {
+    league: 'ФФМО · Б-2',
+    dateText: formatMatchDate(tpEvent.startsAt),
+    time: formatMatchTime(tpEvent.startsAt),
+    homeName: homeIsKlub ? 'Знамя Труда' : home,
+    homeCity: homeIsKlub ? 'Орехово-Зуево' : '',
+    awayName: homeIsKlub ? away : 'Знамя Труда',
+    awayCity: homeIsKlub ? '' : 'Орехово-Зуево',
+    venue,
+    url: tpEvent.url,
+    posterUrl: tpEvent.posterUrl,
+  };
+}
 
 const lastMatch = {
   league: 'ФФМО · Б-2 · 1 тур',
@@ -21,6 +53,10 @@ const lastMatch = {
   away: { name: 'ФК НЕО', short: 'НЕО', score: 1 },
   result: 'win',
 };
+
+const isOurTeam = (name: string) => /знамя труда/i.test(name);
+const shortName = (name: string) =>
+  name.split(/\s+/).map((w) => w[0]).join('').toUpperCase().slice(0, 4);
 ---
 <section class="match" id="match">
   <div class="container-x">
@@ -35,33 +71,33 @@ const lastMatch = {
 
         <div class="match__teams">
           <div class="team">
-            {nextMatch.home.name === 'Знамя Труда' ? (
+            {isOurTeam(nextMatch.homeName) ? (
               <div class="team__crest team__crest--logo">
-                <img src={LOGO} alt={nextMatch.home.name} />
+                <img src={LOGO} alt={nextMatch.homeName} />
               </div>
             ) : (
-              <div class="team__crest">{nextMatch.home.short}</div>
+              <div class="team__crest">{shortName(nextMatch.homeName)}</div>
             )}
-            <div class="team__name">{nextMatch.home.name}</div>
-            <div class="team__city">{nextMatch.home.city}</div>
+            <div class="team__name">{nextMatch.homeName}</div>
+            {nextMatch.homeCity && <div class="team__city">{nextMatch.homeCity}</div>}
           </div>
 
           <div class="match__vs">
             <div class="match__date">{nextMatch.dateText}</div>
-            <div class="match__time">{nextMatch.time}</div>
+            {nextMatch.time && <div class="match__time">{nextMatch.time}</div>}
             <div class="match__vs-label">VS</div>
           </div>
 
           <div class="team">
-            {nextMatch.away.name === 'Знамя Труда' ? (
+            {isOurTeam(nextMatch.awayName) ? (
               <div class="team__crest team__crest--logo">
-                <img src={LOGO} alt={nextMatch.away.name} />
+                <img src={LOGO} alt={nextMatch.awayName} />
               </div>
             ) : (
-              <div class="team__crest">{nextMatch.away.short}</div>
+              <div class="team__crest">{shortName(nextMatch.awayName)}</div>
             )}
-            <div class="team__name">{nextMatch.away.name}</div>
-            <div class="team__city">{nextMatch.away.city}</div>
+            <div class="team__name">{nextMatch.awayName}</div>
+            {nextMatch.awayCity && <div class="team__city">{nextMatch.awayCity}</div>}
           </div>
         </div>
 
@@ -73,7 +109,7 @@ const lastMatch = {
           {nextMatch.venue}
         </div>
 
-        <a href="https://fczt.timepad.ru/events/" target="_blank" rel="noopener" class="btn btn--red match__cta">
+        <a href={nextMatch.url} target="_blank" rel="noopener" class="btn btn--red match__cta">
           Афиша и билеты
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
         </a>

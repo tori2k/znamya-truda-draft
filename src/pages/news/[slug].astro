@@ -1,0 +1,279 @@
+---
+import { getCollection, render } from 'astro:content';
+import { Image } from 'astro:assets';
+import Layout from '../../layouts/Layout.astro';
+import Nav from '../../components/Nav.astro';
+import Footer from '../../components/Footer.astro';
+
+export async function getStaticPaths() {
+  const news = await getCollection('news');
+  return news.map((post) => ({
+    params: { slug: post.id },
+    props: { post },
+  }));
+}
+
+const { post } = Astro.props;
+const { Content } = await render(post);
+
+const dateFmt = new Intl.DateTimeFormat('ru-RU', {
+  day: 'numeric', month: 'long', year: 'numeric',
+}).format(post.data.date);
+
+// Соседние новости — для блока «Читать дальше»
+const all = (await getCollection('news')).sort(
+  (a, b) => b.data.date.getTime() - a.data.date.getTime()
+);
+const idx = all.findIndex((n) => n.id === post.id);
+const related = all.filter((_, i) => i !== idx).slice(0, 3);
+
+const BASE = import.meta.env.BASE_URL.replace(/\/$/, '');
+const newsUrl = (slug: string) => `${BASE}/news/${slug}/`;
+---
+<Layout title={`${post.data.title} — ФК «Знамя Труда»`} description={post.data.excerpt}>
+  <Nav />
+
+  <article class="post">
+    <div class="container-x">
+      <a href={`${BASE}/news/`} class="post__back">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+        Все новости
+      </a>
+
+      <div class="post__meta">
+        <span class="post__cat">{post.data.category}</span>
+        <span class="post__date">{dateFmt}</span>
+      </div>
+
+      <h1 class="post__title">{post.data.title}</h1>
+      <p class="post__excerpt">{post.data.excerpt}</p>
+
+      {post.data.image && (
+        <div class="post__cover">
+          <Image src={post.data.image} alt={post.data.title} widths={[640, 1024, 1600]} sizes="(max-width: 900px) 100vw, 1200px" />
+        </div>
+      )}
+
+      <div class="post__body">
+        <Content />
+      </div>
+    </div>
+
+    {related.length > 0 && (
+      <div class="container-x">
+        <div class="post__more">
+          <h2 class="post__more-title">Читать дальше</h2>
+          <div class="post__more-grid">
+            {related.map((r) => (
+              <a href={newsUrl(r.id)} class="rcard">
+                {r.data.image && (
+                  <div class="rcard__img">
+                    <Image src={r.data.image} alt={r.data.title} widths={[400, 800]} sizes="400px" />
+                  </div>
+                )}
+                <div class="rcard__body">
+                  <span class="rcard__cat">{r.data.category}</span>
+                  <h3 class="rcard__title">{r.data.title}</h3>
+                </div>
+              </a>
+            ))}
+          </div>
+        </div>
+      </div>
+    )}
+  </article>
+
+  <Footer />
+</Layout>
+
+<style>
+  .post {
+    padding: 120px 0 80px;
+    background: #fafaf7;
+  }
+  .post__back {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-family: 'Onest', sans-serif;
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: #6a6a6a;
+    text-decoration: none;
+    margin-bottom: 32px;
+    transition: color 0.2s, gap 0.2s;
+  }
+  .post__back:hover { color: #E4002B; gap: 12px; }
+
+  .post__meta {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    margin-bottom: 20px;
+  }
+  .post__cat {
+    font-family: 'Onest', sans-serif;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 2.5px;
+    text-transform: uppercase;
+    color: #E4002B;
+    padding: 5px 12px;
+    border: 1px solid rgba(228,0,43,0.35);
+  }
+  .post__date {
+    font-family: 'Onest', sans-serif;
+    font-size: 13px;
+    color: #6a6a6a;
+  }
+
+  .post__title {
+    font-family: 'Onest', sans-serif;
+    font-size: clamp(28px, 4vw, 56px);
+    font-weight: 700;
+    line-height: 1.1;
+    letter-spacing: -0.02em;
+    margin: 0 0 24px;
+    max-width: 900px;
+    color: #0a0a0a;
+  }
+
+  .post__excerpt {
+    font-family: 'Onest', sans-serif;
+    font-size: clamp(16px, 1.6vw, 20px);
+    line-height: 1.5;
+    color: #2a2a2a;
+    margin: 0 0 48px;
+    max-width: 800px;
+  }
+
+  .post__cover {
+    margin: 0 0 56px;
+    overflow: hidden;
+    aspect-ratio: 16/9;
+    background: #f0ede5;
+  }
+  .post__cover :global(img) {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+
+  .post__body {
+    max-width: 760px;
+    font-family: 'Onest', sans-serif;
+    font-size: 17px;
+    line-height: 1.7;
+    color: #1f1f1f;
+  }
+  .post__body :global(p) { margin: 0 0 1.2em; }
+  .post__body :global(h2) {
+    font-size: 28px;
+    font-weight: 700;
+    margin: 2em 0 0.6em;
+    letter-spacing: -0.01em;
+  }
+  .post__body :global(h3) {
+    font-size: 22px;
+    font-weight: 700;
+    margin: 1.6em 0 0.5em;
+  }
+  .post__body :global(ul), .post__body :global(ol) {
+    margin: 0 0 1.2em;
+    padding-left: 1.4em;
+  }
+  .post__body :global(li) { margin: 0.3em 0; }
+  .post__body :global(strong) { color: #0a0a0a; }
+  .post__body :global(a) {
+    color: #E4002B;
+    text-decoration: underline;
+    text-underline-offset: 3px;
+  }
+  .post__body :global(blockquote) {
+    border-left: 3px solid #E4002B;
+    padding: 0.4em 0 0.4em 1.2em;
+    margin: 1.4em 0;
+    font-style: italic;
+    color: #4a4a4a;
+  }
+  .post__body :global(img) {
+    width: 100%;
+    height: auto;
+    margin: 1.5em 0;
+  }
+
+  /* Блок «Читать дальше» */
+  .post__more {
+    margin-top: 96px;
+    padding-top: 48px;
+    border-top: 1px solid rgba(0,0,0,0.08);
+  }
+  .post__more-title {
+    font-family: 'Onest', sans-serif;
+    font-size: clamp(24px, 3vw, 36px);
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: -0.01em;
+    margin: 0 0 32px;
+  }
+  .post__more-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+  }
+  .rcard {
+    background: #fff;
+    border: 1px solid rgba(0,0,0,0.08);
+    overflow: hidden;
+    text-decoration: none;
+    color: inherit;
+    display: flex;
+    flex-direction: column;
+    transition: all 0.3s;
+  }
+  .rcard:hover {
+    border-color: rgba(228,0,43,0.35);
+    transform: translateY(-3px);
+    box-shadow: 0 12px 28px rgba(228,0,43,0.08);
+  }
+  .rcard__img {
+    aspect-ratio: 16/10;
+    overflow: hidden;
+    background: #f0ede5;
+  }
+  .rcard__img :global(img) {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+  .rcard__body {
+    padding: 16px 18px 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+  .rcard__cat {
+    font-family: 'Onest', sans-serif;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: #E4002B;
+  }
+  .rcard__title {
+    font-family: 'Onest', sans-serif;
+    font-size: 15px;
+    font-weight: 600;
+    line-height: 1.3;
+    margin: 0;
+    color: #0a0a0a;
+  }
+
+  @media (max-width: 900px) {
+    .post { padding: 90px 0 60px; }
+    .post__more-grid { grid-template-columns: 1fr; }
+  }
+</style>

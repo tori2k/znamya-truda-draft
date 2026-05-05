@@ -1,0 +1,167 @@
+# Decap CMS — конфиг админки ФК «Знамя Труда»
+#
+# ⚠️ Перед использованием:
+#   1. Создай GitHub OAuth App: https://github.com/settings/applications/new
+#      - Homepage URL: https://tori2k.github.io/znamya-truda-draft/
+#      - Authorization callback URL: <URL твоего OAuth-прокси>/callback
+#   2. Подними OAuth-прокси (например на Vercel: https://github.com/sterlingwes/decap-proxy)
+#   3. Замени base_url ниже на URL твоего прокси
+#   4. В репо открой Settings → Collaborators → пригласи редакторов
+
+backend:
+  name: github
+  repo: tori2k/znamya-truda-draft   # измени, если другой репо
+  branch: main
+  base_url: https://decap-proxy.vercel.app   # замени на свой OAuth-прокси
+  auth_endpoint: api/auth
+
+# В режиме разработки локально включай test-repo:
+# local_backend: true
+
+site_url: https://tori2k.github.io/znamya-truda-draft/
+display_url: https://tori2k.github.io/znamya-truda-draft/
+logo_url: https://tori2k.github.io/znamya-truda-draft/favicon.svg
+
+locale: ru
+
+media_folder: 'public/team'
+public_folder: '/team'
+
+collections:
+  # ─── Новости ──────────────────────────────────────────────────────────
+  - name: 'news'
+    label: '📰 Новости'
+    label_singular: 'Новость'
+    folder: 'src/content/news'
+    create: true
+    delete: true
+    slug: '{{year}}-{{month}}-{{day}}-{{slug}}'
+    extension: 'md'
+    format: 'frontmatter'
+    summary: '{{title}} — {{category}}, {{date | date("DD.MM.YYYY")}}'
+    sortable_fields: ['date', 'title']
+    media_folder: '/public/news'
+    public_folder: '/news'
+    view_filters:
+      - { label: 'Матчи',    field: category, pattern: 'Матчи' }
+      - { label: 'Клуб',     field: category, pattern: 'Клуб' }
+      - { label: 'Команда',  field: category, pattern: 'Команда' }
+      - { label: 'Партнёры', field: category, pattern: 'Партнёры' }
+      - { label: 'Анонсы',   field: category, pattern: 'Анонсы' }
+
+    fields:
+      - { label: 'Заголовок', name: 'title', widget: 'string' }
+      - { label: 'Дата публикации', name: 'date', widget: 'datetime', format: 'YYYY-MM-DD', date_format: 'YYYY-MM-DD', time_format: false, picker_utc: false }
+      - label: 'Категория'
+        name: 'category'
+        widget: 'select'
+        options: ['Матчи', 'Клуб', 'Команда', 'Партнёры', 'Анонсы']
+        default: 'Клуб'
+      - label: 'Краткое описание'
+        name: 'excerpt'
+        widget: 'text'
+        hint: 'Покажется в карточке на главной и в превью соцсетей. 1-2 предложения.'
+      - label: 'Обложка'
+        name: 'image'
+        widget: 'image'
+        required: false
+        hint: 'Желательно 16:9, минимум 1200px.'
+      - label: 'Закрепить как главную'
+        name: 'featured'
+        widget: 'boolean'
+        default: false
+        hint: 'Только одна новость может быть главной — закрепится в большой карточке на главной странице.'
+      - label: 'Счёт матча'
+        name: 'score'
+        widget: 'string'
+        required: false
+        hint: 'Только для категории «Матчи». Например: 2:1'
+      - label: 'Текст новости'
+        name: 'body'
+        widget: 'markdown'
+
+  # ─── Состав ───────────────────────────────────────────────────────────
+  - name: 'squad'
+    label: '⚽ Состав команды'
+    label_singular: 'Игрок'
+    folder: 'src/content/squad'
+    create: true
+    delete: true
+    slug: '{{number}}-{{lastName}}-{{firstName}}'
+    extension: 'md'
+    format: 'frontmatter'
+    summary: '#{{number}} {{lastName}} {{firstName}} · {{role}}'
+    sortable_fields: ['number', 'lastName']
+    media_folder: '/public/team'
+    public_folder: '/team'
+    view_filters:
+      - { label: 'Вратари',       field: role, pattern: 'Вратарь' }
+      - { label: 'Защитники',     field: role, pattern: 'Защитник' }
+      - { label: 'Полузащитники', field: role, pattern: 'Полузащитник' }
+      - { label: 'Нападающие',    field: role, pattern: 'Нападающий' }
+
+    fields:
+      - label: 'Игровой номер'
+        name: 'number'
+        widget: 'number'
+        value_type: 'int'
+        min: 1
+        max: 99
+        required: false
+        hint: 'Оставь пустым, если игрок подписан, но не заявлен.'
+      - { label: 'Фамилия',  name: 'lastName',  widget: 'string' }
+      - { label: 'Имя',      name: 'firstName', widget: 'string' }
+      - label: 'Возраст'
+        name: 'age'
+        widget: 'number'
+        value_type: 'int'
+        min: 14
+        max: 50
+      - label: 'Амплуа'
+        name: 'role'
+        widget: 'select'
+        options: ['Вратарь', 'Защитник', 'Полузащитник', 'Нападающий']
+        default: 'Полузащитник'
+      - label: 'Фото'
+        name: 'photo'
+        widget: 'image'
+        required: false
+        hint: 'Портрет игрока. Желательно квадратный или вертикальный кроп. Если пусто — будет силуэт-плейсхолдер.'
+      - label: 'Порядок (внутри амплуа)'
+        name: 'order'
+        widget: 'number'
+        value_type: 'int'
+        default: 100
+        hint: 'Чем меньше — тем выше в списке. Капитан/основа — например, 10. Обычные — 100. Резерв — 200.'
+
+  # ─── Тренерский штаб ──────────────────────────────────────────────────
+  - name: 'staff'
+    label: '👔 Тренерский штаб'
+    label_singular: 'Сотрудник штаба'
+    folder: 'src/content/staff'
+    create: true
+    delete: true
+    slug: '{{slug}}'
+    extension: 'md'
+    format: 'frontmatter'
+    summary: '{{name}} · {{role}}'
+    media_folder: '/public/team'
+    public_folder: '/team'
+
+    fields:
+      - { label: 'Имя и фамилия', name: 'name', widget: 'string' }
+      - { label: 'Должность',     name: 'role', widget: 'string', hint: 'Например: Главный тренер, Тренер вратарей.' }
+      - label: 'Фото'
+        name: 'photo'
+        widget: 'image'
+        required: false
+      - label: 'Биография'
+        name: 'bio'
+        widget: 'text'
+        required: false
+        hint: '1-3 предложения для карточки.'
+      - label: 'Порядок'
+        name: 'order'
+        widget: 'number'
+        value_type: 'int'
+        default: 100

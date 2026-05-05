@@ -1,0 +1,246 @@
+---
+import { getCollection } from 'astro:content';
+import { Image } from 'astro:assets';
+import Layout from '../../layouts/Layout.astro';
+import Nav from '../../components/Nav.astro';
+import Footer from '../../components/Footer.astro';
+import { NEWS_CATEGORIES } from '../../content.config';
+
+const all = (await getCollection('news')).sort(
+  (a, b) => b.data.date.getTime() - a.data.date.getTime()
+);
+
+const BASE = import.meta.env.BASE_URL.replace(/\/$/, '');
+const newsUrl = (slug: string) => `${BASE}/news/${slug}/`;
+
+const fmtDate = (d: Date) =>
+  new Intl.DateTimeFormat('ru-RU', { day: 'numeric', month: 'long' }).format(d);
+---
+<Layout title="Новости — ФК «Знамя Труда»" description="Новости и хроника ФК «Знамя Труда» Орехово-Зуево.">
+  <Nav />
+
+  <section class="news-page">
+    <div class="container-x">
+      <div class="news-page__head">
+        <div class="sec-tag">Новости</div>
+        <h1 class="news-page__title">
+          ЖИЗНЬ<br/><span>КЛУБА</span>
+        </h1>
+      </div>
+
+      <!-- Табы категорий -->
+      <div class="tabs" role="tablist">
+        <button class="tab tab--active" data-cat="all" role="tab">Все</button>
+        {NEWS_CATEGORIES.map((c) => (
+          <button class="tab" data-cat={c} role="tab">{c}</button>
+        ))}
+      </div>
+
+      <!-- Сетка карточек -->
+      <div class="news-grid">
+        {all.map((n) => (
+          <a href={newsUrl(n.id)} class="card" data-cat={n.data.category}>
+            {n.data.image && (
+              <div class="card__img">
+                <Image src={n.data.image} alt={n.data.title} widths={[400, 800]} sizes="(max-width: 900px) 100vw, 400px" />
+                {n.data.score && <div class="card__score">{n.data.score}</div>}
+              </div>
+            )}
+            <div class="card__body">
+              <div class="card__meta">
+                <span class="card__cat">{n.data.category}</span>
+                <span class="card__date">{fmtDate(n.data.date)}</span>
+              </div>
+              <h3 class="card__title">{n.data.title}</h3>
+              <p class="card__excerpt">{n.data.excerpt}</p>
+            </div>
+          </a>
+        ))}
+      </div>
+
+      <p class="news-empty" id="empty" hidden>В этой категории пока нет новостей.</p>
+    </div>
+  </section>
+
+  <Footer />
+</Layout>
+
+<script>
+  const tabs = document.querySelectorAll<HTMLButtonElement>('.tab');
+  const cards = document.querySelectorAll<HTMLAnchorElement>('.card');
+  const empty = document.getElementById('empty');
+
+  tabs.forEach((tab) => {
+    tab.addEventListener('click', () => {
+      const cat = tab.dataset.cat;
+      tabs.forEach((t) => t.classList.toggle('tab--active', t === tab));
+
+      let visible = 0;
+      cards.forEach((card) => {
+        const show = cat === 'all' || card.dataset.cat === cat;
+        card.style.display = show ? '' : 'none';
+        if (show) visible++;
+      });
+      if (empty) empty.hidden = visible > 0;
+    });
+  });
+</script>
+
+<style>
+  .news-page {
+    padding: 130px 0 120px;
+    background: #fafaf7;
+    min-height: 80vh;
+  }
+  .news-page__head { margin-bottom: 40px; }
+  .news-page__title {
+    font-family: 'Onest', sans-serif;
+    font-size: clamp(48px, 7vw, 96px);
+    font-weight: 700;
+    line-height: 0.9;
+    letter-spacing: -0.02em;
+    text-transform: uppercase;
+    color: #0a0a0a;
+    margin: 0;
+  }
+  .news-page__title span { color: #E4002B; }
+
+  .tabs {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-bottom: 40px;
+    padding-bottom: 24px;
+    border-bottom: 1px solid rgba(0,0,0,0.08);
+  }
+  .tab {
+    font-family: 'Onest', sans-serif;
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    padding: 10px 18px;
+    border: 1px solid rgba(0,0,0,0.18);
+    background: #fff;
+    color: #2a2a2a;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  .tab:hover {
+    border-color: #E4002B;
+    color: #E4002B;
+  }
+  .tab--active {
+    background: #0a0a0a;
+    border-color: #0a0a0a;
+    color: #fff;
+  }
+  .tab--active:hover { color: #fff; }
+
+  .news-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 24px;
+  }
+  .card {
+    background: #fff;
+    border: 1px solid rgba(0,0,0,0.08);
+    text-decoration: none;
+    color: inherit;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    transition: all 0.3s cubic-bezier(.25,.46,.45,.94);
+  }
+  .card:hover {
+    border-color: rgba(228,0,43,0.35);
+    transform: translateY(-4px);
+    box-shadow: 0 16px 36px rgba(228,0,43,0.08);
+  }
+  .card__img {
+    position: relative;
+    aspect-ratio: 16/10;
+    background: #f0ede5;
+    overflow: hidden;
+  }
+  .card__img :global(img) {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.5s;
+  }
+  .card:hover .card__img :global(img) { transform: scale(1.05); }
+  .card__score {
+    position: absolute;
+    top: 14px; right: 16px;
+    font-family: 'Onest', sans-serif;
+    font-weight: 700;
+    font-size: 36px;
+    color: #fff;
+    text-shadow: 0 4px 16px rgba(0,0,0,0.35);
+    line-height: 1;
+  }
+  .card__body {
+    padding: 20px 22px 24px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    flex: 1;
+  }
+  .card__meta {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .card__cat {
+    font-family: 'Onest', sans-serif;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: #E4002B;
+    padding: 4px 9px;
+    border: 1px solid rgba(228,0,43,0.35);
+  }
+  .card__date {
+    font-family: 'Onest', sans-serif;
+    font-size: 11px;
+    color: #6a6a6a;
+  }
+  .card__title {
+    font-family: 'Onest', sans-serif;
+    font-size: 17px;
+    font-weight: 600;
+    line-height: 1.3;
+    color: #0a0a0a;
+    margin: 0;
+    transition: color 0.2s;
+  }
+  .card:hover .card__title { color: #E4002B; }
+  .card__excerpt {
+    font-family: 'Onest', sans-serif;
+    font-size: 13px;
+    line-height: 1.55;
+    color: #4a4a4a;
+    margin: 0;
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+
+  .news-empty {
+    text-align: center;
+    color: #6a6a6a;
+    padding: 60px 0;
+    font-family: 'Onest', sans-serif;
+  }
+
+  @media (max-width: 900px) {
+    .news-page { padding: 90px 0 80px; }
+    .news-grid { grid-template-columns: 1fr; }
+  }
+  @media (max-width: 1100px) and (min-width: 901px) {
+    .news-grid { grid-template-columns: repeat(2, 1fr); }
+  }
+</style>
