@@ -1,9 +1,9 @@
 ---
 import { getCollection } from 'astro:content';
-import { Image } from 'astro:assets';
 
 const BASE = import.meta.env.BASE_URL.replace(/\/$/, '');
 const newsUrl = (slug: string) => `${BASE}/news/${slug}/`;
+const asset = (p: string) => `${BASE}${p.startsWith('/') ? p : '/' + p}`;
 
 // Берём 4 свежих новости, отдаём приоритет featured
 const all = (await getCollection('news')).sort(
@@ -34,7 +34,7 @@ const fmtDate = (d: Date) =>
       <a href={newsUrl(featured.id)} class="ncard ncard--featured reveal">
         <div class="ncard__image ncard__image--featured">
           {featured.data.image && (
-            <Image src={featured.data.image} alt={featured.data.title} class="ncard__img" widths={[640, 1024]} sizes="(max-width: 900px) 100vw, 720px" />
+            <img src={asset(featured.data.image)} alt={featured.data.title} class="ncard__img" loading="lazy" />
           )}
           {featured.data.score && <div class="ncard__score">{featured.data.score}</div>}
           <div class="ncard__gradient"></div>
@@ -59,7 +59,7 @@ const fmtDate = (d: Date) =>
           <a href={newsUrl(n.id)} class="ncard reveal" style={`transition-delay: ${(i + 1) * 0.1}s`}>
             <div class="ncard__image ncard__image--small">
               {n.data.image && (
-                <Image src={n.data.image} alt={n.data.title} class="ncard__img" widths={[400, 800]} sizes="400px" />
+                <img src={asset(n.data.image)} alt={n.data.title} class="ncard__img" loading="lazy" />
               )}
             </div>
             <div class="ncard__body">
