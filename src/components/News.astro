@@ -2,12 +2,16 @@
 import { getCollection } from 'astro:content';
 
 const BASE = import.meta.env.BASE_URL.replace(/\/$/, '');
-const newsUrl = (slug: string) => `${BASE}/news/${slug}/`;
+// Кастомный slug из frontmatter в приоритете, иначе id (имя файла) как fallback.
+const newsUrl = (n: { id: string; data: { slug?: string } }) =>
+  `${BASE}/news/${n.data.slug || n.id}/`;
 const asset = (p: string) => `${BASE}${p.startsWith('/') ? p : '/' + p}`;
 
 // 4 свежих новости одного размера. Без featured-выделения —
 // заказчику проще: одна меньше — нет «дыры» от пустого закрепа.
-const all = (await getCollection('news')).sort(
+// Черновики на лендинг не пускаем (даже в dev — это домашняя страница,
+// неуместно показывать недоделанные).
+const all = (await getCollection('news', ({ data }) => !data.draft)).sort(
   (a, b) => b.data.date.getTime() - a.data.date.getTime()
 );
 const items = all.slice(0, 4);
@@ -31,7 +35,7 @@ const fmtDate = (d: Date) =>
 
     <div class="news__grid">
       {items.map((n, i) => (
-        <a href={newsUrl(n.id)} class="ncard reveal" style={`transition-delay: ${i * 0.08}s`}>
+        <a href={newsUrl(n)} class="ncard reveal" style={`transition-delay: ${i * 0.08}s`}>
           <div class="ncard__image">
             {n.data.image && (
               <img src={asset(n.data.image)} alt={n.data.title} class="ncard__img" loading="lazy" />

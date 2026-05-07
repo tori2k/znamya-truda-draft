@@ -5,12 +5,19 @@ import Nav from '../../components/Nav.astro';
 import Footer from '../../components/Footer.astro';
 import { NEWS_CATEGORIES } from '../../content.config';
 
-const all = (await getCollection('news')).sort(
+// На прод не пускаем черновики. В dev (npm run dev) показываем всё —
+// чтобы редактор мог посмотреть как новость будет выглядеть до публикации.
+const all = (await getCollection('news', ({ data }) => {
+  return import.meta.env.DEV || !data.draft;
+})).sort(
   (a, b) => b.data.date.getTime() - a.data.date.getTime()
 );
 
 const BASE = import.meta.env.BASE_URL.replace(/\/$/, '');
-const newsUrl = (slug: string) => `${BASE}/news/${slug}/`;
+// URL новости: если задан кастомный data.slug — используем его, иначе
+// fallback на имя файла (n.id) — старое поведение.
+const newsUrl = (n: { id: string; data: { slug?: string } }) =>
+  `${BASE}/news/${n.data.slug || n.id}/`;
 const asset = (p: string) => `${BASE}${p.startsWith('/') ? p : '/' + p}`;
 
 const fmtDate = (d: Date) =>
@@ -39,7 +46,7 @@ const fmtDate = (d: Date) =>
       <!-- Сетка карточек -->
       <div class="news-grid">
         {all.map((n) => (
-          <a href={newsUrl(n.id)} class="card" data-cat={n.data.category}>
+          <a href={newsUrl(n)} class="card" data-cat={n.data.category}>
             {n.data.image && (
               <div class="card__img">
                 <img src={asset(n.data.image)} alt={n.data.title} loading="lazy" />

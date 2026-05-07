@@ -38,6 +38,8 @@ collections:
     media_folder: '/public/news'
     public_folder: '/news'
     view_filters:
+      - { label: 'Только черновики', field: draft, pattern: 'true' }
+      - { label: 'Только опубликованные', field: draft, pattern: 'false' }
       - { label: 'Матчи',    field: category, pattern: 'Матчи' }
       - { label: 'Клуб',     field: category, pattern: 'Клуб' }
       - { label: 'Команда',  field: category, pattern: 'Команда' }
@@ -52,6 +54,17 @@ collections:
         widget: 'select'
         options: ['Матчи', 'Клуб', 'Команда', 'Партнёры', 'Анонсы']
         default: 'Клуб'
+      - label: 'Адрес страницы (URL)'
+        name: 'slug'
+        widget: 'string'
+        required: false
+        pattern: ['^[a-z0-9-]*$', 'Только латинские буквы, цифры и дефисы']
+        hint: 'Опционально. Например: pobeda-nad-spartakom → /news/pobeda-nad-spartakom. Если пусто — будет автогенерированный.'
+      - label: 'Черновик'
+        name: 'draft'
+        widget: 'boolean'
+        default: false
+        hint: 'Если включено — новость не опубликуется на сайте. Удобно сохранить наработку и допилить позже.'
       - label: 'Краткое описание'
         name: 'excerpt'
         widget: 'text'

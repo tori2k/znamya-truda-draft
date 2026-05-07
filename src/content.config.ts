@@ -41,6 +41,13 @@ const news = defineCollection({
     image: imagePath,
     featured: z.boolean().default(false),
     score: z.string().optional(),
+    // Опциональный кастомный slug. Если задан — URL новости /news/<slug>.
+    // Если не задан — Astro использует имя файла как slug (старое поведение).
+    // Удобно для красивых URL: «pobeda-nad-spartakom» вместо «2026-04-12-pobeda-nad-olimp».
+    slug: z.string().optional(),
+    // Черновик: видим только в Decap CMS превью, не попадает в прод.
+    // Фильтруется в pages/news/index.astro и pages/news/[slug].astro.
+    draft: z.boolean().default(false),
   }),
 });
 
