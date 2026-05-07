@@ -120,13 +120,17 @@ body {
   border: 0;
   cursor: pointer;
   transition: all 0.3s;
-  clip-path: polygon(0 0, 100% 0, calc(100% - 12px) 100%, 0 100%);
   text-decoration: none;
 }
+/* Скошенный правый нижний угол — только для заливочной .btn--red.
+   На .btn--ghost clip-path обрезал бы сам бордер по диагонали и кнопка
+   выглядела «откушенной» (особенно заметно на мобиле). Поэтому ghost
+   делаем обычным прямоугольником с цельным бордером. */
 .btn--red {
   background: #E4002B;
   color: #fff;
   padding-right: 40px;
+  clip-path: polygon(0 0, 100% 0, calc(100% - 12px) 100%, 0 100%);
 }
 .btn--red:hover {
   background: #B80023;
@@ -136,7 +140,6 @@ body {
   background: transparent;
   color: #0a0a0a;
   border: 1px solid rgba(0,0,0,0.18);
-  padding-right: 40px;
 }
 .btn--ghost:hover {
   border-color: #E4002B;

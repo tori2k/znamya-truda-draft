@@ -99,7 +99,15 @@ const groups = ROLES.map((role) => ({
                 <div class="player__num-tag">{p.number !== null ? `#${p.number}` : 'NEW'}</div>
                 <div class="player__photo">
                   {p.photo ? (
-                    <img src={asset(p.photo)} alt={`${p.lastName} ${p.firstName}`} loading="lazy" />
+                    /* Первые 4 в каждой группе грузим eagerly (выше fold),
+                       остальные — lazy. Без этого Олег видел пустые карточки
+                       на медленном мобильном — браузер откладывал загрузку. */
+                    <img
+                      src={asset(p.photo)}
+                      alt={`${p.lastName} ${p.firstName}`}
+                      loading={i < 4 ? 'eager' : 'lazy'}
+                      decoding="async"
+                    />
                   ) : (
                     <div class="player__placeholder">
                       <svg width="70" height="70" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1">
@@ -317,7 +325,23 @@ const groups = ROLES.map((role) => ({
     justify-content: center;
     overflow: hidden;
   }
+  /* Силуэт-плейсхолдер на фоне — видим пока <img loading="lazy"> не
+     догрузилась, чтобы карточка не выглядела «пустой бежевой плиткой».
+     Когда img отрисуется поверх — закроет силуэт. */
+  .player__photo::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background-image: url("data:image/svg+xml;utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23c8c6bf' stroke-width='1'%3E%3Ccircle cx='12' cy='8' r='4'/%3E%3Cpath d='M4 21c0-4 4-6 8-6s8 2 8 6'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: 70px 70px;
+    pointer-events: none;
+    z-index: 0;
+  }
   .player__photo img {
+    position: relative;
+    z-index: 1;
     width: 100%;
     height: 100%;
     object-fit: cover;
@@ -326,7 +350,11 @@ const groups = ROLES.map((role) => ({
     transition: transform 0.5s ease;
   }
   .player:hover .player__photo img { transform: scale(1.04); }
-  .player__placeholder { color: #c8c6bf; }
+  .player__placeholder {
+    color: #c8c6bf;
+    position: relative;
+    z-index: 1;
+  }
 
   .player__body {
     padding: 14px 16px 16px;
