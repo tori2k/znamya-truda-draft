@@ -4,7 +4,7 @@ lastName: Малания
 firstName: Диего
 age: 35
 role: Защитник
-photo: ../../../public/team/malania.jpg
+photo: /team/малания.jpg
 order: 100
 showName: true
 ---

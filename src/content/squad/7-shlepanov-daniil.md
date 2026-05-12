@@ -4,7 +4,7 @@ lastName: Шлепанов
 firstName: Даниил
 age: 37
 role: Нападающий
-photo: ../../../public/team/shlepanov.jpg
+photo: /team/шлепанов.jpg
 order: 100
 showName: true
 ---
