@@ -92,6 +92,19 @@ const asset = (p: string) => `${BASE}${p.startsWith('/') ? p : '/' + p}`;
   <Footer />
 </Layout>
 
+<script>
+  // Картинки в markdown вставляются с путём /news/file.jpg, но сайт
+  // живёт на /znamya-truda-draft/ — добавляем BASE_URL к абсолютным путям.
+  const base = import.meta.env.BASE_URL.replace(/\/$/, '');
+  if (base) {
+    document.querySelectorAll<HTMLImageElement>('.post__body img').forEach((img) => {
+      if (img.getAttribute('src')?.startsWith('/') && !img.src.includes(base)) {
+        img.src = base + img.getAttribute('src');
+      }
+    });
+  }
+</script>
+
 <style>
   .post {
     padding: 120px 0 80px;
