@@ -4,7 +4,7 @@ lastName: Черкасов
 firstName: Данила
 age: 25
 role: Полузащитник
-photo: ../../../public/team/cherkasov.jpg
+photo: /team/черкасов.jpg
 order: 100
 showName: true
 ---
