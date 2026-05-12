@@ -4,7 +4,7 @@ lastName: Герасимов
 firstName: Иван
 age: 21
 role: Защитник
-photo: ../../../public/team/gerasimov.jpg
+photo: /team/герасимов.jpg
 order: 100
 showName: true
 ---
