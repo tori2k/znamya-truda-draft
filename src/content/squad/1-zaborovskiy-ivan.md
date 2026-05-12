@@ -4,7 +4,7 @@ lastName: Заборовский
 firstName: Иван
 age: 21
 role: Вратарь
-photo: ../../../public/team/zaborovsky.jpg
+photo: /team/заба.jpg
 order: 100
 showName: true
 ---

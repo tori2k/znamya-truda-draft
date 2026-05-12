@@ -4,7 +4,7 @@ lastName: Харланов
 firstName: Ярослав
 age: 28
 role: Защитник
-photo: ../../../public/team/kharlanov.jpg
+photo: /team/харланов.jpg
 order: 100
 showName: true
 ---
