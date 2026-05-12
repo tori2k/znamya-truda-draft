@@ -92,7 +92,7 @@ collections:
         # вставляем как обычный markdown ![](/news/file.jpg), drag-n-drop
         # тоже работает. Iframes (VK Video, YouTube) разрешены — Astro
         # рендерит HTML внутри markdown как есть.
-        buttons: ['bold', 'italic', 'code', 'link', 'heading-one', 'heading-two', 'heading-three', 'quote', 'bulleted-list', 'numbered-list', 'image']
+        buttons: ['bold', 'italic', 'code', 'link', 'heading-one', 'heading-two', 'heading-three', 'quote', 'bulleted-list', 'numbered-list']
         editor_components: ['image']
 
   # ─── Состав ───────────────────────────────────────────────────────────
