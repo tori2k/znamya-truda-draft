@@ -94,7 +94,6 @@ collections:
         # рендерит HTML внутри markdown как есть.
         buttons: ['bold', 'italic', 'code', 'link', 'heading-one', 'heading-two', 'heading-three', 'quote', 'bulleted-list', 'numbered-list']
         editor_components: []
-        modes: ['raw']
 
   # ─── Состав ───────────────────────────────────────────────────────────
   - name: 'squad'
