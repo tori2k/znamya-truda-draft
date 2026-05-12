@@ -121,6 +121,7 @@ body {
   cursor: pointer;
   transition: all 0.3s;
   text-decoration: none;
+  border-radius: 8px;
 }
 /* Скошенный правый нижний угол — только для заливочной .btn--red.
    На .btn--ghost clip-path обрезал бы сам бордер по диагонали и кнопка
@@ -129,8 +130,6 @@ body {
 .btn--red {
   background: #E4002B;
   color: #fff;
-  padding-right: 40px;
-  clip-path: polygon(0 0, 100% 0, calc(100% - 12px) 100%, 0 100%);
 }
 .btn--red:hover {
   background: #B80023;

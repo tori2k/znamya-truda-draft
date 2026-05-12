@@ -29,6 +29,7 @@ jobs:
       - run: npm run build
         env:
           TIMEPAD_PROXY_URL: ${{ secrets.TIMEPAD_PROXY_URL }}
+          PUBLIC_YM_COUNTER_ID: ${{ secrets.PUBLIC_YM_COUNTER_ID }}
       - uses: actions/upload-pages-artifact@v3
         with:
           path: ./dist
