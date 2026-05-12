@@ -4,7 +4,7 @@ lastName: Канаев
 firstName: Михаил
 age: 36
 role: Полузащитник
-photo: ../../../public/team/kanaev.jpg
+photo: /team/канай.jpg
 order: 100
 showName: true
 ---
