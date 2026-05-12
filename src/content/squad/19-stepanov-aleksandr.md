@@ -4,7 +4,7 @@ lastName: Степанов
 firstName: Александр
 age: 27
 role: Полузащитник
-photo: ../../../public/team/stepanov.jpg
+photo: /team/степанов.jpg
 order: 100
 showName: true
 ---
