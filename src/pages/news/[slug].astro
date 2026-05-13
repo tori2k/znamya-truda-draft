@@ -93,8 +93,8 @@ const asset = (p: string) => `${BASE}${p.startsWith('/') ? p : '/' + p}`;
 </Layout>
 
 <script>
-  // Картинки в markdown вставляются с путём /news/file.jpg, но сайт
-  // живёт на /znamya-truda-draft/ — добавляем BASE_URL к абсолютным путям.
+  // Картинки в markdown вставляются с путём /news/file.jpg.
+  // На случай если base не корневой — добавляем BASE_URL к путям.
   const base = import.meta.env.BASE_URL.replace(/\/$/, '');
   if (base) {
     document.querySelectorAll<HTMLImageElement>('.post__body img').forEach((img) => {

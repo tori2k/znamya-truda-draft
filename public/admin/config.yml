@@ -13,9 +13,9 @@ backend:
 # В режиме разработки локально включай test-repo:
 # local_backend: true
 
-site_url: https://tori2k.github.io/znamya-truda-draft/
-display_url: https://tori2k.github.io/znamya-truda-draft/
-logo_url: https://tori2k.github.io/znamya-truda-draft/favicon.svg
+site_url: https://fczt1909.ru/
+display_url: https://fczt1909.ru/
+logo_url: https://fczt1909.ru/favicon.svg
 
 locale: ru
 
