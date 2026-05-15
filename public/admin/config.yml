@@ -95,6 +95,90 @@ collections:
         buttons: ['bold', 'italic', 'code', 'link', 'heading-one', 'heading-two', 'heading-three', 'quote', 'bulleted-list', 'numbered-list']
         editor_components: ['image']
 
+  # ─── Матчи ────────────────────────────────────────────────────────────
+  - name: 'matches'
+    label: '📅 Матчи'
+    label_singular: 'Матч'
+    folder: 'src/content/matches'
+    create: true
+    delete: true
+    slug: '{{date}}-{{awayName}}'
+    extension: 'md'
+    format: 'frontmatter'
+    summary: '{{date | date("DD.MM.YYYY")}} · {{homeName}} — {{awayName}}'
+    sortable_fields: ['date', 'status', 'awayName']
+    view_filters:
+      - { label: 'Предстоящие', field: status, pattern: 'upcoming' }
+      - { label: 'Сыгранные', field: status, pattern: 'played' }
+      - { label: 'Черновики', field: draft, pattern: 'true' }
+
+    fields:
+      - label: 'Дата матча'
+        name: 'date'
+        widget: 'datetime'
+        format: 'YYYY-MM-DD'
+        date_format: 'DD.MM.YYYY'
+        time_format: false
+        picker_utc: false
+      - label: 'Время'
+        name: 'time'
+        widget: 'string'
+        required: false
+        pattern: ['^$|^[0-2][0-9]:[0-5][0-9]$', 'Формат времени: 17:00']
+        hint: 'Например: 17:00. Можно оставить пустым, если время уточняется.'
+      - label: 'Статус'
+        name: 'status'
+        widget: 'select'
+        default: 'upcoming'
+        options:
+          - { label: 'Предстоящий', value: 'upcoming' }
+          - { label: 'Сыгран', value: 'played' }
+      - { label: 'Турнир / тур', name: 'league', widget: 'string', default: 'ФФМО · Б-2' }
+      - { label: 'Хозяева', name: 'homeName', widget: 'string', default: 'Знамя Труда' }
+      - label: 'Гости / соперник'
+        name: 'awayName'
+        widget: 'string'
+        hint: 'Название должно совпадать с названием в «Логотипах соперников», чтобы подтянулся герб.'
+      - label: 'Стадион / адрес'
+        name: 'venue'
+        widget: 'string'
+        required: false
+      - label: 'Ссылка на регистрацию'
+        name: 'registrationUrl'
+        widget: 'string'
+        required: false
+        hint: 'Например, ссылка Timepad для предстоящего матча.'
+      - label: 'Счёт хозяев'
+        name: 'homeScore'
+        widget: 'number'
+        value_type: 'int'
+        required: false
+        hint: 'Заполнять только после матча.'
+      - label: 'Счёт гостей'
+        name: 'awayScore'
+        widget: 'number'
+        value_type: 'int'
+        required: false
+        hint: 'Заполнять только после матча.'
+      - label: 'Итог для Знамени'
+        name: 'result'
+        widget: 'select'
+        required: false
+        options:
+          - { label: 'Победа', value: 'win' }
+          - { label: 'Ничья', value: 'draw' }
+          - { label: 'Поражение', value: 'loss' }
+        hint: 'Нужно для бейджа результата. Если не заполнить, сайт попробует понять по счёту.'
+      - label: 'Slug отчёта'
+        name: 'reportSlug'
+        widget: 'string'
+        required: false
+        hint: 'Часть URL после /news/. Например: 2026-05-10-поражение-с-горьким-осадком'
+      - label: 'Черновик'
+        name: 'draft'
+        widget: 'boolean'
+        default: false
+
   # ─── Состав ───────────────────────────────────────────────────────────
   - name: 'squad'
     label: '⚽ Состав команды'
@@ -204,7 +288,7 @@ collections:
       - label: 'Название команды'
         name: 'name'
         widget: 'string'
-        hint: 'Точно как в TimePad-событии или вручную в Match.astro. Например: «Сатурн-2», «Кристалл-Восток», «ФК НЕО».'
+        hint: 'Точно как в поле «Гости / соперник» у матча. Например: «Сатурн-2», «Кристалл-Восток», «ФК НЕО».'
       - label: 'Логотип'
         name: 'logo'
         widget: 'image'

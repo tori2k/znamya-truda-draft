@@ -10,6 +10,8 @@ const NEWS_CATEGORIES = [
 ] as const;
 
 const ROLES = ['Вратарь', 'Защитник', 'Полузащитник', 'Нападающий'] as const;
+const MATCH_STATUSES = ['upcoming', 'played'] as const;
+const MATCH_RESULTS = ['win', 'draw', 'loss'] as const;
 
 // Картинки храним как обычные строки-URL вида "/news/file.jpg" —
 // это формат, который сохраняет Decap CMS. На странице рендерим через
@@ -51,6 +53,25 @@ const news = defineCollection({
   }),
 });
 
+const matches = defineCollection({
+  loader: glob({ pattern: '**/*.md', base: './src/content/matches' }),
+  schema: z.object({
+    date: z.coerce.date(),
+    time: z.string().optional(),
+    status: z.enum(MATCH_STATUSES).default('upcoming'),
+    league: z.string().default('ФФМО · Б-2'),
+    homeName: z.string().default('Знамя Труда'),
+    awayName: z.string(),
+    venue: z.string().optional(),
+    registrationUrl: z.string().optional(),
+    homeScore: z.number().int().nullable().optional(),
+    awayScore: z.number().int().nullable().optional(),
+    result: z.enum(MATCH_RESULTS).nullable().optional(),
+    reportSlug: z.string().optional(),
+    draft: z.boolean().default(false),
+  }),
+});
+
 const squad = defineCollection({
   loader: glob({ pattern: '**/*.md', base: './src/content/squad' }),
   schema: z.object({
@@ -87,5 +108,5 @@ const opponents = defineCollection({
   }),
 });
 
-export const collections = { news, squad, staff, opponents };
-export { NEWS_CATEGORIES, ROLES };
+export const collections = { news, matches, squad, staff, opponents };
+export { NEWS_CATEGORIES, ROLES, MATCH_STATUSES, MATCH_RESULTS };

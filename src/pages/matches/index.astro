@@ -4,7 +4,15 @@ import Layout from '../../layouts/Layout.astro';
 import Nav from '../../components/Nav.astro';
 import Footer from '../../components/Footer.astro';
 import { fetchNextEvent, parseMatchTeams, isHomeMatch, formatMatchDate, formatMatchTime } from '../../lib/timepad';
-import { FFMO_TOURNAMENT_URL, RESULT_LABELS, TIMEPAD_CLUB_URL, lastMatches } from '../../lib/matches';
+import {
+  FFMO_TOURNAMENT_URL,
+  RESULT_LABELS,
+  TIMEPAD_CLUB_URL,
+  formatMatchDateFull,
+  inferResult,
+  matchTimeValue,
+  reportHref,
+} from '../../lib/matches';
 
 const BASE = import.meta.env.BASE_URL.replace(/\/$/, '');
 const LOGO = `${BASE}/logo.png`;
@@ -13,6 +21,13 @@ const asset = (p: string) => `${BASE}${p.startsWith('/') ? p : '/' + p}`;
 const reports = (await getCollection('news', ({ data }) => {
   return (import.meta.env.DEV || !data.draft) && data.category === 'Матчи';
 })).sort((a, b) => b.data.date.getTime() - a.data.date.getTime());
+
+const matchEntries = (await getCollection('matches', ({ data }) => {
+  return import.meta.env.DEV || !data.draft;
+})).sort((a, b) => matchTimeValue(a.data.date, a.data.time) - matchTimeValue(b.data.date, b.data.time));
+
+const upcomingMatches = matchEntries.filter((m) => m.data.status === 'upcoming');
+const playedMatches = [...matchEntries].filter((m) => m.data.status === 'played').reverse();
 
 const opponentEntries = await getCollection('opponents');
 const opponentLogo = (teamName: string): string | null => {
@@ -35,7 +50,6 @@ const shortName = (name: string) => {
 };
 const crestFor = (teamName: string) => isOurTeam(teamName) ? LOGO : opponentLogo(teamName);
 
-const tpEvent = await fetchNextEvent();
 const fallbackNext = {
   league: 'ФФМО · Б-2',
   dateText: 'дата уточняется',
@@ -46,8 +60,40 @@ const fallbackNext = {
   url: TIMEPAD_CLUB_URL,
 };
 
-let nextMatch = fallbackNext;
-if (tpEvent) {
+const rowFromCmsMatch = (m: typeof matchEntries[number]) => {
+  const result = m.data.result
+    || inferResult(m.data.homeName, m.data.awayName, m.data.homeScore, m.data.awayScore);
+  const hasScore = m.data.homeScore != null && m.data.awayScore != null;
+  const isUpcoming = m.data.status === 'upcoming';
+
+  return {
+    status: m.data.status,
+    date: formatMatchDateFull(m.data.date),
+    time: isUpcoming ? (m.data.time || 'время уточняется') : (result ? RESULT_LABELS[result] : m.data.time || ''),
+    league: m.data.league,
+    homeName: m.data.homeName,
+    awayName: m.data.awayName,
+    score: hasScore ? `${m.data.homeScore}:${m.data.awayScore}` : 'VS',
+    href: isUpcoming ? (m.data.registrationUrl || TIMEPAD_CLUB_URL) : reportHref(BASE, m.data.reportSlug),
+    cta: isUpcoming ? 'Регистрация' : 'Отчёт',
+    venue: m.data.venue || 'Стадион «Знамя Труда», Орехово-Зуево',
+  };
+};
+
+const cmsNext = upcomingMatches[0] ? rowFromCmsMatch(upcomingMatches[0]) : null;
+const tpEvent = cmsNext ? null : await fetchNextEvent();
+
+let nextMatch = cmsNext ? {
+  league: cmsNext.league,
+  dateText: cmsNext.date,
+  time: cmsNext.time,
+  homeName: cmsNext.homeName,
+  awayName: cmsNext.awayName,
+  venue: cmsNext.venue,
+  url: cmsNext.href || TIMEPAD_CLUB_URL,
+} : fallbackNext;
+
+if (!cmsNext && tpEvent) {
   const teams = parseMatchTeams(tpEvent.name);
   const home = teams ? teams.home : 'Знамя Труда';
   const away = teams ? teams.away : tpEvent.name;
@@ -66,7 +112,7 @@ if (tpEvent) {
 }
 
 const rows = [
-  {
+  ...(cmsNext ? [] : [{
     status: 'upcoming',
     date: nextMatch.dateText,
     time: nextMatch.time,
@@ -76,18 +122,9 @@ const rows = [
     score: 'VS',
     href: nextMatch.url,
     cta: 'Регистрация',
-  },
-  ...lastMatches.map((m) => ({
-    status: 'played',
-    date: m.dateText,
-    time: RESULT_LABELS[m.result],
-    league: m.league,
-    homeName: m.home.name,
-    awayName: m.away.name,
-    score: `${m.home.score}:${m.away.score}`,
-    href: m.reportSlug ? `${BASE}/news/${m.reportSlug}/` : '',
-    cta: 'Отчёт',
-  })),
+  }]),
+  ...upcomingMatches.map(rowFromCmsMatch),
+  ...playedMatches.map(rowFromCmsMatch),
 ];
 
 const fmtDate = (d: Date) =>

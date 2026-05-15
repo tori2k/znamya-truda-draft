@@ -1,16 +1,23 @@
 ---
 import { getCollection } from 'astro:content';
 import { fetchNextEvent, parseMatchTeams, isHomeMatch, formatMatchDate, formatMatchTime } from '../lib/timepad';
-import { FFMO_TOURNAMENT_URL, RESULT_LABELS, TIMEPAD_CLUB_URL, lastMatch } from '../lib/matches';
+import {
+  FALLBACK_LAST_MATCH,
+  FFMO_TOURNAMENT_URL,
+  RESULT_LABELS,
+  TIMEPAD_CLUB_URL,
+  formatMatchDateFull,
+  formatMatchDateShort,
+  inferResult,
+  matchTimeValue,
+  reportHref,
+} from '../lib/matches';
 
 const BASE = import.meta.env.BASE_URL.replace(/\/$/, '');
 const LOGO = `${BASE}/logo.png`;
 // Версия лого с белой обводкой для красных карточек (next match — красный фон)
 const LOGO_ON_RED = `${BASE}/logo-on-red.png`;
 const asset = (p: string) => `${BASE}${p.startsWith('/') ? p : '/' + p}`;
-
-// Тянем следующий матч из TimePad. Если не получилось — fallback на хардкод.
-const tpEvent = await fetchNextEvent();
 
 // Логотипы соперников живут в коллекции opponents (src/content/opponents/*.md).
 // Заказчик добавляет команды через Decap-админку: имя команды + файл лого.
@@ -19,6 +26,12 @@ const tpEvent = await fetchNextEvent();
 // аббревиатура (как раньше). Это позволяет сразу заявить соперника, потом
 // дозалить лого без правок кода.
 const opponentEntries = await getCollection('opponents');
+const matchEntries = (await getCollection('matches', ({ data }) => {
+  return import.meta.env.DEV || !data.draft;
+})).sort((a, b) => matchTimeValue(a.data.date, a.data.time) - matchTimeValue(b.data.date, b.data.time));
+
+const upcomingMatch = matchEntries.find((m) => m.data.status === 'upcoming') ?? null;
+const playedMatch = [...matchEntries].reverse().find((m) => m.data.status === 'played') ?? null;
 
 const opponentLogo = (teamName: string): string | null => {
   const lc = teamName.toLowerCase();
@@ -28,6 +41,10 @@ const opponentLogo = (teamName: string): string | null => {
   if (!found || !found.data.logo) return null;
   return asset(found.data.logo);
 };
+
+// Сначала берём матч из CMS. TimePad остаётся запасным вариантом,
+// если в админке ещё нет предстоящего матча.
+const tpEvent = upcomingMatch ? null : await fetchNextEvent();
 
 const fallbackNext = {
   league: 'ФФМО · Б-2',
@@ -43,7 +60,20 @@ const fallbackNext = {
 };
 
 let nextMatch = fallbackNext;
-if (tpEvent) {
+if (upcomingMatch) {
+  nextMatch = {
+    league: upcomingMatch.data.league,
+    dateText: formatMatchDateFull(upcomingMatch.data.date),
+    time: upcomingMatch.data.time || '',
+    homeName: upcomingMatch.data.homeName,
+    homeCity: /знамя труда/i.test(upcomingMatch.data.homeName) ? 'Орехово-Зуево' : '',
+    awayName: upcomingMatch.data.awayName,
+    awayCity: /знамя труда/i.test(upcomingMatch.data.awayName) ? 'Орехово-Зуево' : '',
+    venue: upcomingMatch.data.venue || fallbackNext.venue,
+    url: upcomingMatch.data.registrationUrl || TIMEPAD_CLUB_URL,
+    posterUrl: null,
+  };
+} else if (tpEvent) {
   const teams = parseMatchTeams(tpEvent.name);
   const home = teams ? teams.home : 'Знамя Труда';
   const away = teams ? teams.away : tpEvent.name;
@@ -67,13 +97,35 @@ if (tpEvent) {
   };
 }
 
-const isOurTeam = (name: string) => /знамя труда/i.test(name);
+const lastMatch = playedMatch ? {
+  league: playedMatch.data.league,
+  date: playedMatch.data.date,
+  dateText: formatMatchDateShort(playedMatch.data.date),
+  home: {
+    name: playedMatch.data.homeName,
+    short: shortName(playedMatch.data.homeName),
+    score: playedMatch.data.homeScore ?? 0,
+  },
+  away: {
+    name: playedMatch.data.awayName,
+    short: shortName(playedMatch.data.awayName),
+    score: playedMatch.data.awayScore ?? 0,
+  },
+  result: playedMatch.data.result
+    || inferResult(playedMatch.data.homeName, playedMatch.data.awayName, playedMatch.data.homeScore, playedMatch.data.awayScore)
+    || 'draw',
+  reportSlug: playedMatch.data.reportSlug || '',
+} : FALLBACK_LAST_MATCH;
+
+function isOurTeam(name: string) {
+  return /знамя труда/i.test(name);
+}
 
 // Аббревиатура для команды без логотипа.
 // «Кристалл-Восток» → «КВ» (по словам)
 // «ФК НЕО» → «НЕО» (пропускаем «ФК»)
 // «Сатурн-2» → «САТ» (одно слово → первые 3 буквы)
-const shortName = (name: string) => {
+function shortName(name: string) {
   const words = name
     .replace(/[«»"']/g, '')
     .split(/[\s\-]+/)
@@ -82,7 +134,7 @@ const shortName = (name: string) => {
     return words.map((w) => w[0]).join('').toUpperCase().slice(0, 4);
   }
   return (words[0] || name).slice(0, 3).toUpperCase();
-};
+}
 
 const crestFor = (teamName: string) => {
   if (isOurTeam(teamName)) return LOGO;
@@ -99,7 +151,7 @@ const matchCenterItems = [
     home: { name: lastMatch.home.name },
     away: { name: lastMatch.away.name },
     score: `${lastMatch.home.score}:${lastMatch.away.score}`,
-    href: lastMatch.reportSlug ? `${BASE}/news/${lastMatch.reportSlug}/` : '',
+    href: reportHref(BASE, lastMatch.reportSlug),
     cta: 'Отчёт',
   },
   {
@@ -232,7 +284,7 @@ const matchCenterItems = [
 
         <div class="match__last-actions">
           {lastMatch.reportSlug && (
-            <a href={`${BASE}/news/${lastMatch.reportSlug}/`} class="btn btn--red match__report">
+            <a href={reportHref(BASE, lastMatch.reportSlug)} class="btn btn--red match__report">
               Отчёт о матче
               <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
             </a>
