@@ -65,7 +65,7 @@ const rowFromCmsMatch = (m: typeof matchEntries[number]) => {
     || inferResult(m.data.homeName, m.data.awayName, m.data.homeScore, m.data.awayScore);
   const hasScore = m.data.homeScore != null && m.data.awayScore != null;
   const isUpcoming = m.data.status === 'upcoming';
-  const canRegister = isUpcoming && isOurTeam(m.data.homeName);
+  const canRegister = isUpcoming && Boolean(m.data.registrationUrl);
 
   return {
     status: m.data.status,
@@ -76,7 +76,7 @@ const rowFromCmsMatch = (m: typeof matchEntries[number]) => {
     homeName: m.data.homeName,
     awayName: m.data.awayName,
     score: hasScore ? `${m.data.homeScore}:${m.data.awayScore}` : 'VS',
-    href: isUpcoming ? (canRegister ? (m.data.registrationUrl || TIMEPAD_CLUB_URL) : '') : reportHref(BASE, m.data.reportSlug),
+    href: isUpcoming ? (m.data.registrationUrl || '') : reportHref(BASE, m.data.reportSlug),
     cta: isUpcoming ? 'Регистрация' : 'Отчёт',
     venue: m.data.venue || 'Стадион «Знамя Труда», Орехово-Зуево',
   };
@@ -188,9 +188,7 @@ const newsUrl = (n: { id: string; data: { slug?: string } }) =>
             <span>{nextMatch.venue}</span>
             {nextMatch.canRegister ? (
               <a href={nextMatch.url} target="_blank" rel="noopener" class="btn btn--red">Регистрация</a>
-            ) : (
-              <span class="next-match__note">Выездной матч</span>
-            )}
+            ) : null}
           </div>
         </div>
       </div>
@@ -398,16 +396,6 @@ const newsUrl = (n: { id: string; data: { slug?: string } }) =>
     background: #fff;
     color: #E4002B;
   }
-  .next-match__note {
-    flex-shrink: 0;
-    font-family: 'Onest', sans-serif;
-    font-size: 12px;
-    font-weight: 800;
-    letter-spacing: 1.8px;
-    text-transform: uppercase;
-    color: #fff;
-  }
-
   .matches-list {
     padding: 40px 0 64px;
   }

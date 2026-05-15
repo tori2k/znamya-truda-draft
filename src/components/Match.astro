@@ -71,8 +71,8 @@ if (upcomingMatch) {
     awayName: upcomingMatch.data.awayName,
     awayCity: /знамя труда/i.test(upcomingMatch.data.awayName) ? 'Орехово-Зуево' : '',
     venue: upcomingMatch.data.venue || fallbackNext.venue,
-    url: isOurTeam(upcomingMatch.data.homeName) ? (upcomingMatch.data.registrationUrl || TIMEPAD_CLUB_URL) : '',
-    canRegister: isOurTeam(upcomingMatch.data.homeName),
+    url: upcomingMatch.data.registrationUrl || '',
+    canRegister: Boolean(upcomingMatch.data.registrationUrl),
     posterUrl: null,
   };
 } else if (tpEvent) {
@@ -95,7 +95,7 @@ if (upcomingMatch) {
     awayCity: homeIsKlub ? '' : 'Орехово-Зуево',
     venue,
     url: tpEvent.url,
-    canRegister: homeIsKlub,
+    canRegister: true,
     posterUrl: tpEvent.posterUrl,
   };
 }
@@ -235,9 +235,7 @@ const matchCenterItems = [
             Зарегистрироваться на матч
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
           </a>
-        ) : (
-          <div class="match__away-note">Выездной матч</div>
-        )}
+        ) : null}
       </div>
 
       <!-- LAST -->
@@ -540,19 +538,6 @@ const matchCenterItems = [
     color: #fff;
     transform: translateX(4px);
   }
-  .match__away-note {
-    display: inline-flex;
-    align-items: center;
-    align-self: flex-start;
-    min-height: 44px;
-    font-family: 'Onest', sans-serif;
-    font-size: 12px;
-    font-weight: 800;
-    letter-spacing: 2px;
-    text-transform: uppercase;
-    color: #fff;
-  }
-
   /* LAST match */
   .match__score-row {
     display: grid;

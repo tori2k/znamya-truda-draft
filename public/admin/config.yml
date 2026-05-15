@@ -147,7 +147,7 @@ collections:
         name: 'registrationUrl'
         widget: 'string'
         required: false
-        hint: 'Например, ссылка Timepad для предстоящего матча.'
+        hint: 'Если заполнить — появится кнопка «Регистрация». Если оставить пустым — кнопки не будет.'
       - label: 'Счёт хозяев'
         name: 'homeScore'
         widget: 'number'
