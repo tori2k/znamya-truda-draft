@@ -10,6 +10,8 @@ const {
   title = 'ФК «Знамя Труда» — Орехово-Зуево. Старейший футбольный клуб России, с 1909 года.',
   description = 'Официальный сайт футбольного клуба «Знамя Труда» Орехово-Зуево. Основан в 1909 году. Финалист Кубка СССР 1962.',
 } = Astro.props;
+
+const ymCounterId = import.meta.env.PUBLIC_YM_COUNTER_ID || '109216365';
 ---
 <!doctype html>
 <html lang="ru">
@@ -32,14 +34,12 @@ const {
   <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png" />
   <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
 
-  <!-- Yandex.Metrika counter
-       ID берётся из переменной окружения YM_COUNTER_ID на этапе сборки.
-       Если переменной нет — счётчик не подгружается, ошибок нет.
-       Чтобы подключить: задай YM_COUNTER_ID в GitHub Actions / .env.
+  <!-- Yandex.Metrika counter.
+       Основной ID можно переопределить через PUBLIC_YM_COUNTER_ID на этапе сборки.
   -->
-  {import.meta.env.PUBLIC_YM_COUNTER_ID && (
+  {ymCounterId && (
     <Fragment>
-      <script type="text/javascript" is:inline define:vars={{ ymId: import.meta.env.PUBLIC_YM_COUNTER_ID }}>
+      <script type="text/javascript" is:inline define:vars={{ ymId: ymCounterId }}>
         (function(m,e,t,r,i,k,a){m[i]=m[i]||function(){(m[i].a=m[i].a||[]).push(arguments)};
         m[i].l=1*new Date();
         for (var j = 0; j < document.scripts.length; j++) {if (document.scripts[j].src === r) { return; }}
@@ -57,7 +57,7 @@ const {
       </script>
       <noscript>
         <div>
-          <img src={`https://mc.yandex.ru/watch/${import.meta.env.PUBLIC_YM_COUNTER_ID}`} style="position:absolute; left:-9999px;" alt="" />
+          <img src={`https://mc.yandex.ru/watch/${ymCounterId}`} style="position:absolute; left:-9999px;" alt="" />
         </div>
       </noscript>
     </Fragment>

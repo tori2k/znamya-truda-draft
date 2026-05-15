@@ -103,6 +103,38 @@ const shortName = (name: string) => {
   }
   return (words[0] || name).slice(0, 3).toUpperCase();
 };
+
+const crestFor = (teamName: string) => {
+  if (isOurTeam(teamName)) return LOGO;
+  return opponentLogo(teamName);
+};
+
+const matchCenterItems = [
+  {
+    status: 'played',
+    label: 'Сыгран',
+    date: lastMatch.dateText,
+    time: '',
+    league: lastMatch.league,
+    home: { name: lastMatch.home.name },
+    away: { name: lastMatch.away.name },
+    score: `${lastMatch.home.score}:${lastMatch.away.score}`,
+    href: lastMatch.reportSlug ? `${BASE}/news/${lastMatch.reportSlug}/` : '',
+    cta: 'Отчёт',
+  },
+  {
+    status: 'upcoming',
+    label: 'Ближайший',
+    date: nextMatch.dateText,
+    time: nextMatch.time || 'время уточняется',
+    league: nextMatch.league,
+    home: { name: nextMatch.homeName },
+    away: { name: nextMatch.awayName },
+    score: 'VS',
+    href: nextMatch.url,
+    cta: 'Регистрация',
+  },
+];
 ---
 <section class="match" id="match">
   <div class="container-x">
@@ -230,6 +262,63 @@ const shortName = (name: string) => {
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 17L17 7M8 7h9v9"/></svg>
           </a>
         </div>
+      </div>
+    </div>
+
+    <div class="match-center reveal">
+      <div class="match-center__head">
+        <div>
+          <div class="sec-tag">Матч-центр</div>
+          <h2 class="match-center__title">Расписание и результаты</h2>
+        </div>
+        <a href="https://ffmo.ru/tournament43869/" target="_blank" rel="noopener" class="match-center__calendar">
+          Календарь ФФМО
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 17L17 7M8 7h9v9"/></svg>
+        </a>
+      </div>
+
+      <div class="match-center__list">
+        {matchCenterItems.map((item) => (
+          <article class={`match-center__item match-center__item--${item.status}`}>
+            <div class="match-center__date">
+              <strong>{item.date}</strong>
+              <span>{item.time || item.label}</span>
+            </div>
+
+            <div class="match-center__main">
+              <div class="match-center__league">{item.league}</div>
+              <div class="match-center__teams">
+                <div class="match-center__team">
+                  <span class="match-center__crest">
+                    {crestFor(item.home.name) ? (
+                      <img src={crestFor(item.home.name)!} alt={item.home.name} />
+                    ) : (
+                      shortName(item.home.name)
+                    )}
+                  </span>
+                  <span>{item.home.name}</span>
+                </div>
+                <div class="match-center__score">{item.score}</div>
+                <div class="match-center__team match-center__team--right">
+                  <span class="match-center__crest">
+                    {crestFor(item.away.name) ? (
+                      <img src={crestFor(item.away.name)!} alt={item.away.name} />
+                    ) : (
+                      shortName(item.away.name)
+                    )}
+                  </span>
+                  <span>{item.away.name}</span>
+                </div>
+              </div>
+            </div>
+
+            {item.href && (
+              <a href={item.href} target={item.href.startsWith('http') ? '_blank' : undefined} rel={item.href.startsWith('http') ? 'noopener' : undefined} class="match-center__action">
+                {item.cta}
+              </a>
+            )}
+          </article>
+        ))}
       </div>
     </div>
   </div>
@@ -543,10 +632,181 @@ const shortName = (name: string) => {
   }
   .match__link:hover { gap: 14px; }
 
+  .match-center {
+    margin-top: 24px;
+    padding: 32px;
+    background: #fff;
+    border: 1px solid rgba(0,0,0,0.08);
+    box-shadow: 0 4px 20px rgba(0,0,0,0.04);
+  }
+  .match-center__head {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 24px;
+    margin-bottom: 22px;
+  }
+  .match-center__title {
+    margin: 6px 0 0;
+    font-family: 'Onest', sans-serif;
+    font-size: clamp(28px, 4vw, 48px);
+    font-weight: 900;
+    line-height: 1;
+    text-transform: uppercase;
+    color: #0a0a0a;
+  }
+  .match-center__calendar {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    flex-shrink: 0;
+    font-family: 'Onest', sans-serif;
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: #E4002B;
+    text-decoration: none;
+  }
+  .match-center__list {
+    display: grid;
+    gap: 12px;
+  }
+  .match-center__item {
+    display: grid;
+    grid-template-columns: 112px minmax(0, 1fr) auto;
+    align-items: center;
+    gap: 20px;
+    padding: 18px 20px;
+    background: #fafaf7;
+    border: 1px solid rgba(0,0,0,0.06);
+  }
+  .match-center__item--upcoming {
+    border-color: rgba(228,0,43,0.2);
+  }
+  .match-center__date strong {
+    display: block;
+    font-family: 'Onest', sans-serif;
+    font-size: 26px;
+    font-weight: 900;
+    line-height: 1;
+    color: #0a0a0a;
+    text-transform: uppercase;
+  }
+  .match-center__date span {
+    display: block;
+    margin-top: 6px;
+    font-size: 11px;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: #777;
+  }
+  .match-center__league {
+    margin-bottom: 8px;
+    font-size: 11px;
+    color: #777;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+  }
+  .match-center__teams {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 72px minmax(0, 1fr);
+    align-items: center;
+    gap: 14px;
+  }
+  .match-center__team {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    min-width: 0;
+    font-family: 'Onest', sans-serif;
+    font-size: 15px;
+    font-weight: 700;
+    color: #0a0a0a;
+  }
+  .match-center__team--right {
+    justify-content: flex-end;
+    text-align: right;
+  }
+  .match-center__crest {
+    width: 34px;
+    height: 34px;
+    flex: 0 0 34px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    background: rgba(228,0,43,0.08);
+    color: #E4002B;
+    font-family: 'Onest', sans-serif;
+    font-size: 10px;
+    font-weight: 900;
+    letter-spacing: 0.5px;
+  }
+  .match-center__crest img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    display: block;
+  }
+  .match-center__score {
+    font-family: 'Onest', sans-serif;
+    font-size: 22px;
+    font-weight: 900;
+    text-align: center;
+    color: #0a0a0a;
+  }
+  .match-center__action {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 116px;
+    padding: 11px 16px;
+    border-radius: 8px;
+    background: #0a0a0a;
+    color: #fff;
+    font-family: 'Onest', sans-serif;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 1.8px;
+    text-transform: uppercase;
+    text-decoration: none;
+    transition: background 0.2s, transform 0.2s;
+  }
+  .match-center__action:hover {
+    background: #E4002B;
+    transform: translateX(2px);
+  }
+
   @media (max-width: 900px) {
     .match__grid { grid-template-columns: 1fr; }
     .match__card { padding: 28px 24px; }
     .match__teams { grid-template-columns: 1fr; gap: 20px; }
     .team__crest { width: 64px; height: 74px; }
+    .match-center { padding: 24px; }
+    .match-center__head { flex-direction: column; }
+    .match-center__item {
+      grid-template-columns: 1fr;
+      gap: 14px;
+    }
+    .match-center__teams {
+      grid-template-columns: minmax(0, 1fr) 56px minmax(0, 1fr);
+      gap: 8px;
+    }
+    .match-center__team,
+    .match-center__team--right {
+      justify-content: center;
+      text-align: center;
+      flex-direction: column;
+      font-size: 12px;
+      gap: 6px;
+    }
+    .match-center__crest {
+      width: 30px;
+      height: 30px;
+      flex-basis: 30px;
+    }
+    .match-center__score { font-size: 18px; }
+    .match-center__action { width: 100%; }
   }
 </style>

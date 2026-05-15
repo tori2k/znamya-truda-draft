@@ -6,11 +6,11 @@ const HOME = `${BASE}/`;
 // (например /news/[slug]) кликаем якорь — переходим на главную к нужной секции.
 const items = [
   { href: `${HOME}#match`,    label: 'Матчи' },
+  { href: `${HOME}#events`,   label: 'События' },
   { href: `${HOME}#news`,     label: 'Новости' },
   { href: `${HOME}#history`,  label: 'История' },
   { href: `${HOME}#team`,     label: 'Команда' },
   { href: `${HOME}#club`,     label: 'Клуб' },
-  // События скрыты пока мероприятий мало — раздел вернём, когда будет что показать
   { href: `${HOME}#contacts`, label: 'Контакты' },
 ];
 const CONTACTS = `${HOME}#contacts`;
@@ -168,7 +168,7 @@ const CONTACTS = `${HOME}#contacts`;
   }
   .nav__mobile .btn { margin-top: 12px; }
 
-  @media (max-width: 900px) {
+  @media (max-width: 1120px) {
     .nav__links, .nav__cta { display: none; }
     .nav__burger { display: flex; }
   }
