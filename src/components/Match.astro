@@ -1,6 +1,7 @@
 ---
 import { getCollection } from 'astro:content';
 import { fetchNextEvent, parseMatchTeams, isHomeMatch, formatMatchDate, formatMatchTime } from '../lib/timepad';
+import { FFMO_TOURNAMENT_URL, RESULT_LABELS, TIMEPAD_CLUB_URL, lastMatch } from '../lib/matches';
 
 const BASE = import.meta.env.BASE_URL.replace(/\/$/, '');
 const LOGO = `${BASE}/logo.png`;
@@ -37,7 +38,7 @@ const fallbackNext = {
   awayName: 'Соперник',
   awayCity: '',
   venue: 'Стадион «Знамя Труда», Орехово-Зуево',
-  url: 'https://fczt.timepad.ru/',
+  url: TIMEPAD_CLUB_URL,
   posterUrl: null as string | null,
 };
 
@@ -65,27 +66,6 @@ if (tpEvent) {
     posterUrl: tpEvent.posterUrl,
   };
 }
-
-// Последний матч редактируется вручную здесь.
-// result: 'win' | 'draw' | 'loss' — определяет цвет бейджа.
-// reportSlug: id новости-отчёта — если задан, появляется кнопка «Отчёт о матче».
-//             Slug — это часть URL после /news/, например '2026-05-02-otchet-vs-kristall'.
-//             Можно оставить пустой строкой, кнопки не будет.
-const lastMatch = {
-  league: 'ФФМО · Б-2 · 3 тур',
-  date: '2026-05-10',
-  dateText: '10 мая',
-  home: { name: 'Знамя Труда',  short: 'ЗНМ', score: 0 },
-  away: { name: 'Сатурн-2',     short: 'САТ', score: 2 },
-  result: 'loss' as 'win' | 'draw' | 'loss',
-  reportSlug: '2026-05-10-поражение-с-горьким-осадком' as string,
-};
-
-const RESULT_LABELS = {
-  win:  'ПОБЕДА',
-  draw: 'НИЧЬЯ',
-  loss: 'ПОРАЖЕНИЕ',
-};
 
 const isOurTeam = (name: string) => /знамя труда/i.test(name);
 
@@ -257,7 +237,7 @@ const matchCenterItems = [
               <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
             </a>
           )}
-          <a href="https://ffmo.ru/tournament43869/" target="_blank" rel="noopener" class="match__link">
+        <a href={FFMO_TOURNAMENT_URL} target="_blank" rel="noopener" class="match__link">
             Турнирная таблица ФФМО
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 17L17 7M8 7h9v9"/></svg>
           </a>
@@ -271,8 +251,8 @@ const matchCenterItems = [
           <div class="sec-tag">Матч-центр</div>
           <h2 class="match-center__title">Расписание и результаты</h2>
         </div>
-        <a href="https://ffmo.ru/tournament43869/" target="_blank" rel="noopener" class="match-center__calendar">
-          Календарь ФФМО
+        <a href={`${BASE}/matches/`} class="match-center__calendar">
+          Все матчи
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 17L17 7M8 7h9v9"/></svg>
         </a>
       </div>
