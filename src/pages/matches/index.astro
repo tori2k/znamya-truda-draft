@@ -27,7 +27,6 @@ const matchEntries = (await getCollection('matches', ({ data }) => {
 })).sort((a, b) => matchTimeValue(a.data.date, a.data.time) - matchTimeValue(b.data.date, b.data.time));
 
 const upcomingMatches = matchEntries.filter((m) => m.data.status === 'upcoming');
-const playedMatches = [...matchEntries].filter((m) => m.data.status === 'played').reverse();
 
 const opponentEntries = await getCollection('opponents');
 const opponentLogo = (teamName: string): string | null => {
@@ -58,6 +57,7 @@ const fallbackNext = {
   awayName: 'Соперник',
   venue: 'Стадион «Знамя Труда», Орехово-Зуево',
   url: TIMEPAD_CLUB_URL,
+  canRegister: true,
 };
 
 const rowFromCmsMatch = (m: typeof matchEntries[number]) => {
@@ -65,16 +65,18 @@ const rowFromCmsMatch = (m: typeof matchEntries[number]) => {
     || inferResult(m.data.homeName, m.data.awayName, m.data.homeScore, m.data.awayScore);
   const hasScore = m.data.homeScore != null && m.data.awayScore != null;
   const isUpcoming = m.data.status === 'upcoming';
+  const canRegister = isUpcoming && isOurTeam(m.data.homeName);
 
   return {
     status: m.data.status,
+    sortTime: matchTimeValue(m.data.date, m.data.time),
     date: formatMatchDateFull(m.data.date),
     time: isUpcoming ? (m.data.time || 'время уточняется') : (result ? RESULT_LABELS[result] : m.data.time || ''),
     league: m.data.league,
     homeName: m.data.homeName,
     awayName: m.data.awayName,
     score: hasScore ? `${m.data.homeScore}:${m.data.awayScore}` : 'VS',
-    href: isUpcoming ? (m.data.registrationUrl || TIMEPAD_CLUB_URL) : reportHref(BASE, m.data.reportSlug),
+    href: isUpcoming ? (canRegister ? (m.data.registrationUrl || TIMEPAD_CLUB_URL) : '') : reportHref(BASE, m.data.reportSlug),
     cta: isUpcoming ? 'Регистрация' : 'Отчёт',
     venue: m.data.venue || 'Стадион «Знамя Труда», Орехово-Зуево',
   };
@@ -91,6 +93,7 @@ let nextMatch = cmsNext ? {
   awayName: cmsNext.awayName,
   venue: cmsNext.venue,
   url: cmsNext.href || TIMEPAD_CLUB_URL,
+  canRegister: Boolean(cmsNext.href),
 } : fallbackNext;
 
 if (!cmsNext && tpEvent) {
@@ -108,24 +111,25 @@ if (!cmsNext && tpEvent) {
     awayName: homeIsKlub ? away : 'Знамя Труда',
     venue,
     url: tpEvent.url,
+    canRegister: homeIsKlub,
   };
 }
 
 const rows = [
   ...(cmsNext ? [] : [{
     status: 'upcoming',
+    sortTime: tpEvent ? matchTimeValue(tpEvent.startsAt) : Number.MAX_SAFE_INTEGER,
     date: nextMatch.dateText,
     time: nextMatch.time,
     league: nextMatch.league,
     homeName: nextMatch.homeName,
     awayName: nextMatch.awayName,
     score: 'VS',
-    href: nextMatch.url,
+    href: nextMatch.canRegister ? nextMatch.url : '',
     cta: 'Регистрация',
   }]),
-  ...upcomingMatches.map(rowFromCmsMatch),
-  ...playedMatches.map(rowFromCmsMatch),
-];
+  ...matchEntries.map(rowFromCmsMatch),
+].sort((a, b) => a.sortTime - b.sortTime);
 
 const fmtDate = (d: Date) =>
   new Intl.DateTimeFormat('ru-RU', { day: 'numeric', month: 'long' }).format(d);
@@ -182,7 +186,11 @@ const newsUrl = (n: { id: string; data: { slug?: string } }) =>
 
           <div class="next-match__bottom">
             <span>{nextMatch.venue}</span>
-            <a href={nextMatch.url} target="_blank" rel="noopener" class="btn btn--red">Регистрация</a>
+            {nextMatch.canRegister ? (
+              <a href={nextMatch.url} target="_blank" rel="noopener" class="btn btn--red">Регистрация</a>
+            ) : (
+              <span class="next-match__note">Выездной матч</span>
+            )}
           </div>
         </div>
       </div>
@@ -389,6 +397,15 @@ const newsUrl = (n: { id: string; data: { slug?: string } }) =>
   .next-match__bottom .btn {
     background: #fff;
     color: #E4002B;
+  }
+  .next-match__note {
+    flex-shrink: 0;
+    font-family: 'Onest', sans-serif;
+    font-size: 12px;
+    font-weight: 800;
+    letter-spacing: 1.8px;
+    text-transform: uppercase;
+    color: #fff;
   }
 
   .matches-list {
