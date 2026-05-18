@@ -44,7 +44,12 @@
         </div>
       </div>
 
-      <form class="form reveal-right" onsubmit="event.preventDefault(); alert('Форма отправки будет подключена к email/Telegram клуба.');">
+      <form class="form reveal-right" action="https://formsubmit.co/znamiatruda@yandex.ru" method="POST">
+        <input type="hidden" name="_subject" value="Новая заявка с сайта ФК «Знамя Труда»" />
+        <input type="hidden" name="_template" value="table" />
+        <input type="hidden" name="_captcha" value="false" />
+        <input type="hidden" name="_next" value="https://fczt1909.ru/?form=sent#contacts" />
+        <input type="text" name="_honey" tabindex="-1" autocomplete="off" class="form__honey" />
         <h3 class="form__title">Напишите нам</h3>
         <label class="field">
           <span>Имя</span>
@@ -56,7 +61,7 @@
         </label>
         <label class="field">
           <span>Сообщение</span>
-          <textarea name="msg" rows="4" required placeholder="О чём хотите спросить"></textarea>
+          <textarea name="message" rows="4" required placeholder="О чём хотите спросить"></textarea>
         </label>
         <label class="agree">
           <input type="checkbox" required />
@@ -174,6 +179,12 @@
     padding: 40px;
     background: #fafaf7;
     border: 1px solid rgba(0,0,0,0.08);
+  }
+  .form__honey {
+    position: absolute;
+    left: -9999px;
+    opacity: 0;
+    pointer-events: none;
   }
   .form__title {
     font-family: 'Onest', sans-serif;
