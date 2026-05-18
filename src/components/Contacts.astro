@@ -44,12 +44,7 @@
         </div>
       </div>
 
-      <form class="form reveal-right" action="https://formsubmit.co/znamiatruda@yandex.ru" method="POST">
-        <input type="hidden" name="_subject" value="Новая заявка с сайта ФК «Знамя Труда»" />
-        <input type="hidden" name="_template" value="table" />
-        <input type="hidden" name="_captcha" value="false" />
-        <input type="hidden" name="_next" value="https://fczt1909.ru/?form=sent#contacts" />
-        <input type="text" name="_honey" tabindex="-1" autocomplete="off" class="form__honey" />
+      <form class="form reveal-right" id="contactForm" action="mailto:znamiatruda@yandex.ru" method="post" enctype="text/plain">
         <h3 class="form__title">Напишите нам</h3>
         <label class="field">
           <span>Имя</span>
@@ -70,10 +65,47 @@
         <button type="submit" class="btn btn--red">Отправить
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
         </button>
+        <p class="form__status" id="contactFormStatus" aria-live="polite"></p>
       </form>
     </div>
   </div>
 </section>
+
+<script>
+  const contactForm = document.getElementById('contactForm') as HTMLFormElement | null;
+  const contactFormStatus = document.getElementById('contactFormStatus');
+  const contactEmail = 'znamiatruda@yandex.ru';
+
+  contactForm?.addEventListener('submit', (event) => {
+    event.preventDefault();
+
+    if (!contactForm.checkValidity()) {
+      contactForm.reportValidity();
+      return;
+    }
+
+    const data = new FormData(contactForm);
+    const name = String(data.get('name') || '').trim();
+    const contact = String(data.get('contact') || '').trim();
+    const message = String(data.get('message') || '').trim();
+    const subject = `Заявка с сайта ФК «Знамя Труда» — ${name}`;
+    const body = [
+      `Имя: ${name}`,
+      `Контакт: ${contact}`,
+      '',
+      'Сообщение:',
+      message,
+      '',
+      `Страница: ${window.location.href}`,
+    ].join('\n');
+
+    window.location.href = `mailto:${contactEmail}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+
+    if (contactFormStatus) {
+      contactFormStatus.textContent = 'Откроется почтовое приложение с готовым письмом. Проверьте текст и нажмите «Отправить».';
+    }
+  });
+</script>
 
 <style>
   .contacts {
@@ -180,12 +212,6 @@
     background: #fafaf7;
     border: 1px solid rgba(0,0,0,0.08);
   }
-  .form__honey {
-    position: absolute;
-    left: -9999px;
-    opacity: 0;
-    pointer-events: none;
-  }
   .form__title {
     font-family: 'Onest', sans-serif;
     font-size: 24px;
@@ -236,6 +262,13 @@
     cursor: pointer;
   }
   .agree input { margin-top: 2px; accent-color: #E4002B; }
+  .form__status {
+    min-height: 20px;
+    margin: 16px 0 0;
+    color: #4a4a4a;
+    font-size: 13px;
+    line-height: 1.5;
+  }
 
   @media (max-width: 900px) {
     .contacts { padding: 80px 0; }
