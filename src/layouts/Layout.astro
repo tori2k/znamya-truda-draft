@@ -1,5 +1,6 @@
 ---
 import '../styles/global.css';
+import CookieBanner from '../components/CookieBanner.astro';
 
 interface Props {
   title?: string;
@@ -13,24 +14,36 @@ const {
 
 const ymCounterId = '109281195';
 const ymCounterIdNumber = Number(ymCounterId);
+// Метрика теперь загружается ОТЛОЖЕННО — только после согласия пользователя
+// через cookie-баннер (см. CookieBanner.astro и 152-ФЗ требования).
 const ymCode = Number.isFinite(ymCounterIdNumber)
   ? `
-        (function(m,e,t,r,i,k,a){m[i]=m[i]||function(){(m[i].a=m[i].a||[]).push(arguments)};
-        m[i].l=1*new Date();
-        for (var j = 0; j < document.scripts.length; j++) {if (document.scripts[j].src === r) { return; }}
-        k=e.createElement(t),a=e.getElementsByTagName(t)[0],k.async=1,k.src=r,a.parentNode.insertBefore(k,a)})
-        (window, document, "script", "https://mc.yandex.ru/metrika/tag.js?id=${ymCounterIdNumber}", "ym");
+        window.ztLoadMetrika = function () {
+          if (window.__ztMetrikaLoaded) return;
+          window.__ztMetrikaLoaded = true;
+          (function(m,e,t,r,i,k,a){m[i]=m[i]||function(){(m[i].a=m[i].a||[]).push(arguments)};
+          m[i].l=1*new Date();
+          for (var j = 0; j < document.scripts.length; j++) {if (document.scripts[j].src === r) { return; }}
+          k=e.createElement(t),a=e.getElementsByTagName(t)[0],k.async=1,k.src=r,a.parentNode.insertBefore(k,a)})
+          (window, document, "script", "https://mc.yandex.ru/metrika/tag.js?id=${ymCounterIdNumber}", "ym");
 
-        ym(${ymCounterIdNumber}, "init", {
-          ssr: true,
-          webvisor: true,
-          clickmap: true,
-          ecommerce: "dataLayer",
-          referrer: document.referrer,
-          url: location.href,
-          accurateTrackBounce: true,
-          trackLinks: true
-        });
+          ym(${ymCounterIdNumber}, "init", {
+            ssr: true,
+            webvisor: true,
+            clickmap: true,
+            ecommerce: "dataLayer",
+            referrer: document.referrer,
+            url: location.href,
+            accurateTrackBounce: true,
+            trackLinks: true
+          });
+        };
+        // Если пользователь уже принял ранее — запускаем сразу
+        try {
+          if (localStorage.getItem('zt-cookie-consent') === 'accepted') {
+            window.ztLoadMetrika();
+          }
+        } catch (e) {}
       `
   : '';
 ---
@@ -55,20 +68,14 @@ const ymCode = Number.isFinite(ymCounterIdNumber)
   <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png" />
   <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
 
-  <!-- Yandex.Metrika counter -->
+  <!-- Yandex.Metrika counter — отложенная загрузка после согласия (152-ФЗ) -->
   {ymCode && (
-    <Fragment>
-      <script type="text/javascript" is:inline set:html={ymCode}></script>
-      <noscript>
-        <div>
-          <img src={`https://mc.yandex.ru/watch/${ymCounterId}`} style="position:absolute; left:-9999px;" alt="" />
-        </div>
-      </noscript>
-    </Fragment>
+    <script type="text/javascript" is:inline set:html={ymCode}></script>
   )}
 </head>
 <body>
   <slot />
+  <CookieBanner />
 
   <script>
     // Reveal on scroll

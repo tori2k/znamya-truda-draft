@@ -1,0 +1,207 @@
+---
+// Генератор баннера-анонса ЗАПУСКА САЙТА для соцсетей (квадрат 1080×1080).
+// НЕ часть сайта — служебная страница. Открывается локально:
+//   npm run dev → http://localhost:4321/banner
+// Кнопка «⬇ Скачать PNG» сохраняет готовый баннер 1080×1080.
+import '../styles/global.css';
+
+const BASE = import.meta.env.BASE_URL.replace(/\/$/, '');
+const asset = (p: string) => `${BASE}${p.startsWith('/') ? p : '/' + p}`;
+const logoOnRed = asset('/logo-on-red.png');
+
+// Что реально есть на сайте (секции главной) — не выдумано, из index.astro.
+const features = [
+  'Расписание ближайших матчей',
+  'Новости клуба',
+  'История',
+  'Состав команды',
+  'Билеты и контакты',
+];
+---
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Баннер — запуск сайта</title>
+  <link href="https://fonts.googleapis.com/css2?family=Onest:wght@400;700;900&display=swap" rel="stylesheet" />
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      background: #1a1a1a;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 16px;
+      padding: 40px;
+      font-family: 'Onest', sans-serif;
+    }
+    .bar { display: flex; gap: 12px; }
+    .bar button {
+      font-family: 'Onest', sans-serif;
+      font-size: 14px;
+      font-weight: 700;
+      padding: 10px 22px;
+      border: 0;
+      border-radius: 8px;
+      background: #E4002B;
+      color: #fff;
+      cursor: pointer;
+    }
+    .bar span { color: #888; font-size: 13px; align-self: center; }
+
+    #banner {
+      width: 1080px;
+      height: 1080px;
+      background: linear-gradient(135deg, #E4002B 0%, #8a0019 100%);
+      color: #fff;
+      display: flex;
+      flex-direction: column;
+      position: relative;
+      overflow: hidden;
+    }
+    #banner .ghost {
+      position: absolute;
+      right: -70px;
+      bottom: -130px;
+      font-size: 440px;
+      font-weight: 900;
+      color: rgba(255,255,255,0.06);
+      line-height: 1;
+      letter-spacing: -0.04em;
+    }
+    .top {
+      padding: 70px 90px 0;
+      display: flex;
+      align-items: center;
+      gap: 36px;
+      position: relative;
+      z-index: 1;
+    }
+    .top img { height: 110px; }
+    .top .club {
+      font-size: 30px;
+      font-weight: 700;
+      line-height: 1.2;
+      letter-spacing: 1px;
+      opacity: 0.9;
+      text-transform: uppercase;
+    }
+
+    .head {
+      padding: 44px 90px 0;
+      position: relative;
+      z-index: 1;
+    }
+    .head .kicker {
+      display: inline-block;
+      border: 2px solid rgba(255,255,255,0.5);
+      padding: 10px 20px;
+      font-size: 22px;
+      font-weight: 700;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      margin-bottom: 24px;
+    }
+    .head h1 {
+      font-size: 88px;
+      font-weight: 900;
+      line-height: 1.02;
+      letter-spacing: -0.02em;
+      text-transform: uppercase;
+    }
+
+    .list {
+      flex: 1;
+      padding: 44px 90px 0;
+      position: relative;
+      z-index: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+    .list .row {
+      display: flex;
+      align-items: center;
+      gap: 22px;
+      font-size: 34px;
+      font-weight: 700;
+    }
+    .list .row .dot {
+      width: 16px; height: 16px;
+      border-radius: 50%;
+      background: #fff;
+      flex: none;
+      opacity: 0.85;
+    }
+
+    .foot {
+      padding: 0 90px 72px;
+      position: relative;
+      z-index: 1;
+    }
+    .foot .url {
+      font-size: 68px;
+      font-weight: 900;
+      letter-spacing: 0.5px;
+    }
+    .foot .url small {
+      display: block;
+      font-size: 26px;
+      font-weight: 700;
+      opacity: 0.75;
+      margin-bottom: 10px;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+    }
+  </style>
+</head>
+<body>
+  <div class="bar">
+    <button id="dl">⬇ Скачать PNG</button>
+    <span>1080×1080 · открой и нажми «Скачать»</span>
+  </div>
+
+  <div id="banner">
+    <div class="ghost">1909</div>
+
+    <div class="top">
+      <img src={logoOnRed} alt="Знамя Труда" />
+      <div class="club">ФК «Знамя Труда»<br />Орехово-Зуево</div>
+    </div>
+
+    <div class="head">
+      <span class="kicker">Запуск</span>
+      <h1>Официальный<br />сайт клуба</h1>
+    </div>
+
+    <div class="list">
+      {features.map((f) => (
+        <div class="row"><span class="dot"></span>{f}</div>
+      ))}
+    </div>
+
+    <div class="foot">
+      <div class="url">
+        <small>Заходите</small>
+        fczt1909.ru
+      </div>
+    </div>
+  </div>
+
+  <script is:inline>
+    document.getElementById('dl').addEventListener('click', async (e) => {
+      const btn = e.currentTarget;
+      btn.textContent = 'Готовлю…';
+      const mod = await import('https://esm.sh/html-to-image@1.11.11');
+      const node = document.getElementById('banner');
+      const dataUrl = await mod.toPng(node, { width: 1080, height: 1080, pixelRatio: 1 });
+      const a = document.createElement('a');
+      a.download = 'znamya-sayt-anons.png';
+      a.href = dataUrl;
+      a.click();
+      btn.textContent = '⬇ Скачать PNG';
+    });
+  </script>
+</body>
+</html>

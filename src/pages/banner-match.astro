@@ -1,0 +1,260 @@
+---
+// Генератор баннера-анонса МАТЧА для соцсетей (квадрат 1080×1080).
+// НЕ часть сайта — служебная страница, только локально (npm run dev).
+//   http://localhost:4321/banner-match?opp=Сатурн-2&date=16 мая&time=14:00&place=дома
+// Параметры читаются на КЛИЕНТЕ (сайт статический). Поля можно менять
+// прямо на странице. Лого соперника подбирается из коллекции opponents.
+import { getCollection } from 'astro:content';
+import '../styles/global.css';
+
+const BASE = import.meta.env.BASE_URL.replace(/\/$/, '');
+const asset = (p: string) => `${BASE}${p.startsWith('/') ? p : '/' + p}`;
+
+const opponents = (await getCollection('opponents')).map((e) => ({
+  name: e.data.name,
+  logo: e.data.logo ? asset(e.data.logo) : null,
+}));
+const logoOnRed = asset('/logo-on-red.png');
+---
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Баннер — анонс матча</title>
+  <link href="https://fonts.googleapis.com/css2?family=Onest:wght@400;700;900&display=swap" rel="stylesheet" />
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      background: #1a1a1a;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 16px;
+      padding: 40px;
+      font-family: 'Onest', sans-serif;
+    }
+    .bar { display: flex; gap: 10px; flex-wrap: wrap; max-width: 1080px; }
+    .bar input {
+      font-family: 'Onest', sans-serif;
+      font-size: 14px;
+      padding: 9px 14px;
+      border: 0;
+      border-radius: 8px;
+      background: #2c2c2c;
+      color: #fff;
+      width: 150px;
+    }
+    .bar button {
+      font-family: 'Onest', sans-serif;
+      font-size: 14px;
+      font-weight: 700;
+      padding: 10px 22px;
+      border: 0;
+      border-radius: 8px;
+      background: #E4002B;
+      color: #fff;
+      cursor: pointer;
+    }
+
+    #banner {
+      width: 1080px;
+      height: 1080px;
+      background: linear-gradient(135deg, #E4002B 0%, #8a0019 100%);
+      color: #fff;
+      display: flex;
+      flex-direction: column;
+      position: relative;
+      overflow: hidden;
+    }
+    #banner .ghost {
+      position: absolute;
+      right: -70px;
+      bottom: -130px;
+      font-size: 440px;
+      font-weight: 900;
+      color: rgba(255,255,255,0.06);
+      line-height: 1;
+      letter-spacing: -0.04em;
+    }
+    .top {
+      padding: 70px 90px 0;
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      position: relative;
+      z-index: 1;
+    }
+    .top img { height: 110px; }
+    .tag {
+      border: 2px solid rgba(255,255,255,0.5);
+      padding: 12px 22px;
+      font-size: 22px;
+      font-weight: 700;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+    }
+    .center {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 60px;
+      padding: 0 80px;
+      position: relative;
+      z-index: 1;
+    }
+    .side { text-align: center; width: 330px; }
+    .crest {
+      width: 230px; height: 230px;
+      margin: 0 auto 26px;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .crest img { max-width: 100%; max-height: 100%; }
+    .crest .abbr {
+      width: 100%; height: 100%;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.12);
+      border: 3px solid rgba(255,255,255,0.4);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 64px; font-weight: 900;
+    }
+    .side .name {
+      font-size: 38px; font-weight: 900;
+      text-transform: uppercase;
+      line-height: 1.1; letter-spacing: -0.01em;
+    }
+    .vs { font-size: 84px; font-weight: 900; opacity: 0.85; font-style: italic; }
+    .bottom { padding: 0 90px 72px; position: relative; z-index: 1; }
+    .bottom .line {
+      height: 3px;
+      background: rgba(255,255,255,0.3);
+      margin-bottom: 34px;
+    }
+    .meta { display: flex; justify-content: space-between; align-items: flex-end; }
+    .meta .when {
+      font-size: 56px; font-weight: 900;
+      text-transform: uppercase; line-height: 1;
+    }
+    .meta .when small {
+      display: block;
+      font-size: 26px; font-weight: 700;
+      opacity: 0.75; margin-top: 12px; letter-spacing: 1px;
+    }
+    .meta .cta {
+      font-size: 30px; font-weight: 700;
+      text-align: right; letter-spacing: 1px; opacity: 0.9;
+    }
+  </style>
+</head>
+<body>
+  <div class="bar">
+    <input id="i-opp" placeholder="Соперник" />
+    <input id="i-date" placeholder="Дата (16 мая)" />
+    <input id="i-time" placeholder="Время (14:00)" />
+    <input id="i-place" placeholder="дома / на выезде" />
+    <button id="apply">Применить</button>
+    <button id="dl">⬇ Скачать PNG</button>
+  </div>
+
+  <div id="banner">
+    <div class="ghost">1909</div>
+
+    <div class="top">
+      <img src={logoOnRed} alt="Знамя Труда" />
+      <div class="tag">Анонс матча</div>
+    </div>
+
+    <div class="center">
+      <div class="side">
+        <div class="crest"><img src={logoOnRed} alt="" /></div>
+        <div class="name">Знамя<br />Труда</div>
+      </div>
+      <div class="vs">VS</div>
+      <div class="side">
+        <div class="crest" id="opp-crest"></div>
+        <div class="name" id="opp-name">Соперник</div>
+      </div>
+    </div>
+
+    <div class="bottom">
+      <div class="line"></div>
+      <div class="meta">
+        <div class="when" id="when">дата уточняется</div>
+        <div class="cta" id="cta">fczt1909.ru</div>
+      </div>
+    </div>
+  </div>
+
+  <script is:inline define:vars={{ opponents }}>
+    const qs = new URLSearchParams(location.search);
+    const get = (k, d) => qs.get(k) || d;
+
+    function abbr(s) {
+      return s.replace(/[«»"]/g, '').split(/[\s-]+/)
+        .map((w) => w[0]).filter(Boolean).join('').toUpperCase().slice(0, 4);
+    }
+
+    function render() {
+      const opp = get('opp', 'Соперник');
+      const date = get('date', 'дата уточняется');
+      const time = get('time', '');
+      const place = get('place', '');
+
+      document.getElementById('opp-name').textContent = opp;
+
+      const lc = opp.toLowerCase();
+      const found = opponents.find((o) =>
+        lc.includes(o.name.toLowerCase()) || o.name.toLowerCase().includes(lc));
+      const crest = document.getElementById('opp-crest');
+      if (found && found.logo) {
+        crest.innerHTML = '<img alt="">';
+        crest.querySelector('img').src = found.logo;
+      } else {
+        crest.innerHTML = '<div class="abbr"></div>';
+        crest.querySelector('.abbr').textContent = abbr(opp);
+      }
+
+      const when = document.getElementById('when');
+      when.textContent = date;
+      if (time) {
+        const s = document.createElement('small');
+        s.textContent = 'Начало в ' + time;
+        when.appendChild(s);
+      }
+      document.getElementById('cta').innerHTML =
+        (place ? 'Играем ' + place + '<br>' : '') + 'fczt1909.ru';
+
+      document.getElementById('i-opp').value = qs.get('opp') || '';
+      document.getElementById('i-date').value = qs.get('date') || '';
+      document.getElementById('i-time').value = qs.get('time') || '';
+      document.getElementById('i-place').value = qs.get('place') || '';
+    }
+
+    document.getElementById('apply').addEventListener('click', () => {
+      const p = new URLSearchParams();
+      const v = (id) => document.getElementById(id).value.trim();
+      if (v('i-opp')) p.set('opp', v('i-opp'));
+      if (v('i-date')) p.set('date', v('i-date'));
+      if (v('i-time')) p.set('time', v('i-time'));
+      if (v('i-place')) p.set('place', v('i-place'));
+      location.search = p.toString();
+    });
+
+    document.getElementById('dl').addEventListener('click', async (e) => {
+      const btn = e.currentTarget;
+      btn.textContent = 'Готовлю…';
+      const mod = await import('https://esm.sh/html-to-image@1.11.11');
+      const node = document.getElementById('banner');
+      const dataUrl = await mod.toPng(node, { width: 1080, height: 1080, pixelRatio: 1 });
+      const a = document.createElement('a');
+      a.download = 'znamya-match-anons.png';
+      a.href = dataUrl;
+      a.click();
+      btn.textContent = '⬇ Скачать PNG';
+    });
+
+    render();
+  </script>
+</body>
+</html>
