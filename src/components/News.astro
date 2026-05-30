@@ -7,12 +7,15 @@ const newsUrl = (n: { id: string; data: { slug?: string } }) =>
   `${BASE}/news/${n.data.slug || n.id}/`;
 const asset = (p: string) => `${BASE}${p.startsWith('/') ? p : '/' + p}`;
 
-// 4 свежих новости одного размера. Без featured-выделения —
-// заказчику проще: одна меньше — нет «дыры» от пустого закрепа.
-// Черновики на лендинг не пускаем (даже в dev — это домашняя страница,
-// неуместно показывать недоделанные).
+// 4 свежих новости. Закреплённые (featured: true) идут первыми,
+// внутри каждой группы — по убыванию даты.
 const all = (await getCollection('news', ({ data }) => !data.draft)).sort(
-  (a, b) => b.data.date.getTime() - a.data.date.getTime()
+  (a, b) => {
+    const af = a.data.featured ? 1 : 0;
+    const bf = b.data.featured ? 1 : 0;
+    if (af !== bf) return bf - af;
+    return b.data.date.getTime() - a.data.date.getTime();
+  }
 );
 const items = all.slice(0, 4);
 
@@ -89,6 +92,7 @@ const fmtDate = (d: Date) =>
     gap: 10px;
     padding: 12px 22px;
     border: 1px solid rgba(0,0,0,0.18);
+    border-radius: 999px;
     font-family: 'Onest', sans-serif;
     font-size: 12px;
     font-weight: 600;
@@ -97,8 +101,7 @@ const fmtDate = (d: Date) =>
     color: #2a2a2a;
     text-decoration: none;
     transition: all 0.3s;
-    clip-path: polygon(0 0, 100% 0, calc(100% - 10px) 100%, 0 100%);
-    padding-right: 32px;
+    white-space: nowrap;
   }
   .news__all:hover {
     border-color: #E4002B;
@@ -261,7 +264,14 @@ const fmtDate = (d: Date) =>
   .ncard__link:hover { gap: 14px; }
 
   @media (max-width: 900px) {
-    .news { padding: 80px 0; }
+    .news {
+      padding: 80px 0 100px;
+      clip-path: none;
+    }
+    .news__head { margin-bottom: 32px; }
+    .news__head-row { gap: 24px; }
+    .news__title { font-size: clamp(40px, 14vw, 72px); }
+    .news__all { padding: 10px 18px; font-size: 11px; letter-spacing: 1.5px; }
     .news__grid { grid-template-columns: 1fr; }
     .ncard__score { font-size: 54px; top: 14px; right: 18px; }
   }
