@@ -26,7 +26,19 @@ const matchEntries = (await getCollection('matches', ({ data }) => {
   return import.meta.env.DEV || !data.draft;
 })).sort((a, b) => matchTimeValue(a.data.date, a.data.time) - matchTimeValue(b.data.date, b.data.time));
 
-const upcomingMatches = matchEntries.filter((m) => m.data.status === 'upcoming' || m.data.status === 'cancelled');
+// «Сегодня» в локальной таймзоне без учёта часов — чтобы матч этого дня
+// ещё считался предстоящим, даже если его время уже прошло.
+const today = new Date();
+today.setHours(0, 0, 0, 0);
+const isFutureDate = (d: Date) => d.getTime() >= today.getTime();
+
+// Предстоящие = upcoming (всегда) + cancelled, у которого дата ≥ сегодня.
+// Отменённый матч после своей даты уезжает в архив прошедших.
+const upcomingMatches = matchEntries.filter((m) => {
+  if (m.data.status === 'upcoming') return true;
+  if (m.data.status === 'cancelled') return isFutureDate(m.data.date);
+  return false;
+});
 
 const opponentEntries = await getCollection('opponents');
 const opponentLogo = (teamName: string): string | null => {

@@ -30,8 +30,24 @@ const matchEntries = (await getCollection('matches', ({ data }) => {
   return import.meta.env.DEV || !data.draft;
 })).sort((a, b) => matchTimeValue(a.data.date, a.data.time) - matchTimeValue(b.data.date, b.data.time));
 
-const upcomingMatch = matchEntries.find((m) => m.data.status === 'upcoming' || m.data.status === 'cancelled') ?? null;
-const playedMatch = [...matchEntries].reverse().find((m) => m.data.status === 'played') ?? null;
+// «Сегодня» в локальной таймзоне без часов. Отменённый матч после
+// своей даты автоматически уезжает в архив прошедших.
+const today = new Date();
+today.setHours(0, 0, 0, 0);
+const isFutureDate = (d: Date) => d.getTime() >= today.getTime();
+
+const upcomingMatch = matchEntries.find((m) => {
+  if (m.data.status === 'upcoming') return true;
+  if (m.data.status === 'cancelled') return isFutureDate(m.data.date);
+  return false;
+}) ?? null;
+
+// В архив — все played + cancelled из прошлого. Берём последний по дате.
+const playedMatch = [...matchEntries].reverse().find((m) => {
+  if (m.data.status === 'played') return true;
+  if (m.data.status === 'cancelled') return !isFutureDate(m.data.date);
+  return false;
+}) ?? null;
 
 const opponentLogo = (teamName: string): string | null => {
   const lc = teamName.toLowerCase();
@@ -131,7 +147,9 @@ const lastMatch = playedMatch ? {
     || inferResult(playedMatch.data.homeName, playedMatch.data.awayName, playedMatch.data.homeScore, playedMatch.data.awayScore)
     || 'draw',
   reportSlug: playedMatch.data.reportSlug || '',
-} : FALLBACK_LAST_MATCH;
+  cancelled: playedMatch.data.status === 'cancelled',
+  cancelledReason: playedMatch.data.cancelledReason || '',
+} : { ...FALLBACK_LAST_MATCH, cancelled: false, cancelledReason: '' };
 
 function isOurTeam(name: string) {
   return /знамя труда/i.test(name);
@@ -284,11 +302,15 @@ const matchCenterItems = [
             )}
             <div class="score-team__name">{lastMatch.home.name}</div>
           </div>
-          <div class="score">
-            <span class={`score__n ${lastMatch.result === 'win' ? 'score__n--win' : ''}`}>{lastMatch.home.score}</span>
-            <span class="score__sep">:</span>
-            <span class={`score__n ${lastMatch.result === 'loss' ? 'score__n--win' : ''}`}>{lastMatch.away.score}</span>
-          </div>
+          {lastMatch.cancelled ? (
+            <div class="score score--cancelled" aria-label="Матч отменён">—</div>
+          ) : (
+            <div class="score">
+              <span class={`score__n ${lastMatch.result === 'win' ? 'score__n--win' : ''}`}>{lastMatch.home.score}</span>
+              <span class="score__sep">:</span>
+              <span class={`score__n ${lastMatch.result === 'loss' ? 'score__n--win' : ''}`}>{lastMatch.away.score}</span>
+            </div>
+          )}
           <div class="score-team score-team--right">
             {isOurTeam(lastMatch.away.name) ? (
               <div class="score-team__crest score-team__crest--logo">
@@ -306,12 +328,22 @@ const matchCenterItems = [
         </div>
 
         <div class="match__result">
-          <span class={`result-badge result-badge--${lastMatch.result}`}>{RESULT_LABELS[lastMatch.result]}</span>
+          {lastMatch.cancelled ? (
+            <span class="result-badge result-badge--cancelled">Отменён</span>
+          ) : (
+            <span class={`result-badge result-badge--${lastMatch.result}`}>{RESULT_LABELS[lastMatch.result]}</span>
+          )}
           <span class="match__date-small">{lastMatch.dateText}</span>
         </div>
 
+        {lastMatch.cancelled && lastMatch.cancelledReason && (
+          <div class="match__cancelled match__cancelled--inline">
+            <div class="match__cancelled-reason">{lastMatch.cancelledReason}</div>
+          </div>
+        )}
+
         <div class="match__last-actions">
-          {lastMatch.reportSlug && (
+          {!lastMatch.cancelled && lastMatch.reportSlug && (
             <a href={reportHref(BASE, lastMatch.reportSlug)} class="btn btn--red match__report">
               Отчёт о матче
               <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
@@ -687,6 +719,35 @@ const matchCenterItems = [
     background: rgba(70,70,70,0.08);
     border-color: rgba(70,70,70,0.3);
     color: #2a2a2a;
+  }
+  .result-badge--cancelled {
+    background: rgba(228,0,43,0.06);
+    border-color: rgba(228,0,43,0.3);
+    border-style: dashed;
+    color: #E4002B;
+  }
+  .score--cancelled {
+    font-family: 'Onest', sans-serif;
+    font-weight: 400;
+    font-size: 32px;
+    color: #9a9a9a;
+    text-align: center;
+    min-width: 56px;
+  }
+  .match__cancelled--inline {
+    margin-top: -8px;
+    margin-bottom: 16px;
+    padding: 10px 14px;
+    background: rgba(228, 0, 43, 0.06);
+    border: 1px dashed rgba(228, 0, 43, 0.35);
+    border-radius: 6px;
+    background-color: transparent;
+    color: #4a4a4a;
+  }
+  .match__cancelled--inline .match__cancelled-reason {
+    color: #4a4a4a;
+    font-size: 13px;
+    line-height: 1.45;
   }
   .match__date-small {
     font-size: 11px;
