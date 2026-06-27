@@ -30,7 +30,7 @@ const matchEntries = (await getCollection('matches', ({ data }) => {
   return import.meta.env.DEV || !data.draft;
 })).sort((a, b) => matchTimeValue(a.data.date, a.data.time) - matchTimeValue(b.data.date, b.data.time));
 
-const upcomingMatch = matchEntries.find((m) => m.data.status === 'upcoming') ?? null;
+const upcomingMatch = matchEntries.find((m) => m.data.status === 'upcoming' || m.data.status === 'cancelled') ?? null;
 const playedMatch = [...matchEntries].reverse().find((m) => m.data.status === 'played') ?? null;
 
 const opponentLogo = (teamName: string): string | null => {
@@ -57,11 +57,18 @@ const fallbackNext = {
   venue: 'Стадион «Знамя Труда», Орехово-Зуево',
   url: TIMEPAD_CLUB_URL,
   canRegister: true,
+  ctaLabel: 'Оформить билет',
+  cancelled: false,
+  cancelledReason: '',
   posterUrl: null as string | null,
 };
 
 let nextMatch = fallbackNext;
 if (upcomingMatch) {
+  const isCancelled = upcomingMatch.data.status === 'cancelled';
+  const ticketUrl = upcomingMatch.data.ticketUrl || '';
+  const regUrl = upcomingMatch.data.registrationUrl || '';
+  const linkUrl = ticketUrl || regUrl;
   nextMatch = {
     league: upcomingMatch.data.league,
     dateText: formatMatchDateFull(upcomingMatch.data.date),
@@ -71,8 +78,11 @@ if (upcomingMatch) {
     awayName: upcomingMatch.data.awayName,
     awayCity: /знамя труда/i.test(upcomingMatch.data.awayName) ? 'Орехово-Зуево' : '',
     venue: upcomingMatch.data.venue || fallbackNext.venue,
-    url: upcomingMatch.data.registrationUrl || '',
-    canRegister: Boolean(upcomingMatch.data.registrationUrl),
+    url: linkUrl,
+    canRegister: !isCancelled && Boolean(linkUrl),
+    ctaLabel: ticketUrl ? 'Оформить билет' : 'Зарегистрироваться на матч',
+    cancelled: isCancelled,
+    cancelledReason: upcomingMatch.data.cancelledReason || '',
     posterUrl: null,
   };
 } else if (tpEvent) {
@@ -96,6 +106,9 @@ if (upcomingMatch) {
     venue,
     url: tpEvent.url,
     canRegister: true,
+    ctaLabel: 'Оформить билет',
+    cancelled: false,
+    cancelledReason: '',
     posterUrl: tpEvent.posterUrl,
   };
 }
@@ -158,16 +171,16 @@ const matchCenterItems = [
     cta: 'Отчёт',
   },
   {
-    status: 'upcoming',
-    label: 'Ближайший',
+    status: nextMatch.cancelled ? 'cancelled' : 'upcoming',
+    label: nextMatch.cancelled ? 'Отменён' : 'Ближайший',
     date: nextMatch.dateText,
     time: nextMatch.time || 'время уточняется',
     league: nextMatch.league,
     home: { name: nextMatch.homeName },
     away: { name: nextMatch.awayName },
-    score: 'VS',
-    href: nextMatch.canRegister ? nextMatch.url : '',
-    cta: 'Регистрация',
+    score: nextMatch.cancelled ? '—' : 'VS',
+    href: nextMatch.cancelled ? '' : (nextMatch.canRegister ? nextMatch.url : ''),
+    cta: nextMatch.ctaLabel,
   },
 ];
 ---
@@ -230,9 +243,19 @@ const matchCenterItems = [
           {nextMatch.venue}
         </div>
 
-        {nextMatch.canRegister ? (
+        {nextMatch.cancelled ? (
+          <div class="match__cancelled" role="status">
+            <div class="match__cancelled-title">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><circle cx="12" cy="12" r="9"/><path d="M9 9l6 6M15 9l-6 6"/></svg>
+              МАТЧ ОТМЕНЁН
+            </div>
+            {nextMatch.cancelledReason && (
+              <div class="match__cancelled-reason">{nextMatch.cancelledReason}</div>
+            )}
+          </div>
+        ) : nextMatch.canRegister ? (
           <a href={nextMatch.url} target="_blank" rel="noopener" class="btn btn--red match__cta">
-            Зарегистрироваться на матч
+            {nextMatch.ctaLabel}
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
           </a>
         ) : null}
@@ -537,6 +560,33 @@ const matchCenterItems = [
     background: #0a0a0a;
     color: #fff;
     transform: translateX(4px);
+  }
+  .match__cancelled {
+    margin-top: 28px;
+    padding: 18px 22px;
+    background: rgba(10, 10, 10, 0.35);
+    border: 1.5px dashed rgba(255, 255, 255, 0.55);
+    border-radius: 8px;
+    color: #fff;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+  .match__cancelled-title {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    font-family: 'Onest', sans-serif;
+    font-weight: 700;
+    font-size: 14px;
+    letter-spacing: 2.5px;
+    text-transform: uppercase;
+  }
+  .match__cancelled-title svg { flex-shrink: 0; opacity: 0.85; }
+  .match__cancelled-reason {
+    font-size: 13.5px;
+    line-height: 1.45;
+    color: rgba(255, 255, 255, 0.85);
   }
   /* LAST match */
   .match__score-row {

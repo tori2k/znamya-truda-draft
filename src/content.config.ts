@@ -10,7 +10,7 @@ const NEWS_CATEGORIES = [
 ] as const;
 
 const ROLES = ['Вратарь', 'Защитник', 'Полузащитник', 'Нападающий'] as const;
-const MATCH_STATUSES = ['upcoming', 'played'] as const;
+const MATCH_STATUSES = ['upcoming', 'played', 'cancelled'] as const;
 const MATCH_RESULTS = ['win', 'draw', 'loss'] as const;
 
 // Картинки храним как обычные строки-URL вида "/news/file.jpg" —
@@ -64,10 +64,12 @@ const matches = defineCollection({
     awayName: z.string(),
     venue: z.string().optional(),
     registrationUrl: z.string().optional(),
+    ticketUrl: z.string().optional(),
     homeScore: z.number().int().nullable().optional(),
     awayScore: z.number().int().nullable().optional(),
     result: z.enum(MATCH_RESULTS).nullable().optional(),
     reportSlug: z.string().optional(),
+    cancelledReason: z.string().optional(),
     draft: z.boolean().default(false),
   }),
 });

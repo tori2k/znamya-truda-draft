@@ -110,6 +110,7 @@ collections:
     view_filters:
       - { label: 'Предстоящие', field: status, pattern: 'upcoming' }
       - { label: 'Сыгранные', field: status, pattern: 'played' }
+      - { label: 'Отменённые', field: status, pattern: 'cancelled' }
       - { label: 'Черновики', field: draft, pattern: 'true' }
 
     fields:
@@ -133,6 +134,8 @@ collections:
         options:
           - { label: 'Предстоящий', value: 'upcoming' }
           - { label: 'Сыгран', value: 'played' }
+          - { label: 'Отменён', value: 'cancelled' }
+        hint: 'Поставьте «Отменён», если матч не состоится — на сайте вместо кнопки регистрации появится плашка «МАТЧ ОТМЕНЁН».'
       - { label: 'Турнир / тур', name: 'league', widget: 'string', default: 'ФФМО · Б-2' }
       - { label: 'Хозяева', name: 'homeName', widget: 'string', default: 'Знамя Труда' }
       - label: 'Гости / соперник'
@@ -143,11 +146,21 @@ collections:
         name: 'venue'
         widget: 'string'
         required: false
-      - label: 'Ссылка на регистрацию'
+      - label: 'Ссылка «Оформить билет»'
+        name: 'ticketUrl'
+        widget: 'string'
+        required: false
+        hint: 'Главная ссылка. Если заполнить — на сайте появится кнопка «Оформить билет». Используется, когда матч идёт через продажу билетов (TimePad, Яндекс.Афиша и т.п.).'
+      - label: 'Ссылка на регистрацию (запасной вариант)'
         name: 'registrationUrl'
         widget: 'string'
         required: false
-        hint: 'Если заполнить — появится кнопка «Регистрация». Если оставить пустым — кнопки не будет.'
+        hint: 'Используется, если нет ссылки на билеты — тогда покажется кнопка «Зарегистрироваться». Можно оставить пустым.'
+      - label: 'Причина отмены'
+        name: 'cancelledReason'
+        widget: 'text'
+        required: false
+        hint: 'Заполняется только если статус = «Отменён». Например: «Соперник не явился, нам засчитан технарь». Показывается под плашкой «МАТЧ ОТМЕНЁН».'
       - label: 'Счёт хозяев'
         name: 'homeScore'
         widget: 'number'

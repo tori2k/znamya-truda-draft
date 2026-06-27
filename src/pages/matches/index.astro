@@ -26,7 +26,7 @@ const matchEntries = (await getCollection('matches', ({ data }) => {
   return import.meta.env.DEV || !data.draft;
 })).sort((a, b) => matchTimeValue(a.data.date, a.data.time) - matchTimeValue(b.data.date, b.data.time));
 
-const upcomingMatches = matchEntries.filter((m) => m.data.status === 'upcoming');
+const upcomingMatches = matchEntries.filter((m) => m.data.status === 'upcoming' || m.data.status === 'cancelled');
 
 const opponentEntries = await getCollection('opponents');
 const opponentLogo = (teamName: string): string | null => {
@@ -65,20 +65,42 @@ const rowFromCmsMatch = (m: typeof matchEntries[number]) => {
     || inferResult(m.data.homeName, m.data.awayName, m.data.homeScore, m.data.awayScore);
   const hasScore = m.data.homeScore != null && m.data.awayScore != null;
   const isUpcoming = m.data.status === 'upcoming';
-  const canRegister = isUpcoming && Boolean(m.data.registrationUrl);
+  const isCancelled = m.data.status === 'cancelled';
+  const ticketUrl = m.data.ticketUrl || '';
+  const regUrl = m.data.registrationUrl || '';
+  const linkUrl = ticketUrl || regUrl;
+
+  let time: string;
+  if (isCancelled) time = 'Отменён';
+  else if (isUpcoming) time = m.data.time || 'время уточняется';
+  else time = result ? RESULT_LABELS[result] : m.data.time || '';
+
+  let href = '';
+  let cta = '';
+  if (isCancelled) {
+    href = '';
+    cta = '';
+  } else if (isUpcoming) {
+    href = linkUrl;
+    cta = ticketUrl ? 'Оформить билет' : 'Зарегистрироваться';
+  } else {
+    href = reportHref(BASE, m.data.reportSlug);
+    cta = 'Отчёт';
+  }
 
   return {
     status: m.data.status,
     sortTime: matchTimeValue(m.data.date, m.data.time),
     date: formatMatchDateFull(m.data.date),
-    time: isUpcoming ? (m.data.time || 'время уточняется') : (result ? RESULT_LABELS[result] : m.data.time || ''),
+    time,
     league: m.data.league,
     homeName: m.data.homeName,
     awayName: m.data.awayName,
-    score: hasScore ? `${m.data.homeScore}:${m.data.awayScore}` : 'VS',
-    href: isUpcoming ? (m.data.registrationUrl || '') : reportHref(BASE, m.data.reportSlug),
-    cta: isUpcoming ? 'Регистрация' : 'Отчёт',
+    score: hasScore ? `${m.data.homeScore}:${m.data.awayScore}` : (isCancelled ? '—' : 'VS'),
+    href,
+    cta,
     venue: m.data.venue || 'Стадион «Знамя Труда», Орехово-Зуево',
+    cancelledReason: isCancelled ? (m.data.cancelledReason || '') : '',
   };
 };
 
@@ -226,11 +248,18 @@ const newsUrl = (n: { id: string; data: { slug?: string } }) =>
                   <span>{row.awayName}</span>
                 </div>
               </div>
-              {row.href && (
+              {row.status === 'cancelled' ? (
+                <div class="match-row__cancelled">
+                  <div class="match-row__cancelled-title">Матч отменён</div>
+                  {row.cancelledReason && (
+                    <div class="match-row__cancelled-reason">{row.cancelledReason}</div>
+                  )}
+                </div>
+              ) : row.href ? (
                 <a href={row.href} target={row.href.startsWith('http') ? '_blank' : undefined} rel={row.href.startsWith('http') ? 'noopener' : undefined} class="match-row__action">
                   {row.cta}
                 </a>
-              )}
+              ) : null}
             </article>
           ))}
         </div>
@@ -524,6 +553,30 @@ const newsUrl = (n: { id: string; data: { slug?: string } }) =>
     letter-spacing: 1.8px;
     text-transform: uppercase;
     text-decoration: none;
+  }
+  .match-row--cancelled { border-style: dashed; border-color: rgba(10,10,10,0.25); background: rgba(0,0,0,0.02); }
+  .match-row__cancelled {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    padding: 10px 14px;
+    background: rgba(228, 0, 43, 0.06);
+    border: 1px dashed rgba(228, 0, 43, 0.4);
+    border-radius: 8px;
+    min-width: 160px;
+  }
+  .match-row__cancelled-title {
+    font-family: 'Onest', sans-serif;
+    font-size: 11px;
+    font-weight: 800;
+    letter-spacing: 1.8px;
+    text-transform: uppercase;
+    color: #E4002B;
+  }
+  .match-row__cancelled-reason {
+    font-size: 12.5px;
+    line-height: 1.4;
+    color: #4a4a4a;
   }
 
   .match-reports {
