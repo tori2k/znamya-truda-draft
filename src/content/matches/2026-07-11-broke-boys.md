@@ -1,5 +1,5 @@
 ---
-date: 2026-07-11
+date: 2026-08-08
 time: 16:00
 status: upcoming
 league: Товарищеский матч
