@@ -1,4 +1,4 @@
 ---
-name: Broke Boys
+name: Броук Бойз
 logo: /opponents/broke-boys.png
 ---
