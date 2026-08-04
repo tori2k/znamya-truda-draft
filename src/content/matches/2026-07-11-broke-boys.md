@@ -8,5 +8,5 @@ awayName: Броук Бойз
 venue: ул. Торфобрикетная, д. 12а, Орехово-Зуево
 ticketUrl: https://fczt.timepad.ru/event/4125059/
 registrationUrl: ""
-draft: true
+draft: false
 ---
