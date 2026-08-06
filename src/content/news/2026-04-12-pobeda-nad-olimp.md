@@ -5,7 +5,7 @@ category: Клуб
 draft: false
 excerpt: «Знамя Труда» переживает один из самых непростых этапов в своей истории
   – но именно сейчас формируется новая точка отсчёта.
-image: /news/a965cb710417e9e2c945780a69382.jpeg
+image: /news/a965cb710417e9e2c945780a69382.jpg
 featured: false
 score: ""
 ---
