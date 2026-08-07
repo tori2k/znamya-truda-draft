@@ -33,6 +33,14 @@ const normalizePath = (val: unknown): string | undefined => {
 
 const imagePath = z.preprocess(normalizePath, z.string().optional());
 
+// Пустое числовое поле Decap сохраняет как "" — например, у игрока без
+// игрового номера. Схема ждёт число или null, и сборка падает целиком.
+// Считаем пустую строку отсутствием значения.
+const optionalNumber = z.preprocess(
+  (val) => (val === '' ? null : val),
+  z.number().int().nullable().default(null),
+);
+
 const news = defineCollection({
   loader: glob({ pattern: '**/*.md', base: './src/content/news' }),
   schema: z.object({
@@ -77,7 +85,7 @@ const matches = defineCollection({
 const squad = defineCollection({
   loader: glob({ pattern: '**/*.md', base: './src/content/squad' }),
   schema: z.object({
-    number: z.number().int().nullable().default(null),
+    number: optionalNumber,
     lastName: z.string(),
     firstName: z.string(),
     age: z.number().int().min(14).max(50),
