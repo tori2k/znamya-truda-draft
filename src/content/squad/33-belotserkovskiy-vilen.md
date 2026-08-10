@@ -4,7 +4,7 @@ lastName: Белоцерковский
 firstName: Вилен
 age: 18
 role: Полузащитник
-photo: ../../../public/team/belotserkovsky.jpg
+photo: /team/вилен.png
 order: 100
 showName: true
 ---
