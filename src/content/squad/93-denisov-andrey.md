@@ -4,7 +4,7 @@ lastName: Денисов
 firstName: Андрей
 age: 32
 role: Защитник
-photo: /team/денисов.jpg
+photo: /team/денисов.png
 order: 100
 showName: true
 ---
