@@ -4,7 +4,7 @@ lastName: Крупинов
 firstName: Владимир
 age: 30
 role: Полузащитник
-photo: ../../../public/team/krupinov.jpg
+photo: /team/крупинов.png
 order: 100
 showName: true
 ---
