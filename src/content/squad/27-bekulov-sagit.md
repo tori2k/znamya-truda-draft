@@ -4,7 +4,7 @@ lastName: Бекулов
 firstName: Сагит
 age: 26
 role: Защитник
-photo: ../../../public/team/bekulov.jpg
+photo: /team/бекулов.png
 order: 100
 showName: true
 ---
