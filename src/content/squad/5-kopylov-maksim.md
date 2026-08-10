@@ -4,7 +4,7 @@ lastName: Копылов
 firstName: Максим
 age: 22
 role: Защитник
-photo: ../../../public/team/kopylov.jpg
+photo: /team/копылов.png
 order: 100
 showName: true
 ---
