@@ -4,7 +4,7 @@ lastName: Коробов
 firstName: Никита
 age: 26
 role: Полузащитник
-photo: ../../../public/team/korobov.jpg
+photo: /team/коробов.png
 order: 100
 showName: true
 ---
