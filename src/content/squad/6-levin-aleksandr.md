@@ -4,7 +4,7 @@ lastName: Лёвин
 firstName: Александр
 age: 35
 role: Нападающий
-photo: ../../../public/team/levin.jpg
+photo: /team/лёвин.png
 order: 100
 showName: true
 ---
