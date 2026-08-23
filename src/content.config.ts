@@ -46,6 +46,7 @@ const news = defineCollection({
   schema: z.object({
     title: z.string(),
     date: z.coerce.date(),
+    publishedAt: z.coerce.date().optional(),
     category: z.enum(NEWS_CATEGORIES),
     excerpt: z.string(),
     image: imagePath,

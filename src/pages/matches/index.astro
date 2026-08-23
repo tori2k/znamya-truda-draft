@@ -13,6 +13,7 @@ import {
   matchTimeValue,
   reportHref,
 } from '../../lib/matches';
+import { compareNewsByPublication } from '../../lib/news';
 
 const BASE = import.meta.env.BASE_URL.replace(/\/$/, '');
 const LOGO = `${BASE}/logo.png`;
@@ -20,7 +21,7 @@ const asset = (p: string) => `${BASE}${p.startsWith('/') ? p : '/' + p}`;
 
 const reports = (await getCollection('news', ({ data }) => {
   return (import.meta.env.DEV || !data.draft) && data.category === 'Матчи';
-})).sort((a, b) => b.data.date.getTime() - a.data.date.getTime());
+})).sort(compareNewsByPublication);
 
 const matchEntries = (await getCollection('matches', ({ data }) => {
   return import.meta.env.DEV || !data.draft;

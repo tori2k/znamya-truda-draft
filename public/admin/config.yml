@@ -49,6 +49,13 @@ collections:
     fields:
       - { label: 'Заголовок', name: 'title', widget: 'string' }
       - { label: 'Дата публикации', name: 'date', widget: 'datetime', format: 'YYYY-MM-DD', date_format: 'YYYY-MM-DD', time_format: false, picker_utc: false }
+      - label: 'Время добавления'
+        name: 'publishedAt'
+        widget: 'datetime'
+        default: '{{now}}'
+        format: 'YYYY-MM-DDTHH:mm:ssZ'
+        picker_utc: false
+        hint: 'Заполняется автоматически и задаёт порядок материалов внутри одного дня.'
       - label: 'Категория'
         name: 'category'
         widget: 'select'
