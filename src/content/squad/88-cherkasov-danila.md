@@ -2,7 +2,7 @@
 number: 88
 lastName: Черкасов
 firstName: Данила
-age: 25
+age: 26
 role: Полузащитник
 photo: /team/черкасов.jpg
 order: 100
