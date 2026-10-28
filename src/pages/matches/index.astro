@@ -3,6 +3,7 @@ import { getCollection } from 'astro:content';
 import Layout from '../../layouts/Layout.astro';
 import Nav from '../../components/Nav.astro';
 import Footer from '../../components/Footer.astro';
+import SeasonComplete from '../../components/SeasonComplete.astro';
 import { fetchNextEvent, parseMatchTeams, isHomeMatch, formatMatchDate, formatMatchTime } from '../../lib/timepad';
 import {
   FFMO_TOURNAMENT_URL,
@@ -119,6 +120,7 @@ const rowFromCmsMatch = (m: typeof matchEntries[number]) => {
 
 const cmsNext = upcomingMatches[0] ? rowFromCmsMatch(upcomingMatches[0]) : null;
 const tpEvent = cmsNext ? null : await fetchNextEvent();
+const hasNextMatch = Boolean(cmsNext || tpEvent);
 
 let nextMatch = cmsNext ? {
   league: cmsNext.league,
@@ -151,9 +153,9 @@ if (!cmsNext && tpEvent) {
 }
 
 const rows = [
-  ...(cmsNext ? [] : [{
+  ...(!cmsNext && tpEvent ? [{
     status: 'upcoming',
-    sortTime: tpEvent ? matchTimeValue(tpEvent.startsAt) : Number.MAX_SAFE_INTEGER,
+    sortTime: matchTimeValue(tpEvent.startsAt),
     date: nextMatch.dateText,
     time: nextMatch.time,
     league: nextMatch.league,
@@ -162,7 +164,7 @@ const rows = [
     score: 'VS',
     href: nextMatch.canRegister ? nextMatch.url : '',
     cta: 'Регистрация',
-  }]),
+  }] : []),
   ...matchEntries.map(rowFromCmsMatch),
 ].sort((a, b) => a.sortTime - b.sortTime);
 
@@ -186,6 +188,7 @@ const newsUrl = (n: { id: string; data: { slug?: string } }) =>
         </div>
 
         <div class="next-match">
+          {!hasNextMatch ? <SeasonComplete /> : <Fragment>
           <div class="next-match__meta">
             <span>Ближайший матч</span>
             <strong>{nextMatch.league}</strong>
@@ -225,6 +228,7 @@ const newsUrl = (n: { id: string; data: { slug?: string } }) =>
               <a href={nextMatch.url} target="_blank" rel="noopener" class="btn btn--red">Регистрация</a>
             ) : null}
           </div>
+          </Fragment>}
         </div>
       </div>
     </section>

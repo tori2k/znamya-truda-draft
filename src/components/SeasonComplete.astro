@@ -1,0 +1,41 @@
+---
+import Trophy from './Trophy.astro';
+---
+<div class="season-complete">
+  <div class="season-complete__label">Первенство Московской области</div>
+  <div class="season-complete__trophy"><Trophy size={52} /></div>
+  <h2>Сезон-2026<br />завершён</h2>
+  <p class="season-complete__result">Первое место и выход в Чемпионат Московской области</p>
+  <p class="season-complete__note">Спасибо за поддержку! Расписание матчей следующего сезона появится здесь.</p>
+</div>
+
+<style>
+  .season-complete { color: #fff; max-width: 640px; }
+  .season-complete__label {
+    font-size: 11px;
+    font-weight: 600;
+    line-height: 1.6;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.8);
+  }
+  .season-complete__trophy { display: flex; margin: 24px 0 18px; color: #ffe1a3; }
+  h2 {
+    margin: 0 0 20px;
+    font-family: 'Onest', sans-serif;
+    font-size: clamp(30px, 4vw, 48px);
+    font-weight: 800;
+    line-height: 1.05;
+    letter-spacing: -0.02em;
+    text-transform: uppercase;
+  }
+  .season-complete__result { margin: 0 0 24px; font-size: 18px; font-weight: 600; line-height: 1.5; }
+  .season-complete__note {
+    margin: 0;
+    padding-top: 20px;
+    border-top: 1px solid rgba(255,255,255,0.2);
+    font-size: 14px;
+    line-height: 1.6;
+    color: rgba(255,255,255,0.8);
+  }
+</style>

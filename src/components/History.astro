@@ -1,4 +1,6 @@
 ---
+import Trophy from './Trophy.astro';
+
 const milestones = [
   {
     year: '1909',
@@ -69,7 +71,8 @@ const milestones = [
   {
     year: '2026',
     title: 'Новая глава',
-    text: 'В январе 2026 года администрация Орехово-Зуево разорвала концессионное соглашение, и клуб вновь перешёл в муниципальную собственность. Сезон-2026 команда проведёт в Первенстве Федерации футбола Московской области.',
+    text: 'В январе 2026 года администрация Орехово-Зуево разорвала концессионное соглашение, и клуб вновь перешёл в муниципальную собственность. Сезон-2026 команда провела в Первенстве Московской области, где досрочно завоевала первое место и получила право выступить в Чемпионате Московской области в следующем сезоне.',
+    trophy: true,
   },
 ];
 ---
@@ -93,6 +96,7 @@ const milestones = [
           <summary class="mil__sum">
             <div class="mil__year">{m.year}</div>
             <div class="mil__body">
+              {m.trophy && <span class="mil__trophy"><Trophy /></span>}
               <h3 class="mil__title">{m.title}</h3>
               <span class="mil__toggle" aria-hidden="true">
                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M6 9l6 6 6-6"/></svg>
@@ -257,6 +261,7 @@ const milestones = [
     margin: 0;
     flex: 1;
   }
+  .mil__trophy { display: inline-flex; flex-shrink: 0; color: #b07816; }
   .mil__toggle {
     display: inline-flex;
     align-items: center;
